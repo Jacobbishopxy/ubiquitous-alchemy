@@ -5,3 +5,27 @@
 1. [ubiquitous-viz-server](./ubiquitous-viz-server/README.md): visualization of ubiquitous-data-server's application
 1. [ubiquitous-api-gateway](./ubiquitous-api-gateway/README.md): API gateway
 1. [ubiquitous-biz-server](./ubiquitous-biz-server/README.md): business logic implement
+
+## Tech stack
+
+### Language
+
+1. Rust
+
+1. Golang
+
+1. Python
+
+1. Typescript
+
+### Tools
+
+- MySql
+
+- Postgres
+
+- Sqlite
+
+- MongoDB
+
+- Redis

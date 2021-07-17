@@ -116,6 +116,8 @@ impl PersistenceDao {
 #[cfg(test)]
 mod persistence_test {
 
+    use assert::assert_matches;
+
     use super::*;
 
     // replace it to your own connection string

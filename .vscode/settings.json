@@ -5,7 +5,10 @@
     "unresolved-macro"
   ],
   "rust-analyzer.linkedProjects": [
-    "ubiquitous-alchemy-server/Cargo.toml",
+    "ubiquitous-data-server/Cargo.toml",
     "ubiquitous-viz-server/Cargo.toml"
-  ]
+  ],
+  "gopls": {
+    "experimentalWorkspaceModule": true
+  }
 }
