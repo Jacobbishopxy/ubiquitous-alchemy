@@ -36,9 +36,9 @@ function App() {
       <div className="App-footer">
         <a
           className="App-link"
-          href="https://github.com/Jacobbishopxy/rustopia"
+          href="https://github.com/Jacobbishopxy/ubiquitous-alchemy"
         >
-          https://github.com/Jacobbishopxy/rustopia
+          https://github.com/Jacobbishopxy/ubiquitous-alchemy
         </a>
       </div>
     </div>

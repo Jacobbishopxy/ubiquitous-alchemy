@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "BROWSER=none react-scripts start",
+    "start": "BROWSER=none PORT=8088 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:8088/api",
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@ant-design/pro-card": "^1.14.5",

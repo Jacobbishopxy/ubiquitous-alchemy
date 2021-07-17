@@ -1,0 +1,74 @@
+{
+  "version": 2,
+  "name": "Ubiquitous API Gateway",
+  "port": 8080,
+  "timeout": "10s",
+  "cache_ttl": "3600s",
+  "endpoints": [
+    {
+      "endpoint": "/api/cfg/check_connection",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "encoding": "no-op",
+          "method": "POST",
+          "url_pattern": "/api/cfg/check_connection",
+          "host": ["localhost:8070"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/cfg/conn",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "encoding": "no-op",
+          "url_pattern": "/api/cfg/conn",
+          "host": ["localhost:8070"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/cfg/conn",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "encoding": "no-op",
+          "method": "POST",
+          "url_pattern": "/api/cfg/conn",
+          "host": ["localhost:8070"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/cfg/conn",
+      "method": "PUT",
+      "querystring_params": ["db_id"],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "encoding": "no-op",
+          "method": "PUT",
+          "url_pattern": "/api/cfg/conn",
+          "host": ["localhost:8070"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/cfg/conn",
+      "method": "DELETE",
+      "querystring_params": ["db_id"],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "encoding": "no-op",
+          "method": "DELETE",
+          "url_pattern": "/api/cfg/conn",
+          "host": ["localhost:8070"]
+        }
+      ]
+    }
+  ]
+}
