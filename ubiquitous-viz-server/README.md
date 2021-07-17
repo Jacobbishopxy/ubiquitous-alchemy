@@ -8,10 +8,10 @@ Ubiquitous viz server, as a web server supporting user interaction with backend,
 
 ## Dependencies
 
-1. actix-cors
-1. actix-files
-1. actix-web
-1. serde
+1. actix-cors: CORS support
+1. actix-files: serving static files
+1. actix-web: web framework
+1. serde: JSON (de)serializer
 
 ## Project structure
 

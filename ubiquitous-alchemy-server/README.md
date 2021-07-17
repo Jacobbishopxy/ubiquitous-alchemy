@@ -1,5 +1,9 @@
 # Ubiquitous Alchemy Server
 
+## Requirements
+
+`cp .env.template .env` and replace with your own configs.
+
 ## Dependencies
 
 1. [actix-web](https://github.com/actix/actix-web): http service
