@@ -40,6 +40,16 @@ func (a *Article) BeforeSave() {
 	a.UpdatedAt = time.Now()
 }
 
+func (t *Tag) Validate() map[string]string {
+	var errorMessages = make(map[string]string)
+
+	if t.Name == "" {
+		errorMessages["title_required"] = "title is required"
+	}
+
+	return errorMessages
+}
+
 func (a *Article) Validate(action string) map[string]string {
 	var errorMessages = make(map[string]string)
 

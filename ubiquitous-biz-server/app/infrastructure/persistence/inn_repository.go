@@ -6,7 +6,8 @@ import (
 	"ubiquitous-biz-server/app/domain/entity"
 	"ubiquitous-biz-server/app/domain/repository"
 
-	"github.com/jinzhu/gorm"
+	_ "gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type InnRepo struct {
@@ -37,10 +38,11 @@ func (inn *InnRepo) GetAllTag() ([]entity.Tag, error) {
 	var tags []entity.Tag
 	err := inn.db.Debug().Find(&tags).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("tag not found")
+
+		}
 		return nil, err
-	}
-	if gorm.IsRecordNotFoundError(err) {
-		return nil, errors.New("tag not found")
 	}
 	return tags, nil
 }
@@ -81,16 +83,15 @@ func (inn *InnRepo) SaveArticle(article *entity.Article) (*entity.Article, map[s
 func (inn *InnRepo) GetAllArticle(pagination *entity.Pagination) ([]entity.Article, error) {
 	var articles []entity.Article
 	err := inn.db.Debug().
-		Limit(pagination.Limit).
-		Offset(pagination.Offset).
+		Limit(int(pagination.Limit)).
+		Offset(int(pagination.Offset)).
 		Association("Tags").
-		Find(&articles).
-		Error
+		Find(&articles)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("article not found")
+		}
 		return nil, err
-	}
-	if gorm.IsRecordNotFoundError(err) {
-		return nil, errors.New("article not found")
 	}
 	return articles, nil
 }

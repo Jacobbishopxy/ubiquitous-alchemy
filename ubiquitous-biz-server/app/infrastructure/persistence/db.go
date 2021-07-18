@@ -1,11 +1,13 @@
 package persistence
 
 import (
+	"errors"
 	"fmt"
 	"ubiquitous-biz-server/app/domain/entity"
 	"ubiquitous-biz-server/app/domain/repository"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type Repositories struct {
@@ -27,11 +29,11 @@ func NewRepositories(config RepositoriesConfig) (*Repositories, error) {
 		config.DbName,
 		config.DbPassword,
 	)
-	db, err := gorm.Open(config.DbDriver, URI)
+
+	db, err := gorm.Open(postgres.Open(URI))
 	if err != nil {
 		return nil, err
 	}
-	db.LogMode(true)
 
 	return &Repositories{
 		db:  db,
@@ -40,9 +42,13 @@ func NewRepositories(config RepositoriesConfig) (*Repositories, error) {
 }
 
 func (s *Repositories) Close() error {
-	return s.db.Close()
+	d, err := s.db.DB()
+	if err != nil {
+		return errors.New("Close connection failed")
+	}
+	return d.Close()
 }
 
 func (s *Repositories) Automigrate() error {
-	return s.db.AutoMigrate(&entity.Article{}, &entity.Tag{}).Error
+	return s.db.AutoMigrate(&entity.Article{}, &entity.Tag{})
 }
