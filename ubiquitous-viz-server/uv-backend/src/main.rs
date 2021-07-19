@@ -27,6 +27,7 @@ async fn main() -> std::io::Result<()> {
 }
 
 /// development mode: serving proxy for a local frontend server
+/// since `ubiquitous-api-gateway` works fine and has the same functionality, this function is archived
 async fn dev(cfg: constant::Config) -> std::io::Result<()> {
     let forward_url = format!("http://{}:{}", cfg.forward_host, cfg.forward_port);
     let forward_url = util::str_to_url(&forward_url).expect("Cannot parser forward URL");

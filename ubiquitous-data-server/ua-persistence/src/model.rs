@@ -116,7 +116,7 @@ impl PersistenceDao {
 #[cfg(test)]
 mod persistence_test {
 
-    use assert::assert_matches;
+    use std::assert_matches::assert_matches;
 
     use super::*;
 

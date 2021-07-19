@@ -27,5 +27,7 @@ my-createdb:
 my-dropdb:
 	docker exec -it mysql8 mysql -uroot -p${PASS} -e "drop database ${DB};"
 
+redis-init:
+	docker run --name redis6 -p 6379:6379 -d redis:6 --requirepass "${PASS}"
 
-.PHONY: pg-init pg-createdb pg-dropdb my-init my-createdb my-dropdb
+.PHONY: pg-init pg-createdb pg-dropdb my-init my-createdb my-dropdb redis-init
