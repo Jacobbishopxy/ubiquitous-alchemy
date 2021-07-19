@@ -13,18 +13,18 @@ export interface SelectionModalFormProps {
     // trigger: JSX.Element
     // onSubmit: (data: API.Selection) => Promise<void>
 }
-interface cond extends API.Equation {
+interface Cond extends API.Equation {
     junction?: API.Conjunction
-    condition: API.conditionToString
+    condition: API.ConditionToString
     Min?: API.DataEnum
     Max?: API.DataEnum
     column: string
-
 }
+
 export const SelectionModalForm = (props: SelectionModalFormProps) => {
 
     //used to parse a single condition
-    const parseSingleEquation = (condition: cond) => {
+    const parseSingleEquation = (condition: Cond) => {
         // console.log(condition.condition)
         // let equationItem: API.Equation = condition.In
         switch (condition.condition) {
@@ -51,14 +51,14 @@ export const SelectionModalForm = (props: SelectionModalFormProps) => {
 
     }
     //used to parsed embedded filter condition
-    const embedFilterParser = (filterArray: cond[]) => {
+    const embedFilterParser = (filterArray: Cond[]) => {
         // console.log(filterArray)
         let parsedArray: (API.Expression)[] = []
         for (let item of filterArray) {
             // console.log(item)
             parsedArray.push(item.junction as API.Conjunction)
             // console.log(parsedArray)
-            parsedArray.push({equation: parseSingleEquation(item as cond), column: item.column} as API.Condition)
+            parsedArray.push({equation: parseSingleEquation(item as Cond), column: item.column} as API.Condition)
         }
         return parsedArray
     }
@@ -72,7 +72,7 @@ export const SelectionModalForm = (props: SelectionModalFormProps) => {
             if (item.junction) {
                 temp.push(item.junction)
             }
-            temp.push({column: item.column, equation: parseSingleEquation(item as cond) as API.Equation})
+            temp.push({column: item.column, equation: parseSingleEquation(item as Cond) as API.Equation})
             //set up embeded condition
             if (item.filter) {
                 // embedFilterParser(item.filter)

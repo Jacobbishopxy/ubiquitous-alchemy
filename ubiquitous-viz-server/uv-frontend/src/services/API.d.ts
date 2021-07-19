@@ -49,7 +49,7 @@ declare namespace API {
         Between?: [DataEnum, DataEnum],
         Like?: string,
     }
-    enum conditionToString {
+    enum ConditionToString {
         Equal = "Equal",
         NotEqual = "NotEqual",
         Greater = "Greater",
