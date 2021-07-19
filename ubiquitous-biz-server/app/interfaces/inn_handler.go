@@ -120,7 +120,9 @@ func (inn *Inn) GetAllArticle(c *gin.Context) {
 		return
 	}
 
-	allArticle, err := inn.innApp.GetAllArticle(&entity.Pagination{Limit: limit, Offset: offset})
+	allArticle, err := inn.innApp.GetAllArticle(
+		&entity.PaginationM10{Limit: uint(limit), Offset: uint(offset)},
+	)
 	if err != nil {
 		util.ErrorJSON(c, http.StatusInternalServerError, err)
 		return

@@ -4,29 +4,23 @@ import (
 	"html"
 	"strings"
 	"time"
+
 	"ubiquitous-biz-server/app/util"
 )
 
 type Tag struct {
-	ID          uint64     `gorm:"primary_key;auto_increment" json:"id"`
+	Common
 	Name        string     `gorm:"size:100;not null;unique" json:"name" binding:"required"`
 	Description string     `gorm:"size:100" json:"description,omitempty"`
 	Color       string     `gorm:"size:100" json:"color,omitempty"`
-	Articles    []*Article `gorm:"many2many:article_tags" json:"articles,omitempty"`
+	Articles    []*Article `gorm:"many2many:article_tag" json:"articles,omitempty"`
 }
 
 type Article struct {
-	ID        uint64    `gorm:"primary_key;auto_increment" json:"id"`
-	Title     string    `gorm:"size:100;not null" json:"title" binding:"required"`
-	Content   string    `gorm:"text;not null" json:"content" binding:"required"`
-	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
-	Tags      []*Tag    `gorm:"many2many:article_tags" json:"tags,omitempty"`
-}
-
-type Pagination struct {
-	Limit  uint64 `json:"limit" binding:"required,gte=0,max=10"`
-	Offset uint64 `json:"offset" binding:"required,gte=0"`
+	Common
+	Title   string `gorm:"size:100;not null" json:"title" binding:"required"`
+	Content string `gorm:"text;not null" json:"content" binding:"required"`
+	Tags    []*Tag `gorm:"many2many:article_tag" json:"tags,omitempty"`
 }
 
 func (t *Tag) BeforeSave() {

@@ -18,7 +18,7 @@ type InnAppInterface interface {
 	DeleteTag(uint64) error
 
 	SaveArticle(*entity.Article) (*entity.Article, error)
-	GetAllArticle(*entity.Pagination) ([]entity.Article, error)
+	GetAllArticle(*entity.PaginationM10) ([]entity.Article, error)
 	UpdateArticle(*entity.Article) (*entity.Article, error)
 	DeleteArticle(uint64) error
 }
@@ -43,7 +43,7 @@ func (ia *innApp) SaveArticle(article *entity.Article) (*entity.Article, error) 
 	return ia.ir.SaveArticle(article)
 }
 
-func (ia *innApp) GetAllArticle(pagination *entity.Pagination) ([]entity.Article, error) {
+func (ia *innApp) GetAllArticle(pagination *entity.PaginationM10) ([]entity.Article, error) {
 	return ia.ir.GetAllArticle(pagination)
 }
 

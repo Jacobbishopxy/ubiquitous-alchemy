@@ -22,12 +22,12 @@ type RepositoriesConfig struct {
 
 func NewRepositories(config RepositoriesConfig) (*Repositories, error) {
 	URI := fmt.Sprintf(
-		"host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.DbHost,
 		config.DbPort,
 		config.DbUser,
-		config.DbName,
 		config.DbPassword,
+		config.DbName,
 	)
 
 	db, err := gorm.Open(postgres.Open(URI))

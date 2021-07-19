@@ -65,7 +65,7 @@ func (inn *InnRepo) SaveArticle(article *entity.Article) (*entity.Article, error
 	return article, nil
 }
 
-func (inn *InnRepo) GetAllArticle(pagination *entity.Pagination) ([]entity.Article, error) {
+func (inn *InnRepo) GetAllArticle(pagination *entity.PaginationM10) ([]entity.Article, error) {
 	var articles []entity.Article
 	err := inn.db.Debug().
 		Preload("Tags").

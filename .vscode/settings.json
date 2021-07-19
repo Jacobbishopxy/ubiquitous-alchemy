@@ -10,5 +10,6 @@
   ],
   "gopls": {
     "experimentalWorkspaceModule": true
-  }
+  },
+  "cSpell.words": ["postgres"]
 }
