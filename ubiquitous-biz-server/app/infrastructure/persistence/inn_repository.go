@@ -2,7 +2,6 @@ package persistence
 
 import (
 	"errors"
-	"strings"
 	"ubiquitous-biz-server/app/domain/entity"
 	"ubiquitous-biz-server/app/domain/repository"
 
@@ -20,16 +19,10 @@ func NewInnRepository(db *gorm.DB) *InnRepo {
 
 var _ repository.InnRepository = &InnRepo{}
 
-func (inn *InnRepo) SaveTag(tag *entity.Tag) (*entity.Tag, map[string]string) {
-	dbErr := make(map[string]string)
+func (inn *InnRepo) SaveTag(tag *entity.Tag) (*entity.Tag, error) {
 	err := inn.db.Debug().Create(&tag).Error
 	if err != nil {
-		if strings.Contains(err.Error(), "duplicate") || strings.Contains(err.Error(), "Duplicate") {
-			dbErr["unique_name"] = "tag name already taken"
-			return nil, dbErr
-		}
-		dbErr["db_err"] = "database error"
-		return nil, dbErr
+		return nil, err
 	}
 	return tag, nil
 }
@@ -47,16 +40,10 @@ func (inn *InnRepo) GetAllTag() ([]entity.Tag, error) {
 	return tags, nil
 }
 
-func (inn *InnRepo) UpdateTag(tag *entity.Tag) (*entity.Tag, map[string]string) {
-	dbErr := make(map[string]string)
+func (inn *InnRepo) UpdateTag(tag *entity.Tag) (*entity.Tag, error) {
 	err := inn.db.Debug().Save(&tag).Error
 	if err != nil {
-		if strings.Contains(err.Error(), "duplicate") || strings.Contains(err.Error(), "Duplicate") {
-			dbErr["unique_name"] = "tag name already taken"
-			return nil, dbErr
-		}
-		dbErr["db_err"] = "database error"
-		return nil, dbErr
+		return nil, err
 	}
 	return tag, nil
 }
@@ -70,12 +57,10 @@ func (inn *InnRepo) DeleteTag(id uint64) error {
 	return nil
 }
 
-func (inn *InnRepo) SaveArticle(article *entity.Article) (*entity.Article, map[string]string) {
-	dbErr := make(map[string]string)
+func (inn *InnRepo) SaveArticle(article *entity.Article) (*entity.Article, error) {
 	err := inn.db.Debug().Create(&article).Error
 	if err != nil {
-		dbErr["db_err"] = "database error"
-		return nil, dbErr
+		return nil, err
 	}
 	return article, nil
 }
@@ -99,12 +84,10 @@ func (inn *InnRepo) GetAllArticle(pagination *entity.Pagination) ([]entity.Artic
 	return articles, nil
 }
 
-func (inn *InnRepo) UpdateArticle(article *entity.Article) (*entity.Article, map[string]string) {
-	dbErr := make(map[string]string)
+func (inn *InnRepo) UpdateArticle(article *entity.Article) (*entity.Article, error) {
 	err := inn.db.Debug().Save(&article).Error
 	if err != nil {
-		dbErr["db_err"] = "database error"
-		return nil, dbErr
+		return nil, err
 	}
 	return article, nil
 }

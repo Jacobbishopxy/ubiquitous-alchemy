@@ -4,6 +4,7 @@ import (
 	"html"
 	"strings"
 	"time"
+	"ubiquitous-biz-server/app/util"
 )
 
 type Tag struct {
@@ -40,33 +41,33 @@ func (a *Article) BeforeSave() {
 	a.UpdatedAt = time.Now()
 }
 
-func (t *Tag) Validate() map[string]string {
-	var errorMessages = make(map[string]string)
+func (t *Tag) Validate() error {
+	var errorMessages error
 
 	if t.Name == "" {
-		errorMessages["title_required"] = "title is required"
+		errorMessages = util.NewBizError("title is required")
 	}
 
 	return errorMessages
 }
 
-func (a *Article) Validate(action string) map[string]string {
-	var errorMessages = make(map[string]string)
+func (a *Article) Validate(action string) error {
+	var errorMessages error
 
 	switch strings.ToLower(action) {
 	case "update": // occupied in case of modify
 		if a.Title == "" {
-			errorMessages["title_required"] = "title is required"
+			errorMessages = util.NewBizError("title is required")
 		}
 		if a.Content == "" {
-			errorMessages["content_required"] = "content is required"
+			errorMessages = util.NewBizError("content is required")
 		}
 	default:
 		if a.Title == "" {
-			errorMessages["title_required"] = "title is required"
+			errorMessages = util.NewBizError("title is required")
 		}
 		if a.Content == "" {
-			errorMessages["content_required"] = "content is required"
+			errorMessages = util.NewBizError("content is required")
 		}
 	}
 
