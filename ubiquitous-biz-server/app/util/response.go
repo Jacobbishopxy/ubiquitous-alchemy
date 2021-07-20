@@ -8,8 +8,8 @@ type Response struct {
 	Data    interface{} `json:"data"`
 }
 
-func ErrorJSON(c *gin.Context, statusCode int, data interface{}) {
-	c.JSON(statusCode, gin.H{"error": data})
+func ErrorJSON(c *gin.Context, statusCode int, err error) {
+	c.JSON(statusCode, gin.H{"error": err.Error()})
 }
 
 func SuccessJSON(c *gin.Context, statusCode int, data interface{}) {

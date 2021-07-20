@@ -11,5 +11,8 @@
   "gopls": {
     "experimentalWorkspaceModule": true
   },
-  "cSpell.words": ["postgres"]
+  "cSpell.words": ["postgres"],
+  "files.watcherExclude": {
+    "**/target": true
+  }
 }

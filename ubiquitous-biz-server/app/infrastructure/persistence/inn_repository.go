@@ -41,7 +41,7 @@ func (inn *InnRepo) GetAllTag() ([]entity.Tag, error) {
 }
 
 func (inn *InnRepo) UpdateTag(tag *entity.Tag) (*entity.Tag, error) {
-	err := inn.db.Debug().Save(&tag).Error
+	err := inn.db.Debug().Updates(&tag).Error
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func (inn *InnRepo) GetAllArticle(pagination *entity.PaginationM10) ([]entity.Ar
 }
 
 func (inn *InnRepo) UpdateArticle(article *entity.Article) (*entity.Article, error) {
-	err := inn.db.Debug().Save(&article).Error
+	err := inn.db.Debug().Updates(&article).Error
 	if err != nil {
 		return nil, err
 	}
