@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"ubiquitous-biz-server/app/application"
 	"ubiquitous-biz-server/app/infrastructure/persistence"
 	"ubiquitous-biz-server/app/interfaces"
 	"ubiquitous-biz-server/app/interfaces/middleware"
@@ -39,7 +40,8 @@ func main() {
 	defer services.Close()
 	services.Automigrate()
 
-	inn := interfaces.NewInn(services.InnBehavior)
+	innApp := application.NewInnApp(services.InnBehavior)
+	inn := interfaces.NewInn(*innApp)
 
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())

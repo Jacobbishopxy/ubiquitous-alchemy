@@ -30,7 +30,7 @@ func (inn *InnRepo) SaveTag(tag *entity.Tag) (*entity.Tag, error) {
 
 func (inn *InnRepo) GetTag(id uint) (*entity.Tag, error) {
 	var tag entity.Tag
-	err := inn.db.Debug().First(tag, id).Error
+	err := inn.db.Debug().First(&tag, id).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, util.NewBizError(err.Error())
@@ -62,10 +62,9 @@ func (inn *InnRepo) UpdateTag(tag *entity.Tag) (*entity.Tag, error) {
 }
 
 func (inn *InnRepo) DeleteTag(id uint) error {
-	var tag entity.Tag
-	err := inn.db.Debug().Where("id = ?", id).Association("Articles").Delete(&tag).Error
+	err := inn.db.Debug().Delete(&entity.Tag{}, id).Error
 	if err != nil {
-		return errors.New("delete error")
+		return util.NewBizError(err.Error())
 	}
 	return nil
 }
@@ -80,7 +79,10 @@ func (inn *InnRepo) SaveArticle(article *entity.Article) (*entity.Article, error
 
 func (inn *InnRepo) GetArticle(id uint) (*entity.Article, error) {
 	var article entity.Article
-	err := inn.db.Debug().First(article, id).Error
+	err := inn.db.Debug().
+		Preload("Tags").
+		First(&article, id).
+		Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, util.NewBizError(err.Error())
@@ -118,10 +120,9 @@ func (inn *InnRepo) UpdateArticle(article *entity.Article) (*entity.Article, err
 }
 
 func (inn *InnRepo) DeleteArticle(id uint) error {
-	var article entity.Article
-	err := inn.db.Debug().Where("id = ?", id).Association("Tags").Delete(&article).Error
+	err := inn.db.Debug().Delete(&entity.Article{}, id).Error
 	if err != nil {
-		return errors.New("delete error")
+		return util.NewBizError(err.Error())
 	}
 	return nil
 }

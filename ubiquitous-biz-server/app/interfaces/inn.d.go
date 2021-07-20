@@ -16,12 +16,12 @@ type updateTag struct {
 type newArticle struct {
 	Title   string    `json:"title" validate:"required,gt=1"`
 	Content string    `json:"content" validate:"required,gt=1"`
-	Tags    []*UnitId `json:"tags"`
+	Tags    []*UnitId `json:"tags,omitempty"`
 }
 
 type UpdateArticle struct {
 	UnitId
 	Title   string    `json:"title,omitempty" validate:"omitempty,gt=1"`
 	Content string    `json:"content,omitempty" validate:"omitempty,gt=1"`
-	Tags    []*UnitId `json:"tags"`
+	Tags    []*UnitId `json:"tags,omitempty"`
 }

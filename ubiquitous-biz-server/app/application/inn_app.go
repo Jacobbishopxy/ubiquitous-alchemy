@@ -5,11 +5,15 @@ import (
 	"ubiquitous-biz-server/app/domain/entity"
 )
 
-type innApp struct {
+type InnApp struct {
 	ib behavior.InnBehavior
 }
 
-var _ InnApplication = &innApp{}
+func NewInnApp(ib behavior.InnBehavior) *InnApp {
+	return &InnApp{ib}
+}
+
+var _ InnApplication = &InnApp{}
 
 type InnApplication interface {
 	SaveTag(*entity.Tag) (*entity.Tag, error)
@@ -25,44 +29,43 @@ type InnApplication interface {
 	DeleteArticle(uint) error
 }
 
-func (ia *innApp) SaveTag(tag *entity.Tag) (*entity.Tag, error) {
+func (ia *InnApp) SaveTag(tag *entity.Tag) (*entity.Tag, error) {
 	return ia.ib.SaveTag(tag)
 }
 
-func (ia *innApp) GetTag(id uint) (*entity.Tag, error) {
+func (ia *InnApp) GetTag(id uint) (*entity.Tag, error) {
 	return ia.ib.GetTag(id)
 }
 
-func (ia *innApp) GetAllTag() ([]entity.Tag, error) {
+func (ia *InnApp) GetAllTag() ([]entity.Tag, error) {
 	return ia.ib.GetAllTag()
 }
 
-func (ia *innApp) UpdateTag(tag *entity.Tag) (*entity.Tag, error) {
+func (ia *InnApp) UpdateTag(tag *entity.Tag) (*entity.Tag, error) {
 	_, err := ia.ib.UpdateTag(tag)
 	if err != nil {
 		return nil, err
 	}
-	a, b := ia.ib.GetTag(tag.Id)
-	return a, b
+	return ia.ib.GetTag(tag.Id)
 }
 
-func (ia *innApp) DeleteTag(id uint) error {
+func (ia *InnApp) DeleteTag(id uint) error {
 	return ia.ib.DeleteTag(id)
 }
 
-func (ia *innApp) SaveArticle(article *entity.Article) (*entity.Article, error) {
+func (ia *InnApp) SaveArticle(article *entity.Article) (*entity.Article, error) {
 	return ia.ib.SaveArticle(article)
 }
 
-func (ia *innApp) GetArticle(id uint) (*entity.Article, error) {
+func (ia *InnApp) GetArticle(id uint) (*entity.Article, error) {
 	return ia.ib.GetArticle(id)
 }
 
-func (ia *innApp) GetAllArticle(pagination *entity.PaginationM10) ([]entity.Article, error) {
+func (ia *InnApp) GetAllArticle(pagination *entity.PaginationM10) ([]entity.Article, error) {
 	return ia.ib.GetAllArticle(pagination)
 }
 
-func (ia *innApp) UpdateArticle(article *entity.Article) (*entity.Article, error) {
+func (ia *InnApp) UpdateArticle(article *entity.Article) (*entity.Article, error) {
 	_, err := ia.ib.UpdateArticle(article)
 	if err != nil {
 		return nil, err
@@ -70,6 +73,6 @@ func (ia *innApp) UpdateArticle(article *entity.Article) (*entity.Article, error
 	return ia.ib.GetArticle(article.Id)
 }
 
-func (ia *innApp) DeleteArticle(id uint) error {
+func (ia *InnApp) DeleteArticle(id uint) error {
 	return ia.ib.DeleteArticle(id)
 }

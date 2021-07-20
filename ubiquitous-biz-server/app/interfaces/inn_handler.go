@@ -10,14 +10,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/jinzhu/copier"
 )
 
 type Inn struct {
 	validate *validator.Validate
-	innApp   application.InnApplication
+	innApp   application.InnApp
 }
 
-func NewInn(innApp application.InnApplication) *Inn {
+func NewInn(innApp application.InnApp) *Inn {
 	validate := validator.New()
 	return &Inn{validate, innApp}
 }
@@ -84,13 +85,10 @@ func (inn *Inn) UpdateTag(c *gin.Context) {
 		return
 	}
 
-	ut := entity.Tag{}
-	ut.Id = tag.Id
-	ut.Name = tag.Name
-	ut.Description = tag.Description
-	ut.Color = tag.Color
+	ut := new(entity.Tag)
+	copier.Copy(ut, tag)
 
-	t, err := inn.innApp.UpdateTag(&ut)
+	t, err := inn.innApp.UpdateTag(ut)
 	if err != nil {
 		util.ErrorJSON(c, http.StatusInternalServerError, err)
 		return
@@ -126,16 +124,19 @@ func (inn *Inn) SaveArticle(c *gin.Context) {
 		return
 	}
 
-	sa := entity.Article{}
-	sa.Title = article.Title
-	sa.Content = article.Content
+	sa := new(entity.Article)
+	copier.Copy(sa, article)
 	for _, t := range article.Tags {
-		et := &entity.Tag{}
+		if saveArticleError = inn.validate.Struct(t); saveArticleError != nil {
+			util.ErrorJSON(c, http.StatusBadRequest, saveArticleError)
+			return
+		}
+		et := new(entity.Tag)
 		et.Id = t.Id
 		sa.Tags = append(sa.Tags, et)
 	}
 
-	a, err := inn.innApp.SaveArticle(&sa)
+	a, err := inn.innApp.SaveArticle(sa)
 	if err != nil {
 		util.ErrorJSON(c, http.StatusInternalServerError, err)
 		return
@@ -195,10 +196,18 @@ func (inn *Inn) UpdateArticle(c *gin.Context) {
 		return
 	}
 
-	tmp := new(entity.Article)
-	tmp.Id = article.Id
+	ua := new(entity.Article)
+	copier.Copy(ua, article)
+	for _, t := range article.Tags {
+		if updateArticleError = inn.validate.Struct(t); updateArticleError != nil {
+			util.ErrorJSON(c, http.StatusBadRequest, updateArticleError)
+		}
+		et := new(entity.Tag)
+		et.Id = t.Id
+		ua.Tags = append(ua.Tags, et)
+	}
 
-	a, err := inn.innApp.UpdateArticle(&entity.Article{})
+	a, err := inn.innApp.UpdateArticle(ua)
 	if err != nil {
 		util.ErrorJSON(c, http.StatusInternalServerError, err)
 		return
