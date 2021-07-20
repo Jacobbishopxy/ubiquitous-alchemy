@@ -3,8 +3,8 @@ package persistence
 import (
 	"errors"
 	"fmt"
+	"ubiquitous-biz-server/app/domain/behavior"
 	"ubiquitous-biz-server/app/domain/entity"
-	"ubiquitous-biz-server/app/domain/repository"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -13,7 +13,7 @@ import (
 type Repositories struct {
 	db *gorm.DB
 
-	Inn repository.InnRepository
+	InnBehavior behavior.InnBehavior
 }
 
 type RepositoriesConfig struct {
@@ -36,8 +36,8 @@ func NewRepositories(config RepositoriesConfig) (*Repositories, error) {
 	}
 
 	return &Repositories{
-		db:  db,
-		Inn: NewInnRepository(db),
+		db:          db,
+		InnBehavior: NewInnRepository(db),
 	}, nil
 }
 

@@ -2,8 +2,9 @@ package persistence
 
 import (
 	"errors"
+	"ubiquitous-biz-server/app/domain/behavior"
 	"ubiquitous-biz-server/app/domain/entity"
-	"ubiquitous-biz-server/app/domain/repository"
+	"ubiquitous-biz-server/app/util"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -17,7 +18,7 @@ func NewInnRepository(db *gorm.DB) *InnRepo {
 	return &InnRepo{db}
 }
 
-var _ repository.InnRepository = &InnRepo{}
+var _ behavior.InnBehavior = &InnRepo{}
 
 func (inn *InnRepo) SaveTag(tag *entity.Tag) (*entity.Tag, error) {
 	err := inn.db.Debug().Create(&tag).Error
@@ -25,6 +26,18 @@ func (inn *InnRepo) SaveTag(tag *entity.Tag) (*entity.Tag, error) {
 		return nil, err
 	}
 	return tag, nil
+}
+
+func (inn *InnRepo) GetTag(id uint) (*entity.Tag, error) {
+	var tag entity.Tag
+	err := inn.db.Debug().First(tag, id).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, util.NewBizError(err.Error())
+		}
+		return nil, util.NewBizError(err.Error())
+	}
+	return &tag, nil
 }
 
 func (inn *InnRepo) GetAllTag() ([]entity.Tag, error) {
@@ -48,7 +61,7 @@ func (inn *InnRepo) UpdateTag(tag *entity.Tag) (*entity.Tag, error) {
 	return tag, nil
 }
 
-func (inn *InnRepo) DeleteTag(id uint64) error {
+func (inn *InnRepo) DeleteTag(id uint) error {
 	var tag entity.Tag
 	err := inn.db.Debug().Where("id = ?", id).Association("Articles").Delete(&tag).Error
 	if err != nil {
@@ -63,6 +76,18 @@ func (inn *InnRepo) SaveArticle(article *entity.Article) (*entity.Article, error
 		return nil, err
 	}
 	return article, nil
+}
+
+func (inn *InnRepo) GetArticle(id uint) (*entity.Article, error) {
+	var article entity.Article
+	err := inn.db.Debug().First(article, id).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, util.NewBizError(err.Error())
+		}
+		return nil, util.NewBizError(err.Error())
+	}
+	return &article, nil
 }
 
 func (inn *InnRepo) GetAllArticle(pagination *entity.PaginationM10) ([]entity.Article, error) {
@@ -92,7 +117,7 @@ func (inn *InnRepo) UpdateArticle(article *entity.Article) (*entity.Article, err
 	return article, nil
 }
 
-func (inn *InnRepo) DeleteArticle(id uint64) error {
+func (inn *InnRepo) DeleteArticle(id uint) error {
 	var article entity.Article
 	err := inn.db.Debug().Where("id = ?", id).Association("Tags").Delete(&article).Error
 	if err != nil {

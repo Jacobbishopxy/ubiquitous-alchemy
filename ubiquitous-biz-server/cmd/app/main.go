@@ -39,7 +39,7 @@ func main() {
 	defer services.Close()
 	services.Automigrate()
 
-	inn := interfaces.NewInn(services.Inn)
+	inn := interfaces.NewInn(services.InnBehavior)
 
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
@@ -48,11 +48,13 @@ func main() {
 
 	groupInn := api.Group("/inn")
 
-	groupInn.GET("/tag", inn.GetAllTag)
+	groupInn.GET("/tags", inn.GetAllTag)
+	groupInn.GET("/tag/:id", inn.GetTag)
 	groupInn.POST("/tag", inn.SaveTag)
 	groupInn.PUT("/tag", inn.UpdateTag)
 	groupInn.DELETE("/tag/:id", inn.DeleteTag)
-	groupInn.GET("/article", inn.GetAllArticle)
+	groupInn.GET("/articles", inn.GetAllArticle)
+	groupInn.GET("/article/:id", inn.GetArticle)
 	groupInn.POST("/article", inn.SaveArticle)
 	groupInn.PUT("/article", inn.UpdateArticle)
 	groupInn.DELETE("/article/:id", inn.DeleteArticle)

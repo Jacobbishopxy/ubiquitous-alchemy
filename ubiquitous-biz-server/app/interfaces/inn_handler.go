@@ -14,10 +14,10 @@ import (
 
 type Inn struct {
 	validate *validator.Validate
-	innApp   application.InnAppInterface
+	innApp   application.InnApplication
 }
 
-func NewInn(innApp application.InnAppInterface) *Inn {
+func NewInn(innApp application.InnApplication) *Inn {
 	validate := validator.New()
 	return &Inn{validate, innApp}
 }
@@ -46,6 +46,21 @@ func (inn *Inn) SaveTag(c *gin.Context) {
 	}
 
 	util.SuccessJSON(c, http.StatusOK, t)
+}
+
+func (inn *Inn) GetTag(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		util.ErrorJSON(c, http.StatusBadRequest, err)
+		return
+	}
+	tag, err := inn.innApp.GetTag(uint(id))
+	if err != nil {
+		util.ErrorJSON(c, http.StatusInternalServerError, err)
+		return
+	}
+	util.SuccessJSON(c, http.StatusOK, tag)
 }
 
 func (inn *Inn) GetAllTag(c *gin.Context) {
@@ -91,7 +106,7 @@ func (inn *Inn) DeleteTag(c *gin.Context) {
 		util.ErrorJSON(c, http.StatusBadRequest, err)
 		return
 	}
-	err = inn.innApp.DeleteTag(id)
+	err = inn.innApp.DeleteTag(uint(id))
 	if err != nil {
 		util.ErrorJSON(c, http.StatusInternalServerError, err)
 		return
@@ -127,6 +142,21 @@ func (inn *Inn) SaveArticle(c *gin.Context) {
 	}
 
 	util.SuccessJSON(c, http.StatusOK, a)
+}
+
+func (inn *Inn) GetArticle(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		util.ErrorJSON(c, http.StatusBadRequest, err)
+		return
+	}
+	article, err := inn.innApp.GetArticle(uint(id))
+	if err != nil {
+		util.ErrorJSON(c, http.StatusInternalServerError, err)
+		return
+	}
+	util.SuccessJSON(c, http.StatusOK, article)
 }
 
 func (inn *Inn) GetAllArticle(c *gin.Context) {
@@ -184,7 +214,7 @@ func (inn *Inn) DeleteArticle(c *gin.Context) {
 		util.ErrorJSON(c, http.StatusBadRequest, err)
 		return
 	}
-	err = inn.innApp.DeleteArticle(id)
+	err = inn.innApp.DeleteArticle(uint(id))
 	if err != nil {
 		util.ErrorJSON(c, http.StatusInternalServerError, err)
 		return
