@@ -2,8 +2,8 @@ package persistence
 
 import (
 	"errors"
-	"ubiquitous-biz-server/app/domain/behavior"
 	"ubiquitous-biz-server/app/domain/entity"
+	"ubiquitous-biz-server/app/domain/repository"
 	"ubiquitous-biz-server/app/util"
 
 	"gorm.io/gorm"
@@ -18,7 +18,8 @@ func NewInnRepository(db *gorm.DB) *InnRepo {
 	return &InnRepo{db}
 }
 
-var _ behavior.InnBehavior = &InnRepo{}
+// Implementation of domian model
+var _ repository.Inn = &InnRepo{}
 
 func (inn *InnRepo) SaveTag(tag *entity.Tag) (*entity.Tag, error) {
 	err := inn.db.Debug().Create(&tag).Error
@@ -45,7 +46,7 @@ func (inn *InnRepo) GetAllTag() ([]entity.Tag, error) {
 	err := inn.db.Debug().Find(&tags).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("tag not found")
+			return nil, util.NewBizError("tag not found")
 
 		}
 		return nil, err
@@ -104,7 +105,7 @@ func (inn *InnRepo) GetAllArticle(pagination *entity.PaginationM10) ([]entity.Ar
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("article not found")
+			return nil, util.NewBizError("article not found")
 		}
 		return nil, err
 	}

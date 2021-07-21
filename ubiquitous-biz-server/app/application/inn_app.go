@@ -1,15 +1,15 @@
 package application
 
 import (
-	"ubiquitous-biz-server/app/domain/behavior"
 	"ubiquitous-biz-server/app/domain/entity"
+	"ubiquitous-biz-server/app/domain/repository"
 )
 
 type InnApp struct {
-	ib behavior.InnBehavior
+	ri repository.Inn
 }
 
-func NewInnApp(ib behavior.InnBehavior) *InnApp {
+func NewInnApp(ib repository.Inn) *InnApp {
 	return &InnApp{ib}
 }
 
@@ -30,49 +30,49 @@ type InnApplication interface {
 }
 
 func (ia *InnApp) SaveTag(tag *entity.Tag) (*entity.Tag, error) {
-	return ia.ib.SaveTag(tag)
+	return ia.ri.SaveTag(tag)
 }
 
 func (ia *InnApp) GetTag(id uint) (*entity.Tag, error) {
-	return ia.ib.GetTag(id)
+	return ia.ri.GetTag(id)
 }
 
 func (ia *InnApp) GetAllTag() ([]entity.Tag, error) {
-	return ia.ib.GetAllTag()
+	return ia.ri.GetAllTag()
 }
 
 func (ia *InnApp) UpdateTag(tag *entity.Tag) (*entity.Tag, error) {
-	_, err := ia.ib.UpdateTag(tag)
+	_, err := ia.ri.UpdateTag(tag)
 	if err != nil {
 		return nil, err
 	}
-	return ia.ib.GetTag(tag.Id)
+	return ia.ri.GetTag(tag.Id)
 }
 
 func (ia *InnApp) DeleteTag(id uint) error {
-	return ia.ib.DeleteTag(id)
+	return ia.ri.DeleteTag(id)
 }
 
 func (ia *InnApp) SaveArticle(article *entity.Article) (*entity.Article, error) {
-	return ia.ib.SaveArticle(article)
+	return ia.ri.SaveArticle(article)
 }
 
 func (ia *InnApp) GetArticle(id uint) (*entity.Article, error) {
-	return ia.ib.GetArticle(id)
+	return ia.ri.GetArticle(id)
 }
 
 func (ia *InnApp) GetAllArticle(pagination *entity.PaginationM10) ([]entity.Article, error) {
-	return ia.ib.GetAllArticle(pagination)
+	return ia.ri.GetAllArticle(pagination)
 }
 
 func (ia *InnApp) UpdateArticle(article *entity.Article) (*entity.Article, error) {
-	_, err := ia.ib.UpdateArticle(article)
+	_, err := ia.ri.UpdateArticle(article)
 	if err != nil {
 		return nil, err
 	}
-	return ia.ib.GetArticle(article.Id)
+	return ia.ri.GetArticle(article.Id)
 }
 
 func (ia *InnApp) DeleteArticle(id uint) error {
-	return ia.ib.DeleteArticle(id)
+	return ia.ri.DeleteArticle(id)
 }

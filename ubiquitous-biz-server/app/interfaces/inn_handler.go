@@ -13,17 +13,32 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-type Inn struct {
+type InnHandler struct {
 	validate *validator.Validate
 	innApp   application.InnApp
 }
 
-func NewInn(innApp application.InnApp) *Inn {
+func NewInnHandler(innApp application.InnApp) *InnHandler {
 	validate := validator.New()
-	return &Inn{validate, innApp}
+	return &InnHandler{validate, innApp}
 }
 
-func (inn *Inn) SaveTag(c *gin.Context) {
+func (ih *InnHandler) Register(router *gin.RouterGroup) {
+	inn := router.Group("/inn")
+
+	inn.GET("/tags", ih.GetAllTag)
+	inn.GET("/tag/:id", ih.GetTag)
+	inn.POST("/tag", ih.SaveTag)
+	inn.PUT("/tag", ih.UpdateTag)
+	inn.DELETE("/tag/:id", ih.DeleteTag)
+	inn.GET("/articles", ih.GetAllArticle)
+	inn.GET("/article/:id", ih.GetArticle)
+	inn.POST("/article", ih.SaveArticle)
+	inn.PUT("/article", ih.UpdateArticle)
+	inn.DELETE("/article/:id", ih.DeleteArticle)
+}
+
+func (inn *InnHandler) SaveTag(c *gin.Context) {
 	var saveTagError error
 	var tag newTag
 
@@ -49,7 +64,7 @@ func (inn *Inn) SaveTag(c *gin.Context) {
 	util.SuccessJSON(c, http.StatusOK, t)
 }
 
-func (inn *Inn) GetTag(c *gin.Context) {
+func (inn *InnHandler) GetTag(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
@@ -64,7 +79,7 @@ func (inn *Inn) GetTag(c *gin.Context) {
 	util.SuccessJSON(c, http.StatusOK, tag)
 }
 
-func (inn *Inn) GetAllTag(c *gin.Context) {
+func (inn *InnHandler) GetAllTag(c *gin.Context) {
 	allTag, err := inn.innApp.GetAllTag()
 	if err != nil {
 		util.ErrorJSON(c, http.StatusInternalServerError, err)
@@ -73,7 +88,7 @@ func (inn *Inn) GetAllTag(c *gin.Context) {
 	util.SuccessJSON(c, http.StatusOK, allTag)
 }
 
-func (inn *Inn) UpdateTag(c *gin.Context) {
+func (inn *InnHandler) UpdateTag(c *gin.Context) {
 	var updateTagError error
 	var tag updateTag
 
@@ -97,7 +112,7 @@ func (inn *Inn) UpdateTag(c *gin.Context) {
 	util.SuccessJSON(c, http.StatusOK, t)
 }
 
-func (inn *Inn) DeleteTag(c *gin.Context) {
+func (inn *InnHandler) DeleteTag(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
@@ -112,7 +127,7 @@ func (inn *Inn) DeleteTag(c *gin.Context) {
 	util.SuccessJSON(c, http.StatusOK, fmt.Sprintf("tag %v deleted", id))
 }
 
-func (inn *Inn) SaveArticle(c *gin.Context) {
+func (inn *InnHandler) SaveArticle(c *gin.Context) {
 	var saveArticleError error
 	var article newArticle
 
@@ -145,7 +160,7 @@ func (inn *Inn) SaveArticle(c *gin.Context) {
 	util.SuccessJSON(c, http.StatusOK, a)
 }
 
-func (inn *Inn) GetArticle(c *gin.Context) {
+func (inn *InnHandler) GetArticle(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
@@ -160,7 +175,7 @@ func (inn *Inn) GetArticle(c *gin.Context) {
 	util.SuccessJSON(c, http.StatusOK, article)
 }
 
-func (inn *Inn) GetAllArticle(c *gin.Context) {
+func (inn *InnHandler) GetAllArticle(c *gin.Context) {
 	limitQuery := c.Query("limit")
 	limit, err := strconv.ParseUint(limitQuery, 10, 64)
 	if err != nil {
@@ -184,7 +199,7 @@ func (inn *Inn) GetAllArticle(c *gin.Context) {
 	util.SuccessJSON(c, http.StatusOK, allArticle)
 }
 
-func (inn *Inn) UpdateArticle(c *gin.Context) {
+func (inn *InnHandler) UpdateArticle(c *gin.Context) {
 	var updateArticleError error
 	var article UpdateArticle
 
@@ -216,7 +231,7 @@ func (inn *Inn) UpdateArticle(c *gin.Context) {
 	util.SuccessJSON(c, http.StatusOK, a)
 }
 
-func (inn *Inn) DeleteArticle(c *gin.Context) {
+func (inn *InnHandler) DeleteArticle(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {

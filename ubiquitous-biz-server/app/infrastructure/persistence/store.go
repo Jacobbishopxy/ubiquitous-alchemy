@@ -1,10 +1,10 @@
 package persistence
 
 import (
-	"errors"
 	"fmt"
-	"ubiquitous-biz-server/app/domain/behavior"
 	"ubiquitous-biz-server/app/domain/entity"
+	"ubiquitous-biz-server/app/domain/repository"
+	"ubiquitous-biz-server/app/util"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -13,7 +13,7 @@ import (
 type Repositories struct {
 	db *gorm.DB
 
-	InnBehavior behavior.InnBehavior
+	InnRepo repository.Inn
 }
 
 type RepositoriesConfig struct {
@@ -36,15 +36,15 @@ func NewRepositories(config RepositoriesConfig) (*Repositories, error) {
 	}
 
 	return &Repositories{
-		db:          db,
-		InnBehavior: NewInnRepository(db),
+		db:      db,
+		InnRepo: NewInnRepository(db),
 	}, nil
 }
 
 func (s *Repositories) Close() error {
 	d, err := s.db.DB()
 	if err != nil {
-		return errors.New("Close connection failed")
+		return util.NewBizError("Close connection failed")
 	}
 	return d.Close()
 }

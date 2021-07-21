@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	AppEnv     string
+	ApiPrefix  string
 	ApiPort    string
 	DbDriver   string
 	DbHost     string
@@ -22,23 +23,15 @@ func LoadConfig(path string) (*Config, error) {
 		return nil, err
 	}
 
-	appEnv := os.Getenv("APP_ENV")
-	apiPort := os.Getenv("API_PORT")
-	dbDriver := os.Getenv("DB_DRIVER")
-	host := os.Getenv("DB_HOST")
-	password := os.Getenv("DB_PASSWORD")
-	user := os.Getenv("DB_USER")
-	dbName := os.Getenv("DB_NAME")
-	port := os.Getenv("DB_PORT")
-
 	return &Config{
-		AppEnv:     appEnv,
-		ApiPort:    apiPort,
-		DbDriver:   dbDriver,
-		DbHost:     host,
-		DbPassword: password,
-		DbUser:     user,
-		DbName:     dbName,
-		DbPort:     port,
+		AppEnv:     os.Getenv("APP_ENV"),
+		ApiPrefix:  os.Getenv("APP_PREFIX"),
+		ApiPort:    os.Getenv("API_PORT"),
+		DbDriver:   os.Getenv("DB_DRIVER"),
+		DbHost:     os.Getenv("DB_HOST"),
+		DbPassword: os.Getenv("DB_PASSWORD"),
+		DbUser:     os.Getenv("DB_USER"),
+		DbName:     os.Getenv("DB_NAME"),
+		DbPort:     os.Getenv("DB_PORT"),
 	}, nil
 }

@@ -1,8 +1,8 @@
-package behavior
+package repository
 
 import "ubiquitous-biz-server/app/domain/entity"
 
-type InnBehavior interface {
+type Inn interface {
 	SaveTag(*entity.Tag) (*entity.Tag, error)
 	GetTag(uint) (*entity.Tag, error)
 	GetAllTag() ([]entity.Tag, error)
