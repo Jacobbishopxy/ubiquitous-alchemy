@@ -2,37 +2,29 @@ package main
 
 import (
 	"log"
-	"os"
 	"ubiquitous-biz-server/app/application"
 	"ubiquitous-biz-server/app/infrastructure/persistence"
 	"ubiquitous-biz-server/app/interfaces"
 	"ubiquitous-biz-server/app/interfaces/middleware"
+	"ubiquitous-biz-server/app/util"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
-func init() {
-	if err := godotenv.Load(); err != nil {
-		log.Panicln("no env file found")
-	}
-}
-
 func main() {
-	dbDriver := os.Getenv("DB_DRIVER")
-	host := os.Getenv("DB_HOST")
-	password := os.Getenv("DB_PASSWORD")
-	user := os.Getenv("DB_USER")
-	dbName := os.Getenv("DB_NAME")
-	port := os.Getenv("DB_PORT")
+
+	config, err := util.LoadConfig(".env")
+	if err != nil {
+		panic("config not found")
+	}
 
 	services, err := persistence.NewRepositories(persistence.RepositoriesConfig{
-		DbDriver:   dbDriver,
-		DbHost:     host,
-		DbPassword: password,
-		DbUser:     user,
-		DbName:     dbName,
-		DbPort:     port,
+		DbDriver:   config.DbDriver,
+		DbHost:     config.DbHost,
+		DbPassword: config.DbPassword,
+		DbUser:     config.DbUser,
+		DbName:     config.DbName,
+		DbPort:     config.DbPort,
 	})
 	if err != nil {
 		panic(err)
@@ -61,9 +53,5 @@ func main() {
 	groupInn.PUT("/article", inn.UpdateArticle)
 	groupInn.DELETE("/article/:id", inn.DeleteArticle)
 
-	app_port := os.Getenv("PORT")
-	if app_port == "" {
-		app_port = "8071"
-	}
-	log.Fatal(r.Run(":" + app_port))
+	log.Fatal(r.Run(":" + config.ApiPort))
 }
