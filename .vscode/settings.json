@@ -6,12 +6,13 @@
   ],
   "rust-analyzer.linkedProjects": [
     "ubiquitous-data-server/Cargo.toml",
-    "ubiquitous-viz-server/Cargo.toml"
+    "ubiquitous-viz-server/Cargo.toml",
+    "ubiquitous-auth-server/Cargo.toml"
   ],
   "gopls": {
     "experimentalWorkspaceModule": true
   },
-  "cSpell.words": ["postgres"],
+  "cSpell.words": ["Lettre", "postgres"],
   "files.watcherExclude": {
     "**/target": true
   }

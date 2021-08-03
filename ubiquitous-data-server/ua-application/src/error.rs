@@ -1,6 +1,6 @@
 //!
 
-use actix_web::{dev, error::ResponseError, HttpResponse};
+use actix_web::{error::ResponseError, HttpResponse};
 use derive_more::Display;
 
 use dyn_conn::ConnStoreError;
@@ -48,24 +48,19 @@ impl From<ConnStoreError> for ServiceError {
 }
 
 impl ResponseError for ServiceError {
-    fn error_response(&self) -> HttpResponse<actix_web::dev::Body> {
+    fn error_response(&self) -> HttpResponse {
         match self {
             ServiceError::DaoError(e) => {
                 let e_s = serde_json::to_string(e)
                     .unwrap_or("message cannot be converted to string".to_owned());
-                HttpResponse::InternalServerError().body(dev::Body::from_message(e_s))
+                HttpResponse::InternalServerError().body(e_s)
             }
-            ServiceError::DaoNotFoundError(s) => {
-                HttpResponse::BadRequest().body(dev::Body::from_message(s.to_owned()))
+            ServiceError::DaoNotFoundError(s) => HttpResponse::BadRequest().body(s.to_owned()),
+            ServiceError::DaoAlreadyExistError(s) => HttpResponse::BadRequest().body(s.to_owned()),
+            ServiceError::InternalServerError => {
+                HttpResponse::InternalServerError().body("Internal Server Error")
             }
-            ServiceError::DaoAlreadyExistError(s) => {
-                HttpResponse::BadRequest().body(dev::Body::from_message(s.to_owned()))
-            }
-            ServiceError::InternalServerError => HttpResponse::InternalServerError()
-                .body(dev::Body::from_message("Internal Server Error")),
-            ServiceError::BadRequest(e) => {
-                HttpResponse::BadRequest().body(dev::Body::from_message(e.to_owned()))
-            }
+            ServiceError::BadRequest(e) => HttpResponse::BadRequest().body(e.to_owned()),
         }
     }
 }
