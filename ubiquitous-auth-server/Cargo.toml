@@ -5,6 +5,7 @@ edition = "2018"
 
 
 [dependencies]
+actix-identity = "0.4.0-beta.1"
 actix-web = "4.0.0-beta.8"
 chrono = { version = "0.4.19", features = ["serde"] }
 dotenv = "0.15.0"

@@ -5,7 +5,7 @@ use rbatis::crud::CRUD;
 use rbatis::rbatis::Rbatis;
 
 use crate::error::{ServiceError, ServiceResult};
-use crate::model::{Invitation, SimpleUser, User};
+use crate::model::{Invitation, User};
 
 pub struct Persistence {
     pub conn: String,
@@ -47,11 +47,20 @@ impl Persistence {
             })
     }
 
-    pub async fn save_user(&self, _user: &User) -> ServiceResult<User> {
-        todo!()
+    pub async fn get_user_by_email(&self, email: &str) -> ServiceResult<Option<User>> {
+        Ok(self.rb.fetch_by_column("email", &email.to_owned()).await?)
     }
 
-    pub async fn get_user_by_email(&self, _user: &SimpleUser) -> ServiceResult<User> {
-        todo!()
+    pub async fn save_user(&self, user: &User) -> ServiceResult<User> {
+        self.rb.save(user, &[]).await?;
+
+        self.get_user_by_email(&user.email)
+            .await
+            .and_then(|op| match op {
+                Some(u) => Ok(u),
+                None => Err(ServiceError::InternalServerError(
+                    "user not found".to_owned(),
+                )),
+            })
     }
 }

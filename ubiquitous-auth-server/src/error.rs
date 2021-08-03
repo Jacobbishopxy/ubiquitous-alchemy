@@ -25,6 +25,9 @@ pub enum ServiceError {
 
     #[error("persistence error")]
     PersistenceError(#[from] rbatis::Error),
+
+    #[error("web error")]
+    WebError(#[from] actix_web::Error),
 }
 
 impl ResponseError for ServiceError {
@@ -45,6 +48,7 @@ impl ResponseError for ServiceError {
             ServiceError::PersistenceError(e) => {
                 HttpResponse::InternalServerError().body(e.to_string())
             }
+            ServiceError::WebError(e) => e.error_response(),
         }
     }
 }
