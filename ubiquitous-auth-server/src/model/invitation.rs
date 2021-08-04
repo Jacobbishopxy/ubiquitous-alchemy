@@ -3,7 +3,7 @@ use rbatis::crud_table;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[crud_table(table_name:invitation | formats_pg:"id:{}::uuid")]
+#[crud_table(table_name:"invitation" | formats_pg:"id:{}::uuid,expires_at:{}::timestamp")]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Invitation {
     pub id: Option<Uuid>,

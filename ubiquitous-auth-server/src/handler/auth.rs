@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use actix_identity::Identity;
 use actix_web::ResponseError;
 use actix_web::{dev::Payload, web, FromRequest, HttpRequest, HttpResponse};
@@ -36,7 +38,7 @@ impl FromRequest for LoggedUser {
 pub async fn login(
     auth_req: web::Json<AuthReq>,
     id: Identity,
-    persistence: web::Data<Persistence>,
+    persistence: web::Data<Arc<Persistence>>,
 ) -> HttpResponse {
     let user = match persistence.get_user_by_email(&auth_req.email).await {
         Ok(op) => op,

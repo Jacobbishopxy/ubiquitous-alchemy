@@ -12,7 +12,7 @@
   "gopls": {
     "experimentalWorkspaceModule": true
   },
-  "cSpell.words": ["Lettre", "postgres"],
+  "cSpell.words": ["Lettre", "VARCHAR", "postgres"],
   "files.watcherExclude": {
     "**/target": true
   }

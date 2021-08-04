@@ -53,3 +53,60 @@ impl EmailService {
             .send(subject, &body)
     }
 }
+
+#[test]
+fn test_send_invitation() {
+    use std::assert_matches::assert_matches;
+    use std::convert::TryInto;
+
+    use uuid::Uuid;
+
+    use super::*;
+    use crate::constant::CFG;
+
+    let sender = CFG
+        .get("SENDING_EMAIL_ADDRESS")
+        .unwrap()
+        .clone()
+        .try_into()
+        .expect("Err");
+    let smtp_username = CFG
+        .get("SMTP_USERNAME")
+        .unwrap()
+        .clone()
+        .try_into()
+        .expect("Err");
+    let smtp_password = CFG
+        .get("SMTP_PASSWORD")
+        .unwrap()
+        .clone()
+        .try_into()
+        .expect("Err");
+    let smtp_host = CFG
+        .get("SMTP_HOST")
+        .unwrap()
+        .clone()
+        .try_into()
+        .expect("Err");
+    let smtp_port: u32 = CFG
+        .get("SMTP_PORT")
+        .unwrap()
+        .clone()
+        .try_into()
+        .expect("Err");
+
+    let es = EmailService::new(
+        sender,
+        smtp_username,
+        smtp_password,
+        smtp_host,
+        smtp_port as u16,
+    );
+
+    let mut invitation: Invitation = "jacobxy@qq.com".into();
+    invitation.id = Some(Uuid::parse_str("02207087-ab01-4a57-ad8a-bcbcddf500ea").unwrap());
+
+    let res = es.send_invitation(&invitation);
+
+    assert_matches!(res, Ok(_));
+}

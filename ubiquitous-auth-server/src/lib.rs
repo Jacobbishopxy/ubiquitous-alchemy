@@ -1,3 +1,5 @@
+#![feature(assert_matches)]
+
 pub mod constant;
 pub mod error;
 pub mod handler;

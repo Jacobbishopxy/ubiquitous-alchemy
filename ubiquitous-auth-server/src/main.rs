@@ -13,7 +13,13 @@ async fn main() -> std::io::Result<()> {
     let (host, port) = (init_var.host.clone(), init_var.port.clone());
 
     let persistence = Persistence::new(&init_var.conn).await.expect("Err");
-    let persistence = Arc::new(persistence);
+
+    persistence
+        .initialize(init_var.init)
+        .await
+        .expect("Table initializing failed");
+
+    let persistence = web::Data::new(Arc::new(persistence));
 
     HttpServer::new(move || {
         let ids = IdentityService::new(
@@ -58,6 +64,7 @@ struct InitVar {
     port: String,
     secret_key: String,
     domain: String,
+    init: bool,
 }
 
 fn init() -> InitVar {
@@ -66,31 +73,37 @@ fn init() -> InitVar {
         .unwrap()
         .clone()
         .try_into()
-        .expect("Err");
+        .expect("DATABASE_URL convert error");
     let host: String = CFG
         .get("SERVICE_HOST")
         .unwrap()
         .clone()
         .try_into()
-        .expect("Err");
+        .expect("SERVICE_HOST convert error");
     let port: String = CFG
         .get("SERVICE_PORT")
         .unwrap()
         .clone()
         .try_into()
-        .expect("Err");
+        .expect("SERVICE_PORT convert error");
     let secret_key: String = CFG
         .get("SECRET_KEY")
         .unwrap()
         .clone()
         .try_into()
-        .expect("Err");
+        .expect("SECRET_KEY convert error");
     let domain: String = CFG
         .get("SECURITY_DOMAIN")
         .unwrap()
         .clone()
         .try_into()
-        .expect("Err");
+        .expect("SECURITY_DOMAIN convert error");
+    let init: bool = CFG
+        .get("PERSISTENCE_INIT")
+        .unwrap()
+        .clone()
+        .try_into()
+        .expect("PERSISTENCE_INIT convert error");
 
     InitVar {
         conn,
@@ -98,5 +111,6 @@ fn init() -> InitVar {
         port,
         secret_key,
         domain,
+        init,
     }
 }

@@ -52,20 +52,20 @@ impl PersistenceDao {
 
     /// initialize table
     pub async fn init_table(&self) -> Result<DBExecResult, Error> {
-        let init_table = r##"
+        let init_table = r#"
         CREATE TABLE IF NOT EXISTS
         conn_info(
-            id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
-            name VARCHAR,
+            id UUID PRIMARY KEY,
+            name VARCHAR NOT NULL,
             description TEXT,
-            driver VARCHAR,
-            username VARCHAR,
-            password VARCHAR,
-            host VARCHAR,
-            port INT,
-            database VARCHAR
+            driver VARCHAR NOT NULL,
+            username VARCHAR NOT NULL,
+            password VARCHAR NOT NULL,
+            host VARCHAR NOT NULL,
+            port INT NOT NOLL,
+            database VARCHAR NOT NULL
         );
-        "##;
+        "#;
 
         self.rb.exec(init_table, &vec![]).await
     }

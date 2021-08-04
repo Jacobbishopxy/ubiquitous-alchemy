@@ -9,6 +9,9 @@ pg-init:
 pg-evoke:
 	docker start postgres12
 
+pg-uuid:
+	docker exec -i postgres12 psql -U ${USER} -d ${DB} -c 'create extension if not exists "uuid-ossp"'
+
 pg-createdb:
 	docker exec -it postgres12 createdb --username=${USER} --owner=${USER} ${DB}
 

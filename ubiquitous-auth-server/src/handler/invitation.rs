@@ -1,4 +1,5 @@
 use std::convert::TryInto;
+use std::sync::Arc;
 
 use actix_web::{web, HttpResponse};
 use serde::Deserialize;
@@ -14,7 +15,7 @@ pub struct InvitationReq {
 
 pub async fn post_invitation(
     invitation_req: web::Json<InvitationReq>,
-    persistence: web::Data<Persistence>,
+    persistence: web::Data<Arc<Persistence>>,
 ) -> HttpResponse {
     match create_invitation_and_send_email(invitation_req.0.email, persistence).await {
         Ok(_) => HttpResponse::Ok().finish(),
@@ -24,7 +25,7 @@ pub async fn post_invitation(
 
 async fn create_invitation_and_send_email(
     email: String,
-    persistence: web::Data<Persistence>,
+    persistence: web::Data<Arc<Persistence>>,
 ) -> ServiceResult<()> {
     let sender = CFG
         .get("SENDING_EMAIL_ADDRESS")

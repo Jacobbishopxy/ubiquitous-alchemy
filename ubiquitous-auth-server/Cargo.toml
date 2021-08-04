@@ -1,5 +1,6 @@
 [package]
 name = "ubiquitous-auth-server"
+authors = ["JacobX <jacobbishopxy@gmail.com>"]
 version = "0.1.0"
 edition = "2018"
 
@@ -18,3 +19,6 @@ serde = { version = "1.0.127", features = ["derive"] }
 serde_json = "1.0.66"
 thiserror = "1.0.26"
 uuid = { version = "0.8.2", features = ["serde", "v4"] }
+
+[dev-dependencies]
+actix-rt = "2.2.0"

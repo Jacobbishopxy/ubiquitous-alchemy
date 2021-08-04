@@ -22,7 +22,8 @@ impl<'a> TryInto<Mailbox> for EmailAddress<'a> {
     type Error = ServiceError;
 
     fn try_into(self) -> ServiceResult<Mailbox> {
-        Ok(Mailbox::try_from((self.name.unwrap(), self.address))?)
+        let name = self.name.map_or("", |n| n);
+        Ok(Mailbox::try_from((name, self.address))?)
     }
 }
 

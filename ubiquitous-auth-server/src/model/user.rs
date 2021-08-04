@@ -2,7 +2,7 @@ use chrono::NaiveDateTime;
 use rbatis::crud_table;
 use serde::{Deserialize, Serialize};
 
-#[crud_table(table_name::user)]
+#[crud_table(table_name:"users" | formats_pg:"created_at:{}::timestamp")]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
     pub email: String,

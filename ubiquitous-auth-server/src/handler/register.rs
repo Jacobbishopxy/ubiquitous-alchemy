@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use actix_web::{web, HttpResponse, ResponseError};
 use serde::Deserialize;
 
@@ -14,7 +16,7 @@ pub struct UserReq {
 pub async fn register_user(
     invitation_id: web::Path<String>,
     user_req: web::Json<UserReq>,
-    persistence: web::Data<Persistence>,
+    persistence: web::Data<Arc<Persistence>>,
 ) -> HttpResponse {
     let invitation = match persistence.get_invitation_by_email(&invitation_id).await {
         Ok(op) => op,

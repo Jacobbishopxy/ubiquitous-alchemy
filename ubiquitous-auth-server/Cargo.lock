@@ -2900,6 +2900,7 @@ name = "ubiquitous-auth-server"
 version = "0.1.0"
 dependencies = [
  "actix-identity",
+ "actix-rt",
  "actix-web",
  "chrono",
  "dotenv",
