@@ -10,3 +10,16 @@ pub struct Invitation {
     pub email: String,
     pub expires_at: NaiveDateTime,
 }
+
+impl<T> From<T> for Invitation
+where
+    T: Into<String>,
+{
+    fn from(email: T) -> Self {
+        Invitation {
+            id: None,
+            email: email.into(),
+            expires_at: chrono::Local::now().naive_local() + chrono::Duration::hours(24),
+        }
+    }
+}

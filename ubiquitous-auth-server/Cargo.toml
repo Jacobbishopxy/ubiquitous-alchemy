@@ -9,6 +9,7 @@ actix-identity = "0.4.0-beta.1"
 actix-web = "4.0.0-beta.8"
 chrono = { version = "0.4.19", features = ["serde"] }
 dotenv = "0.15.0"
+futures = "0.3.16"
 lazy_static = "1.4.0"
 lettre = "0.10.0-rc.3"
 rbatis = "2.0.20"
