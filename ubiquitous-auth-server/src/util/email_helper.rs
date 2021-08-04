@@ -1,6 +1,6 @@
 use std::convert::{TryFrom, TryInto};
 
-use lettre::message::{Mailbox, MessageBuilder};
+use lettre::message::{Mailbox, MessageBuilder, MultiPart, SinglePart};
 use lettre::transport::smtp::authentication::{Credentials, Mechanism};
 use lettre::transport::smtp::SmtpTransportBuilder;
 use lettre::{Message, SmtpTransport, Transport};
@@ -28,20 +28,21 @@ impl<'a> TryInto<Mailbox> for EmailAddress<'a> {
 }
 
 #[derive(Clone)]
-pub struct InsecureEmailHelper {
+pub struct EmailHelper {
     mailer_builder: SmtpTransportBuilder,
     message_builder: MessageBuilder,
 }
 
-impl InsecureEmailHelper {
+impl EmailHelper {
     pub fn new(username: String, password: String, host: String, port: u16) -> Self {
-        let server = format!("{:?}:{:?}", host, port);
         let creds = Credentials::new(username, password);
-        let mailer = SmtpTransport::builder_dangerous(server)
+        let mailer = SmtpTransport::relay(&host)
+            .unwrap()
+            .port(port)
             .credentials(creds)
             .authentication(vec![Mechanism::Plain]);
 
-        InsecureEmailHelper {
+        EmailHelper {
             mailer_builder: mailer,
             message_builder: Message::builder(),
         }
@@ -81,12 +82,13 @@ impl InsecureEmailHelper {
         Ok(self)
     }
 
+    // TODO: MultiPart & SinglePart
     pub fn send(&self, subject: &str, body: &str) -> ServiceResult<()> {
         let email = self
             .message_builder
             .clone()
             .subject(subject)
-            .body(body.to_owned())?;
+            .multipart(MultiPart::mixed().singlepart(SinglePart::html(body.to_owned())))?;
         let mailer = self.mailer_builder.clone().build();
 
         match mailer.send(&email) {

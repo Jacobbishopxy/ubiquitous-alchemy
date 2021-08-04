@@ -1,10 +1,10 @@
 use crate::error::{ServiceError, ServiceResult};
 use crate::model::Invitation;
-use crate::util::{EmailAddress, InsecureEmailHelper};
+use crate::util::{EmailAddress, EmailHelper};
 
 pub struct EmailService {
     sender: String,
-    helper: InsecureEmailHelper,
+    helper: EmailHelper,
 }
 
 impl EmailService {
@@ -15,7 +15,7 @@ impl EmailService {
         host: String,
         port: u16,
     ) -> Self {
-        let helper = InsecureEmailHelper::new(username, password, host, port);
+        let helper = EmailHelper::new(username, password, host, port);
 
         Self { sender, helper }
     }
@@ -33,9 +33,12 @@ impl EmailService {
         };
         let body = format!(
             r#"
-            Please click on the link below to complete registration. <br/>
-            <a href=\"http://localhost:3000/register.html?id={}&email={}\">
-            http://localhost:3030/register</a> <br/>
+            Please click on the link below to complete registration.
+            <br/>
+            <a href="http://localhost:3000/register.html?id={}&email={}">
+            http://localhost:3030/register
+            </a>
+            <br/>
             your Invitation expires on <strong>{}</strong>
             "#,
             id,
