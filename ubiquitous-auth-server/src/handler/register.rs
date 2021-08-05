@@ -1,8 +1,10 @@
+use std::convert::TryInto;
 use std::sync::Arc;
 
 use actix_web::{web, HttpResponse, ResponseError};
 use serde::Deserialize;
 
+use crate::model::user::Role;
 use crate::model::User;
 use crate::service::Persistence;
 use crate::util::encryption;
@@ -10,7 +12,9 @@ use crate::util::encryption;
 #[derive(Debug, Deserialize)]
 pub struct UserReq {
     pub email: String,
+    pub nickname: String,
     pub password: String,
+    pub role: String,
 }
 
 pub async fn register_user(
@@ -29,7 +33,13 @@ pub async fn register_user(
                     Ok(pwd) => pwd,
                     Err(e) => return e.error_response(),
                 };
-                let user = User::from_details(user_req.0.email, password);
+                let role: Role = match user_req.0.role.try_into() {
+                    Ok(r) => r,
+                    Err(e) => return e.error_response(),
+                };
+                let user =
+                    User::from_details(user_req.0.nickname, user_req.0.email, password, role);
+
                 match persistence.save_user(&user).await {
                     Ok(_) => return HttpResponse::Ok().finish(),
                     Err(e) => return e.error_response(),

@@ -44,7 +44,9 @@ impl Persistence {
             CREATE TABLE IF NOT EXISTS
             users(
                 email VARCHAR(100) PRIMARY KEY,
+                nickname VARCHAR(100) NOT NULL,
                 hash VARCHAR(122) NOT NULL,
+                role VARCHAR(50) NOT NULL,
                 created_at TIMESTAMP NOT NULL
             )
             "#;
@@ -83,7 +85,9 @@ impl Persistence {
 
 #[cfg(test)]
 mod persistence_test {
-    use std::assert_matches::assert_matches;
+    use std::{assert_matches::assert_matches, convert::TryInto};
+
+    use crate::model::user::Role;
 
     use super::*;
 
@@ -124,7 +128,8 @@ mod persistence_test {
     async fn save_user_test() {
         let p = Persistence::new(CONN).await.unwrap();
 
-        let user = User::from_details("jacob@example.com", "pwd");
+        let role: Role = "admin".to_owned().try_into().unwrap();
+        let user = User::from_details("Jacob", "jacob@example.com", "pwd", role);
 
         let res = p.save_user(&user).await;
 
