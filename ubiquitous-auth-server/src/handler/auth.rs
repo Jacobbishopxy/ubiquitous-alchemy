@@ -5,8 +5,7 @@ use actix_web::{web, HttpResponse, ResponseError};
 use serde::Deserialize;
 
 use crate::model::User;
-use crate::service::Persistence;
-use crate::util::encryption;
+use crate::service::{encryption, Persistence};
 
 #[derive(Debug, Deserialize)]
 pub struct AuthReq {

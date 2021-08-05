@@ -6,26 +6,23 @@ use rbatis::executor::Executor;
 use rbatis::rbatis::Rbatis;
 use uuid::Uuid;
 
+use crate::constant::CONFIG;
 use crate::error::{ServiceError, ServiceResult};
 use crate::model::{Invitation, User};
 
 pub struct Persistence {
-    pub conn: String,
     rb: Rbatis,
 }
 
 impl Persistence {
-    pub async fn new(conn: &str) -> ServiceResult<Self> {
+    pub async fn new() -> ServiceResult<Self> {
         let rb = Rbatis::new();
         let mut opt = DBPoolOptions::new();
 
         opt.connect_timeout = Duration::new(5, 0);
-        rb.link_opt(conn, &opt).await?;
+        rb.link_opt(&CONFIG.database_url, &opt).await?;
 
-        Ok(Persistence {
-            conn: conn.to_owned(),
-            rb,
-        })
+        Ok(Persistence { rb })
     }
 
     pub async fn initialize(&self, required: bool) -> ServiceResult<()> {
@@ -91,11 +88,9 @@ mod persistence_test {
 
     use super::*;
 
-    const CONN: &'static str = "postgresql://root:secret@localhost:5432/dev";
-
     #[actix_rt::test]
     async fn init_test() {
-        let p = Persistence::new(CONN).await.unwrap();
+        let p = Persistence::new().await.unwrap();
 
         let res = p.initialize(true).await;
 
@@ -104,7 +99,7 @@ mod persistence_test {
 
     #[actix_rt::test]
     async fn save_invitation_test() {
-        let p = Persistence::new(CONN).await.unwrap();
+        let p = Persistence::new().await.unwrap();
 
         let invitation: Invitation = "jacob@example.com".into();
 
@@ -115,7 +110,7 @@ mod persistence_test {
 
     #[actix_rt::test]
     async fn get_invitation_test() {
-        let p = Persistence::new(CONN).await.unwrap();
+        let p = Persistence::new().await.unwrap();
 
         let invitation = "jacob@example.com";
 
@@ -126,7 +121,7 @@ mod persistence_test {
 
     #[actix_rt::test]
     async fn save_user_test() {
-        let p = Persistence::new(CONN).await.unwrap();
+        let p = Persistence::new().await.unwrap();
 
         let role: Role = "admin".to_owned().try_into().unwrap();
         let user = User::from_details("Jacob", "jacob@example.com", "pwd", role);
@@ -138,7 +133,7 @@ mod persistence_test {
 
     #[actix_rt::test]
     async fn get_user_test() {
-        let p = Persistence::new(CONN).await.unwrap();
+        let p = Persistence::new().await.unwrap();
 
         let user = "jacob@example.com";
 

@@ -6,8 +6,7 @@ use serde::Deserialize;
 
 use crate::model::user::Role;
 use crate::model::User;
-use crate::service::Persistence;
-use crate::util::encryption;
+use crate::service::{encryption, Persistence};
 
 #[derive(Debug, Deserialize)]
 pub struct UserReq {

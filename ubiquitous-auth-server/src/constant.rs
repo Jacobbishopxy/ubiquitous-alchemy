@@ -1,6 +1,25 @@
-use std::{collections::HashMap, convert::TryInto};
+use std::convert::TryInto;
 
 use super::error::ServiceError;
+
+#[derive(Clone)]
+pub struct Config {
+    pub database_url: String,
+    pub is_secure: bool,
+    pub sending_email_addr: String,
+    pub secret_key: String,
+    pub secret_len: u32,
+    pub smtp_username: String,
+    pub smtp_password: String,
+    pub smtp_host: String,
+    pub smtp_port: u32,
+    pub invitation_page: String,
+    pub invitation_message: String,
+    pub persistence_init: bool,
+    pub service_host: String,
+    pub service_port: String,
+    pub cookie_duration_secs: u32,
+}
 
 pub enum CFGValue {
     String(String),
@@ -9,12 +28,7 @@ pub enum CFGValue {
 }
 
 lazy_static::lazy_static! {
-    pub static ref CFG: HashMap<&'static str, CFGValue> = {
-
-        dotenv::from_path(".env").ok();
-
-        let mut map = HashMap::new();
-
+    pub static ref CONFIG: Config = {
         let database_url = dotenv::var("DATABASE_URL").expect("Expected DATABASE_URL to be set in env!");
         let is_secure = dotenv::var("IS_SECURE").expect("Expected IS_SECURE to be set in env!").parse::<bool>().expect("IS_SECURE parse err!");
         let sending_email_addr = dotenv::var("SENDING_EMAIL_ADDRESS").expect("Expected SENDING_EMAIL_ADDRESS to be set in env!");
@@ -24,24 +38,30 @@ lazy_static::lazy_static! {
         let smtp_password = dotenv::var("SMTP_PASSWORD").expect("Expected SMTP_PASSWORD to be set in env!");
         let smtp_host = dotenv::var("SMTP_HOST").expect("Expected SMTP_HOST to be set in env!");
         let smtp_port = dotenv::var("SMTP_PORT").expect("Expected SMTP_PORT to be set in env!").parse::<u32>().expect("SMTP_PORT parse err!");
+        let invitation_page = dotenv::var("INVITATION_PAGE").expect("Expected INVITATION_PAGE to be set in env!");
+        let invitation_message = dotenv::var("INVITATION_MESSAGE").expect("Expected INVITATION_MESSAGE to be set in env!");
         let service_host = dotenv::var("SERVICE_HOST").expect("Expected SERVICE_HOST to be set in env!");
         let service_port = dotenv::var("SERVICE_PORT").expect("Expected SERVICE_PORT to be set in env!");
         let persistence_init = dotenv::var("PERSISTENCE_INIT").expect("Expected PERSISTENCE_INIT to be set in env!").parse::<bool>().expect("PERSISTENCE_INIT parse err!");
+        let cookie_duration_secs = dotenv::var("COOKIE_DURATION_SECS").map_or(0, |s| s.parse::<u32>().expect("SMTP_PORT parse err!"));
 
-        map.insert("DATABASE_URL", CFGValue::String(database_url));
-        map.insert("IS_SECURE", CFGValue::Bool(is_secure));
-        map.insert("SENDING_EMAIL_ADDRESS", CFGValue::String(sending_email_addr));
-        map.insert("SECRET_KEY", CFGValue::String(secret_key));
-        map.insert("SECRET_LEN", CFGValue::UInt(secret_len));
-        map.insert("SMTP_USERNAME", CFGValue::String(smtp_username));
-        map.insert("SMTP_PASSWORD", CFGValue::String(smtp_password));
-        map.insert("SMTP_HOST", CFGValue::String(smtp_host));
-        map.insert("SMTP_PORT", CFGValue::UInt(smtp_port));
-        map.insert("SERVICE_HOST", CFGValue::String(service_host));
-        map.insert("SERVICE_PORT", CFGValue::String(service_port));
-        map.insert("PERSISTENCE_INIT", CFGValue::Bool(persistence_init));
-
-        map
+        Config {
+            database_url,
+            is_secure,
+            sending_email_addr,
+            secret_key,
+            secret_len,
+            smtp_username,
+            smtp_password,
+            smtp_host,
+            smtp_port,
+            invitation_page,
+            invitation_message,
+            persistence_init,
+            service_host,
+            service_port,
+            cookie_duration_secs,
+        }
     };
 }
 
