@@ -4,7 +4,6 @@ use rbatis::core::db::DBPoolOptions;
 use rbatis::crud::{Skip, CRUD};
 use rbatis::executor::Executor;
 use rbatis::rbatis::Rbatis;
-use uuid::Uuid;
 
 use crate::constant::CONFIG;
 use crate::error::{ServiceError, ServiceResult};
@@ -52,16 +51,38 @@ impl Persistence {
         Ok(())
     }
 
-    pub async fn get_invitation_by_id(&self, id: &str) -> ServiceResult<Option<Invitation>> {
-        let id = Uuid::parse_str(id)?;
+    // pub async fn get_invitation_by_id(&self, id: &str) -> ServiceResult<Option<Invitation>> {
+    //     let id = uuid::Uuid::parse_str(id)?;
+    //     let w = self.rb.new_wrapper().eq("id", &id);
+    //     let r: Option<Invitation> = self.rb.fetch_by_wrapper(&w).await?;
+    //     Ok(r)
+    // }
 
+    // TODO: BUG? failed to get the correct row if database has more than one record
+    pub async fn get_invitation_by_id(&self, id: &str) -> ServiceResult<Option<Invitation>> {
+        let id = uuid::Uuid::parse_str(id)?;
         Ok(self.rb.fetch_by_column("id", &id).await?)
+    }
+
+    pub async fn get_invitation_by_email_and_latest_expired(
+        &self,
+        email: &str,
+    ) -> ServiceResult<Option<Invitation>> {
+        let w = self
+            .rb
+            .new_wrapper()
+            .eq("email", email)
+            .order_by(false, &["expires_at"])
+            .limit(1);
+
+        let r: Option<Invitation> = self.rb.fetch_by_wrapper(&w).await?;
+        Ok(r)
     }
 
     pub async fn save_invitation(&self, invitation: &Invitation) -> ServiceResult<Invitation> {
         self.rb.save(invitation, &[Skip::Column("id")]).await?;
 
-        self.get_invitation_by_id(&invitation.email)
+        self.get_invitation_by_email_and_latest_expired(&invitation.email)
             .await
             .and_then(|op| match op {
                 Some(i) => Ok(i),
@@ -109,12 +130,30 @@ mod persistence_test {
     }
 
     #[actix_rt::test]
-    async fn get_invitation_test() {
+    async fn get_invitation_by_email_test() {
         let p = Persistence::new().await.unwrap();
 
         let invitation = "jacob@example.com";
 
-        let res = p.get_invitation_by_id(&invitation).await;
+        let res = p
+            .get_invitation_by_email_and_latest_expired(&invitation)
+            .await;
+
+        println!("{:#?}", res);
+
+        assert_matches!(res, Ok(_));
+    }
+
+    #[actix_rt::test]
+    async fn get_invitation_by_id_test() {
+        let p = Persistence::new().await.unwrap();
+
+        // ??? cannot convert?
+        let id = " ";
+
+        let res = p.get_invitation_by_id(id).await;
+
+        println!("{:#?}", res);
 
         assert_matches!(res, Ok(_));
     }
@@ -124,7 +163,7 @@ mod persistence_test {
         let p = Persistence::new().await.unwrap();
 
         let role: Role = "admin".to_owned().try_into().unwrap();
-        let user = User::from_details("Jacob", "jacob@example.com", "pwd", role);
+        let user = User::from_details("Jacob", "jacob2@example.com", "pwd", role);
 
         let res = p.save_user(&user).await;
 

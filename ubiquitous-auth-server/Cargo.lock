@@ -1369,9 +1369,9 @@ checksum = "dd25036021b0de88a0aff6b850051563c6516d0bf53f8638938edbb9de732736"
 
 [[package]]
 name = "jobserver"
-version = "0.1.22"
+version = "0.1.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "972f5ae5d1cb9c6ae417789196c803205313edde988685da5e3aae0827b9e7fd"
+checksum = "f5ca711fd837261e14ec9e674f092cbb931d3fa1482b017ae59328ddc6f3212b"
 dependencies = [
  "libc",
 ]
@@ -2043,9 +2043,9 @@ dependencies = [
 
 [[package]]
 name = "rbatis"
-version = "2.0.20"
+version = "2.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67bac3599e8dcce2d1c270bf3933e30565b60ea6ce35ac2f4a511133a84bc240"
+checksum = "dbb9a1de4f7edf556134e4e4772996266e03490fa25a8d6b7e315cfb7e385e39"
 dependencies = [
  "async-trait",
  "chrono",
@@ -2088,9 +2088,9 @@ dependencies = [
 
 [[package]]
 name = "rbatis-macro-driver"
-version = "2.0.9"
+version = "2.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d1ea1c20fe3b740b0ae688b2ed643394fa8b00615881d7e200e6a581eab0cc16"
+checksum = "9c2afa0ed6114d795be458370a0bd71a45268d135addae55d7bffa6ca4aa7d9e"
 dependencies = [
  "html_parser",
  "proc-macro2",
@@ -2100,9 +2100,9 @@ dependencies = [
 
 [[package]]
 name = "rbatis_sql"
-version = "2.0.14"
+version = "2.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2df821da59fd9d7d12431277ec4dce621c8ff7a9b4fd7aaef9d376ad3aad40aa"
+checksum = "6462f927765c75c1e7b46c164a3dd125b102638bace81e81f74a38d28bb994f1"
 dependencies = [
  "async-trait",
  "base64",
@@ -2114,9 +2114,9 @@ dependencies = [
 
 [[package]]
 name = "rbatis_sql_macro"
-version = "2.0.13"
+version = "2.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "39fcffc9e1ec659dd0dafc706ab391f6600807c635ecf54f400e293b78eb3e19"
+checksum = "dd40b4e0076f5f67b248397418916027dbd4cfe7cdf2eac0d79ae2d95b8e3112"
 dependencies = [
  "async-trait",
  "base64",

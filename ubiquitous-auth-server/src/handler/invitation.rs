@@ -26,6 +26,6 @@ pub async fn post_invitation(
 
     match es.send_invitation(&invitation) {
         Ok(_) => HttpResponse::Ok().finish(),
-        Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
+        Err(e) => e.error_response(),
     }
 }

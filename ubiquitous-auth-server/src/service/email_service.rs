@@ -67,7 +67,7 @@ fn test_send_invitation() {
     let es = EmailService::new();
 
     // Change it to an available email address
-    let mut invitation: Invitation = "jacobxy@example.com".into();
+    let mut invitation: Invitation = "jacobxy@qq.com".into();
     invitation.id = Some(Uuid::parse_str("02207087-ab01-4a57-ad8a-bcbcddf500ea").unwrap());
 
     let res = es.send_invitation(&invitation);
