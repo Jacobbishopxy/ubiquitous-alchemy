@@ -27,6 +27,12 @@ async fn create_invitation_and_send_email(
     email: String,
     persistence: web::Data<Arc<Persistence>>,
 ) -> ServiceResult<()> {
+    let is_secure = CFG
+        .get("IS_SECURE")
+        .unwrap()
+        .clone()
+        .try_into()
+        .expect("Err");
     let sender = CFG
         .get("SENDING_EMAIL_ADDRESS")
         .unwrap()
@@ -59,6 +65,7 @@ async fn create_invitation_and_send_email(
         .expect("Err");
 
     let es = EmailService::new(
+        is_secure,
         sender,
         smtp_username,
         smtp_password,

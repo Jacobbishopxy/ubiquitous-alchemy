@@ -29,21 +29,36 @@ impl<'a> TryInto<Mailbox> for EmailAddress<'a> {
 
 #[derive(Clone)]
 pub struct EmailHelper {
+    pub is_secure: bool,
     mailer_builder: SmtpTransportBuilder,
     message_builder: MessageBuilder,
 }
 
 impl EmailHelper {
-    pub fn new(username: String, password: String, host: String, port: u16) -> Self {
+    pub fn new(
+        is_secure: bool,
+        username: String,
+        password: String,
+        host: String,
+        port: u16,
+    ) -> Self {
         let creds = Credentials::new(username, password);
-        let mailer = SmtpTransport::relay(&host)
-            .unwrap()
-            .port(port)
-            .credentials(creds)
-            .authentication(vec![Mechanism::Plain]);
+        let mailer_builder = if is_secure {
+            SmtpTransport::relay(&host)
+                .unwrap()
+                .port(port)
+                .credentials(creds)
+                .authentication(vec![Mechanism::Plain])
+        } else {
+            SmtpTransport::builder_dangerous(&host)
+                .port(port)
+                .credentials(creds)
+                .authentication(vec![Mechanism::Plain])
+        };
 
         EmailHelper {
-            mailer_builder: mailer,
+            is_secure,
+            mailer_builder,
             message_builder: Message::builder(),
         }
     }

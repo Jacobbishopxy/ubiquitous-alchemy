@@ -4,6 +4,7 @@ use rbatis::core::db::DBPoolOptions;
 use rbatis::crud::{Skip, CRUD};
 use rbatis::executor::Executor;
 use rbatis::rbatis::Rbatis;
+use uuid::Uuid;
 
 use crate::error::{ServiceError, ServiceResult};
 use crate::model::{Invitation, User};
@@ -52,14 +53,16 @@ impl Persistence {
         Ok(())
     }
 
-    pub async fn get_invitation_by_email(&self, email: &str) -> ServiceResult<Option<Invitation>> {
-        Ok(self.rb.fetch_by_column("email", &email.to_owned()).await?)
+    pub async fn get_invitation_by_id(&self, id: &str) -> ServiceResult<Option<Invitation>> {
+        let id = Uuid::parse_str(id)?;
+
+        Ok(self.rb.fetch_by_column("id", &id).await?)
     }
 
     pub async fn save_invitation(&self, invitation: &Invitation) -> ServiceResult<Invitation> {
         self.rb.save(invitation, &[Skip::Column("id")]).await?;
 
-        self.get_invitation_by_email(&invitation.email)
+        self.get_invitation_by_id(&invitation.email)
             .await
             .and_then(|op| match op {
                 Some(i) => Ok(i),
@@ -107,12 +110,34 @@ mod persistence_test {
     }
 
     #[actix_rt::test]
+    async fn get_invitation_test() {
+        let p = Persistence::new(CONN).await.unwrap();
+
+        let invitation = "jacob@example.com";
+
+        let res = p.get_invitation_by_id(&invitation).await;
+
+        assert_matches!(res, Ok(_));
+    }
+
+    #[actix_rt::test]
     async fn save_user_test() {
         let p = Persistence::new(CONN).await.unwrap();
 
         let user = User::from_details("jacob@example.com", "pwd");
 
         let res = p.save_user(&user).await;
+
+        assert_matches!(res, Ok(_));
+    }
+
+    #[actix_rt::test]
+    async fn get_user_test() {
+        let p = Persistence::new(CONN).await.unwrap();
+
+        let user = "jacob@example.com";
+
+        let res = p.get_user_by_email(user).await;
 
         assert_matches!(res, Ok(_));
     }

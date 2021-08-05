@@ -2904,7 +2904,6 @@ dependencies = [
  "actix-web",
  "chrono",
  "dotenv",
- "futures",
  "lazy_static",
  "lettre",
  "rbatis",

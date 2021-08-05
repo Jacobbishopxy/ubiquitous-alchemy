@@ -12,7 +12,9 @@ async fn main() -> std::io::Result<()> {
     let init_var = init();
     let (host, port) = (init_var.host.clone(), init_var.port.clone());
 
-    let persistence = Persistence::new(&init_var.conn).await.expect("Err");
+    let persistence = Persistence::new(&init_var.conn)
+        .await
+        .expect("Persistence connection error");
 
     persistence
         .initialize(init_var.init)
@@ -21,12 +23,11 @@ async fn main() -> std::io::Result<()> {
 
     let persistence = web::Data::new(Arc::new(persistence));
 
+    // TODO: config max age
     HttpServer::new(move || {
         let ids = IdentityService::new(
             CookieIdentityPolicy::new(init_var.secret_key.as_bytes())
                 .name("auth")
-                .path("/")
-                .domain(&init_var.domain)
                 .max_age_secs(86400 * 30) // 30 days duration
                 .secure(false),
         );
@@ -63,7 +64,6 @@ struct InitVar {
     host: String,
     port: String,
     secret_key: String,
-    domain: String,
     init: bool,
 }
 
@@ -92,12 +92,6 @@ fn init() -> InitVar {
         .clone()
         .try_into()
         .expect("SECRET_KEY convert error");
-    let domain: String = CFG
-        .get("SECURITY_DOMAIN")
-        .unwrap()
-        .clone()
-        .try_into()
-        .expect("SECURITY_DOMAIN convert error");
     let init: bool = CFG
         .get("PERSISTENCE_INIT")
         .unwrap()
@@ -110,7 +104,6 @@ fn init() -> InitVar {
         host,
         port,
         secret_key,
-        domain,
         init,
     }
 }

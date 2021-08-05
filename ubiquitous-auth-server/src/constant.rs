@@ -16,10 +16,10 @@ lazy_static::lazy_static! {
         let mut map = HashMap::new();
 
         let database_url = dotenv::var("DATABASE_URL").expect("Expected DATABASE_URL to be set in env!");
+        let is_secure = dotenv::var("IS_SECURE").expect("Expected IS_SECURE to be set in env!").parse::<bool>().expect("IS_SECURE parse err!");
         let sending_email_addr = dotenv::var("SENDING_EMAIL_ADDRESS").expect("Expected SENDING_EMAIL_ADDRESS to be set in env!");
         let secret_key = dotenv::var("SECRET_KEY").expect("Expected SECRET_KEY to be set in env!");
         let secret_len = dotenv::var("SECRET_LEN").expect("Expected SECRET_LEN to be set in env!").parse::<u32>().expect("SECRET_KEY parse err!");
-        let security_domain = dotenv::var("SECURITY_DOMAIN").expect("Expected SECURITY_DOMAIN to be set in env!");
         let smtp_username = dotenv::var("SMTP_USERNAME").expect("Expected SMTP_USERNAME to be set in env!");
         let smtp_password = dotenv::var("SMTP_PASSWORD").expect("Expected SMTP_PASSWORD to be set in env!");
         let smtp_host = dotenv::var("SMTP_HOST").expect("Expected SMTP_HOST to be set in env!");
@@ -29,10 +29,10 @@ lazy_static::lazy_static! {
         let persistence_init = dotenv::var("PERSISTENCE_INIT").expect("Expected PERSISTENCE_INIT to be set in env!").parse::<bool>().expect("PERSISTENCE_INIT parse err!");
 
         map.insert("DATABASE_URL", CFGValue::String(database_url));
+        map.insert("IS_SECURE", CFGValue::Bool(is_secure));
         map.insert("SENDING_EMAIL_ADDRESS", CFGValue::String(sending_email_addr));
         map.insert("SECRET_KEY", CFGValue::String(secret_key));
         map.insert("SECRET_LEN", CFGValue::UInt(secret_len));
-        map.insert("SECURITY_DOMAIN", CFGValue::String(security_domain));
         map.insert("SMTP_USERNAME", CFGValue::String(smtp_username));
         map.insert("SMTP_PASSWORD", CFGValue::String(smtp_password));
         map.insert("SMTP_HOST", CFGValue::String(smtp_host));

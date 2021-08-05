@@ -1,38 +1,16 @@
 use std::sync::Arc;
 
 use actix_identity::Identity;
-use actix_web::ResponseError;
-use actix_web::{dev::Payload, web, FromRequest, HttpRequest, HttpResponse};
-use futures::future::{err, ok, Ready};
+use actix_web::{web, HttpResponse, ResponseError};
 use serde::Deserialize;
 
-use crate::error::{ServiceError, ServiceResult};
-use crate::model::SimpleUser;
 use crate::service::Persistence;
+use crate::util::encryption;
 
 #[derive(Debug, Deserialize)]
 pub struct AuthReq {
     pub email: String,
     pub password: String,
-}
-
-pub type LoggedUser = SimpleUser;
-
-impl FromRequest for LoggedUser {
-    type Config = ();
-    type Error = ServiceError;
-    type Future = Ready<ServiceResult<LoggedUser>>;
-
-    fn from_request(req: &HttpRequest, payload: &mut Payload) -> Self::Future {
-        if let Ok(identity) = Identity::from_request(req, payload).into_inner() {
-            if let Some(user_json) = identity.identity() {
-                if let Ok(user) = serde_json::from_str(&user_json) {
-                    return ok(user);
-                }
-            }
-        }
-        err(ServiceError::Unauthorized("unauthorized".to_owned()).into())
-    }
 }
 
 pub async fn login(
@@ -44,21 +22,37 @@ pub async fn login(
         Ok(op) => op,
         Err(e) => return e.error_response(),
     };
-    match user {
-        Some(u) => {
-            let user_string = serde_json::to_string(&u).unwrap();
-            id.remember(user_string);
-            HttpResponse::Ok().finish()
+    if let Some(u) = user {
+        match encryption::verify_password(&u.hash, &auth_req.password) {
+            Ok(b) => {
+                if b {
+                    let user_string = serde_json::to_string(&u).unwrap();
+                    id.remember(user_string);
+                    return HttpResponse::Ok().body("Success");
+                } else {
+                    return HttpResponse::BadRequest().body("Password incorrect");
+                }
+            }
+            Err(e) => return e.error_response(),
         }
-        None => HttpResponse::BadRequest().body("Invalid user"),
+    }
+
+    HttpResponse::BadRequest().body("Invalid user")
+}
+
+pub async fn check_alive(id: Identity) -> HttpResponse {
+    match id.identity() {
+        Some(i) => HttpResponse::Ok().body(i),
+        None => HttpResponse::Unauthorized().body("unauthorized".to_owned()),
     }
 }
 
 pub async fn logout(id: Identity) -> HttpResponse {
-    id.forget();
-    HttpResponse::Ok().finish()
-}
+    match id.identity() {
+        Some(i) => println!("forgetting {:?}", i),
+        None => println!("forget failed"),
+    }
 
-pub async fn check_alive(logged_user: LoggedUser) -> HttpResponse {
-    HttpResponse::Ok().json(logged_user)
+    id.forget();
+    HttpResponse::Found().append_header(("auth", "/")).finish()
 }

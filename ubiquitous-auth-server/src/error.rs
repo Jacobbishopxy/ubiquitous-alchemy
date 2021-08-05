@@ -23,6 +23,9 @@ pub enum ServiceError {
     #[error("smtp error")]
     LettreSmtpError(#[from] lettre::transport::smtp::Error),
 
+    #[error("uuid error")]
+    UuidError(#[from] uuid::Error),
+
     #[error("persistence error")]
     PersistenceError(#[from] rbatis::Error),
 
@@ -45,6 +48,7 @@ impl ResponseError for ServiceError {
             ServiceError::LettreSmtpError(e) => {
                 HttpResponse::InternalServerError().body(e.to_string())
             }
+            ServiceError::UuidError(e) => HttpResponse::InternalServerError().body(e.to_string()),
             ServiceError::PersistenceError(e) => {
                 HttpResponse::InternalServerError().body(e.to_string())
             }

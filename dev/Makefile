@@ -3,6 +3,9 @@ ifneq (,$(wildcard ./dev.env))
     export
 endif
 
+listen:
+	lsof -i -P -n | grep LISTEN
+
 pg-init:
 	docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=${USER} -e POSTGRES_PASSWORD=${PASS} -d postgres:12-alpine
 
@@ -33,4 +36,4 @@ my-dropdb:
 redis-init:
 	docker run --name redis6 -p 6379:6379 -d redis:6 --requirepass "${PASS}"
 
-.PHONY: pg-init pg-createdb pg-dropdb my-init my-createdb my-dropdb redis-init
+.PHONY: listen pg-init pg-evoke pg-uuid pg-createdb pg-dropdb my-init my-evoke my-createdb my-dropdb redis-init

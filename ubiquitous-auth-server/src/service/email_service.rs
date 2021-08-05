@@ -9,13 +9,14 @@ pub struct EmailService {
 
 impl EmailService {
     pub fn new(
+        is_secure: bool,
         sender: String,
         username: String,
         password: String,
         host: String,
         port: u16,
     ) -> Self {
-        let helper = EmailHelper::new(username, password, host, port);
+        let helper = EmailHelper::new(is_secure, username, password, host, port);
 
         Self { sender, helper }
     }
@@ -35,7 +36,7 @@ impl EmailService {
             r#"
             Please click on the link below to complete registration.
             <br/>
-            <a href="http://localhost:3000/register.html?id={}&email={}">
+            <a href="http://localhost:3000/register?id={}&email={}">
             http://localhost:3030/register
             </a>
             <br/>
@@ -99,6 +100,7 @@ fn test_send_invitation() {
         .expect("Err");
 
     let es = EmailService::new(
+        false,
         sender,
         smtp_username,
         smtp_password,

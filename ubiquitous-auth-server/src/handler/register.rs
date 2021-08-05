@@ -18,7 +18,7 @@ pub async fn register_user(
     user_req: web::Json<UserReq>,
     persistence: web::Data<Arc<Persistence>>,
 ) -> HttpResponse {
-    let invitation = match persistence.get_invitation_by_email(&invitation_id).await {
+    let invitation = match persistence.get_invitation_by_id(&invitation_id).await {
         Ok(op) => op,
         Err(e) => return e.error_response(),
     };

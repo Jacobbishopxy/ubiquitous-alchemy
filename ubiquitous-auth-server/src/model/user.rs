@@ -19,14 +19,3 @@ impl User {
         }
     }
 }
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct SimpleUser {
-    pub email: String,
-}
-
-impl From<User> for SimpleUser {
-    fn from(user: User) -> Self {
-        SimpleUser { email: user.email }
-    }
-}
