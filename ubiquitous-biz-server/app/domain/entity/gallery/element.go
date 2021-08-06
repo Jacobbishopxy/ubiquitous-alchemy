@@ -37,5 +37,5 @@ type Element struct {
 	H          uint   `gorm:"not null" json:"h"`
 	W          uint   `gorm:"not null" json:"w"`
 	Template   Template
-	Contents   []*Content
+	Pointers   []*Pointer
 }

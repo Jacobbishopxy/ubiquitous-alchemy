@@ -2,31 +2,92 @@ package repository
 
 import "ubiquitous-biz-server/app/domain/entity/gallery"
 
-type Gallery interface {
-	NewCategory(category *gallery.Category) (*gallery.Category, error)
-	NewSymbol(symbol *gallery.Symbol) (*gallery.Symbol, error)
+type GalleryQuery interface {
+	ShowAllCategories() ([]gallery.Category, error)
 
-	AttachSymbolToCategory(symbolId, categoryId uint) (bool, error)
-	ModifySymbolInCategory(symbolId, categoryId uint) (bool, error)
-	RemoveSymbolFromCategory(symbolId, categoryId uint) (bool, error)
+	ShowAllPublicTags() ([]gallery.PublicTag, error)
 
-	CategoryNewMark(categoryId uint, mark *gallery.Mark) (*gallery.Mark, error)
-	CategoryRemoveMark(categoryId, markId uint) (bool, error)
-	CategoryNewDashboard(categoryId uint, dashboard *gallery.Dashboard) (*gallery.Dashboard, error)
+	CategoryShowAllPrivateTags(categoryId uint) ([]gallery.PrivateTag, error)
 
-	DashboardNewTemplate(dashboardId uint, template *gallery.Template) (*gallery.Template, error)
+	CategoryShowAllDashboards(categoryId uint) ([]gallery.Dashboard, error)
+
+	CategoryShowAllPointers(categoryId uint) ([]gallery.Pointer, error)
+
+	DashboardShowAllTemplates(dashboardId uint) ([]gallery.Template, error)
+
+	TemplateShowAllElements(templateId uint) ([]gallery.Element, error)
+
+	ElementShowAllPointers(elementId uint) ([]gallery.Pointer, error)
+
+	ElementShowPointer(elementId uint, condition interface{}) (gallery.Pointer, error)
+
+	ShowAllPointers(condition interface{}) ([]gallery.Pointer, error)
+}
+
+type GalleryMutation interface {
+	// Supervisor
+	CreateCategory(category *gallery.Category) (*gallery.Category, error)
+	// Supervisor
+	DeleteCategory(categoryId uint) error
+	// Admin
+	CreatePublicTag(publicTag *gallery.PublicTag) (*gallery.PublicTag, error)
+	// Admin
+	DeletePublicTag(publicTagId uint) error
+
+	// Editor
+	AttachPublicTagToCategory(categoryId, publicTagId uint) error
+	// Editor
+	ModifyPublicTagsInCategory(categoryId uint, publicTagIds []uint) error
+	// Editor
+	DetachPublicTagFromCategory(categoryId, publicTagId uint) error
+
+	// Editor
+	CreatePrivateTagToCategory(categoryId uint, privateTag *gallery.PrivateTag) (*gallery.PrivateTag, error)
+	// Editor
+	DeletePrivateTagFromCategory(privateTagId, categoryId uint) error
+
+	// Editor
+	CategoryCreateDashboard(categoryId uint, dashboard *gallery.Dashboard) (*gallery.Dashboard, error)
+	// Editor
+	DashboardCreateTemplate(dashboardId uint, template *gallery.Template) (*gallery.Template, error)
+	// Editor
 	DashboardModifyTemplate(dashboardId uint, template *gallery.Template) (*gallery.Template, error)
-	DashboardRemoveTemplate(dashboardId, templateId uint) (bool, error)
+	// Editor
+	DashboardDeleteTemplate(dashboardId, templateId uint) error
+	// Editor
+	DashboardCopyTemplate(originalDashboardId, originalTemplateId, targetDashboardId, targetTemplateId uint) error
 
-	TemplateNewElement(templateId uint, element *gallery.Element) (*gallery.Element, error)
+	// Editor
+	TemplateCreateElement(templateId uint, element *gallery.Element) (*gallery.Element, error)
+	// Editor
 	TemplateModifyElements(templateId uint, elements []gallery.Element) ([]gallery.Element, error)
-	TemplateRemoveElement(templateId, elementId uint) (bool, error)
+	// Editor
+	TemplateDeleteElement(templateId, elementId uint) error
 
-	NewContent(content *gallery.Content) (*gallery.Content, error)
-	AttachSymbolToContent(symbolId, contentId uint) (bool, error)
-	ModifySymbolInContent(symbolId, contentId uint) (bool, error)
-	RemoveSymbolFromContent(symbolId, contentId uint) (bool, error)
-	AttachMarksToContent(markIds []uint, contentId uint) (bool, error)
-	ModifyMarksInContent(markIds []uint, contentId uint) (bool, error)
-	RemoveMarksFromContent(markIds []uint, contentId uint) (bool, error)
+	// Editor
+	CreatePointer(pointer *gallery.Pointer) (*gallery.Pointer, error)
+	// Editor
+	DeletePointer(pointerId uint) error
+	// Editor
+	AttachPointerToCategory(categoryId, pointerId uint) error
+	// Editor
+	DetachPointerFromCategory(categoryId, pointerId uint) error
+	// Editor
+	AttachPointerToElement(elementId, pointerId uint) error
+	// Editor
+	DetachPointerFromElement(elementId, pointerId uint) error
+
+	// Editor
+	AttachPublicTagToPointer(pointerId, publicTagId uint) error
+	// Editor
+	ModifyPublicTagsInPointer(pointerId uint, publicTagIds []uint) error
+	// Editor
+	DetachPublicTagFromPointer(pointerId, symbolId uint) error
+
+	// Editor
+	AttachPrivateTagToPointer(pointerId, privateId uint) error
+	// Editor
+	ModifyPrivateTagsInPointer(pointerId uint, privateIds []uint) error
+	// Editor
+	DetachPrivateTagFromPointer(pointerId, privateId uint) error
 }

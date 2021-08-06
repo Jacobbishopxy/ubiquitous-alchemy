@@ -13,8 +13,8 @@ type CategoryBase struct {
 
 type Category struct {
 	CategoryBase
-	Symbols    []*Symbol `gorm:"many2many:category_symbol"`
-	Marks      []*Mark
-	Dashboards []*Dashboard
-	Contents   []*Content
+	PublicTags  []PublicTag `gorm:"many2many:category_symbol"`
+	PrivateTags []PrivateTag
+	Dashboards  []Dashboard
+	Pointers    []Pointer
 }
