@@ -97,13 +97,10 @@ impl Persistence {
 #[cfg(test)]
 mod persistence_test {
     use std::{assert_matches::assert_matches, convert::TryInto};
-    use uuid::Uuid;
 
     use crate::model::user::Role;
 
     use super::*;
-
-    const COMMON_ID: &'static str = "df07fea2-b819-4e05-b86d-dfc15a5f52a9";
 
     #[actix_rt::test]
     async fn init_test() {
@@ -119,17 +116,6 @@ mod persistence_test {
         let p = Persistence::new().await.unwrap();
 
         let invitation: Invitation = "jacob@example.com".into();
-
-        let res = p.save_invitation(&invitation).await;
-
-        assert_matches!(res, Ok(_));
-    }
-    #[actix_rt::test]
-    async fn save_invitation_with_id_test() {
-        let p = Persistence::new().await.unwrap();
-
-        let mut invitation: Invitation = "jacob2@example.com".into();
-        invitation.id = Some(Uuid::from_str(COMMON_ID).unwrap());
 
         let res = p.save_invitation(&invitation).await;
 
@@ -155,7 +141,9 @@ mod persistence_test {
     async fn get_invitation_by_id_test() {
         let p = Persistence::new().await.unwrap();
 
-        let res = p.get_invitation_by_id(COMMON_ID).await;
+        let res = p
+            .get_invitation_by_id("82834e08-6d73-4d29-9006-c240b4c3aa42")
+            .await;
 
         println!("{:#?}", res);
 
