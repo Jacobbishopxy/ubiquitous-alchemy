@@ -80,7 +80,7 @@ impl PersistenceDao {
             id: Some(id.clone()),
             ..conn_info.clone()
         };
-        self.rb.save(&conn_info).await
+        self.rb.save(&conn_info, &[]).await
     }
 
     /// load all info from DB

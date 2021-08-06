@@ -1,3 +1,4 @@
+use std::str::FromStr;
 use std::time::Duration;
 
 use rbatis::core::db::DBPoolOptions;
@@ -51,16 +52,8 @@ impl Persistence {
         Ok(())
     }
 
-    // pub async fn get_invitation_by_id(&self, id: &str) -> ServiceResult<Option<Invitation>> {
-    //     let id = uuid::Uuid::parse_str(id)?;
-    //     let w = self.rb.new_wrapper().eq("id", &id);
-    //     let r: Option<Invitation> = self.rb.fetch_by_wrapper(&w).await?;
-    //     Ok(r)
-    // }
-
-    // TODO: BUG? failed to get the correct row if database has more than one record
     pub async fn get_invitation_by_id(&self, id: &str) -> ServiceResult<Option<Invitation>> {
-        let id = uuid::Uuid::parse_str(id)?;
+        let id = uuid::Uuid::from_str(id)?;
         Ok(self.rb.fetch_by_column("id", &id).await?)
     }
 
@@ -104,10 +97,13 @@ impl Persistence {
 #[cfg(test)]
 mod persistence_test {
     use std::{assert_matches::assert_matches, convert::TryInto};
+    use uuid::Uuid;
 
     use crate::model::user::Role;
 
     use super::*;
+
+    const COMMON_ID: &'static str = "df07fea2-b819-4e05-b86d-dfc15a5f52a9";
 
     #[actix_rt::test]
     async fn init_test() {
@@ -123,6 +119,17 @@ mod persistence_test {
         let p = Persistence::new().await.unwrap();
 
         let invitation: Invitation = "jacob@example.com".into();
+
+        let res = p.save_invitation(&invitation).await;
+
+        assert_matches!(res, Ok(_));
+    }
+    #[actix_rt::test]
+    async fn save_invitation_with_id_test() {
+        let p = Persistence::new().await.unwrap();
+
+        let mut invitation: Invitation = "jacob2@example.com".into();
+        invitation.id = Some(Uuid::from_str(COMMON_ID).unwrap());
 
         let res = p.save_invitation(&invitation).await;
 
@@ -148,10 +155,7 @@ mod persistence_test {
     async fn get_invitation_by_id_test() {
         let p = Persistence::new().await.unwrap();
 
-        // ??? cannot convert?
-        let id = " ";
-
-        let res = p.get_invitation_by_id(id).await;
+        let res = p.get_invitation_by_id(COMMON_ID).await;
 
         println!("{:#?}", res);
 
@@ -163,7 +167,7 @@ mod persistence_test {
         let p = Persistence::new().await.unwrap();
 
         let role: Role = "admin".to_owned().try_into().unwrap();
-        let user = User::from_details("Jacob", "jacob2@example.com", "pwd", role);
+        let user = User::from_details("Jacob", "jacob@example.com", "pwd", role);
 
         let res = p.save_user(&user).await;
 

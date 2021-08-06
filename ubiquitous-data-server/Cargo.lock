@@ -1807,9 +1807,9 @@ dependencies = [
 
 [[package]]
 name = "rbatis"
-version = "2.0.13"
+version = "2.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "581e58b8027a4c77c60fb6e6efe81d0c271ca9e236ec0ceba7fbe62b38bb70d5"
+checksum = "dbb9a1de4f7edf556134e4e4772996266e03490fa25a8d6b7e315cfb7e385e39"
 dependencies = [
  "async-trait",
  "chrono",
@@ -1830,9 +1830,9 @@ dependencies = [
 
 [[package]]
 name = "rbatis-core"
-version = "2.0.7"
+version = "2.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d8863c7ef20554b053ee50819a7b9a04cde3c09b4877e8bb494fbf21b25a96ac"
+checksum = "ec8788347af1b05cc3d7033e07578a8ac36aa75035b490bf2ab58e7c0e2b79f6"
 dependencies = [
  "async-std",
  "bigdecimal",
@@ -1852,9 +1852,9 @@ dependencies = [
 
 [[package]]
 name = "rbatis-macro-driver"
-version = "2.0.9"
+version = "2.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d1ea1c20fe3b740b0ae688b2ed643394fa8b00615881d7e200e6a581eab0cc16"
+checksum = "9c2afa0ed6114d795be458370a0bd71a45268d135addae55d7bffa6ca4aa7d9e"
 dependencies = [
  "html_parser",
  "proc-macro2",
@@ -1864,9 +1864,9 @@ dependencies = [
 
 [[package]]
 name = "rbatis_sql"
-version = "2.0.13"
+version = "2.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b8064b6e3a40d7d7de5bd959ce36daf4acfb340666057db84319e564f2fdf109"
+checksum = "6462f927765c75c1e7b46c164a3dd125b102638bace81e81f74a38d28bb994f1"
 dependencies = [
  "async-trait",
  "base64",
