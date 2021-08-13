@@ -7,8 +7,8 @@ import {
   withRouter,
 } from "react-router-dom"
 
-import {Alert, Breadcrumb, } from "antd"
-import {Apps, DataLab} from "./pages"
+import {Breadcrumb, } from "antd"
+import {Apps} from "./pages"
 
 
 
@@ -41,20 +41,15 @@ const App = withRouter(props => {
       </header>
 
       <div className="App-body" >
-        <div className="demo">
-          <div className="demo-nav">
-            <Link to="/">Home</Link>
-            <Link to="/apps">Application List</Link>
-          </div>
-        </div>
+        <Breadcrumb>{breadcrumbItems}</Breadcrumb>
+
+        <Link to="/">Home</Link>
+        <Link to="/apps">Application List</Link>
+
         <Switch>
           <Route path="/apps" component={Apps} />
-          <Route path="/apps/datalab" component={DataLab} />
-
-          <Route render={() => <span>Home Page</span>} />
         </Switch>
-        <Alert style={{margin: '16px 0'}} message="Click the navigation above to switch:" />
-        <Breadcrumb>{breadcrumbItems}</Breadcrumb>
+
       </div>
 
       <div className="App-footer">
