@@ -1,36 +1,60 @@
 import './App.css'
 
-import {Tabs} from "antd"
+import {
+  Switch,
+  Route,
+  Link,
+  withRouter,
+} from "react-router-dom"
 
-import {checkConnection, createConn, listConn, deleteConn, updateConn} from "./services"
-import {DatabaseConfiguration, SelectionModalForm} from "./components"
+import {Alert, Breadcrumb, } from "antd"
+import {Apps, DataLab} from "./pages"
 
-//To Delete
-import {tableNameEnum, columnNameEnum} from "./components/QuerySelector/temp"
 
-function App() {
+
+const breadcrumbNameMap: Record<string, string> = {
+  '/apps': 'Application List',
+  '/apps/datalab': 'Data Lab',
+}
+
+const App = withRouter(props => {
+  const {location} = props
+  const pathSnippets = location.pathname.split('/').filter(i => i)
+  const extraBreadcrumbItems = pathSnippets.map((_, index) => {
+    const url = `/${pathSnippets.slice(0, index + 1).join('/')}`
+    return (
+      <Breadcrumb.Item key={url}>
+        <Link to={url}>{breadcrumbNameMap[url]}</Link>
+      </Breadcrumb.Item>
+    )
+  })
+  const breadcrumbItems = [
+    <Breadcrumb.Item key="home">
+      <Link to="/">Home</Link>
+    </Breadcrumb.Item>,
+  ].concat(extraBreadcrumbItems)
+
   return (
     <div className="App">
       <header className="App-header">
         Welcome
       </header>
+
       <div className="App-body" >
-        <div style={{width: "100%", backgroundColor: "white"}}>
-          <Tabs style={{margin: "10px"}}>
-            <Tabs.TabPane tab="Database Configation" key="db_config">
-              <DatabaseConfiguration
-                checkConnection={checkConnection}
-                listConn={listConn}
-                createConn={createConn}
-                updateConn={updateConn}
-                deleteConn={deleteConn}
-              />
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Selection" key="select">
-              <SelectionModalForm key='select' tableNameEnum={tableNameEnum} columnNameEnum={columnNameEnum} />
-            </Tabs.TabPane>
-          </Tabs>
+        <div className="demo">
+          <div className="demo-nav">
+            <Link to="/">Home</Link>
+            <Link to="/apps">Application List</Link>
+          </div>
         </div>
+        <Switch>
+          <Route path="/apps" component={Apps} />
+          <Route path="/apps/datalab" component={DataLab} />
+
+          <Route render={() => <span>Home Page</span>} />
+        </Switch>
+        <Alert style={{margin: '16px 0'}} message="Click the navigation above to switch:" />
+        <Breadcrumb>{breadcrumbItems}</Breadcrumb>
       </div>
 
       <div className="App-footer">
@@ -41,8 +65,10 @@ function App() {
           https://github.com/Jacobbishopxy/ubiquitous-alchemy
         </a>
       </div>
+
+
     </div>
   )
-}
+})
 
 export default App
