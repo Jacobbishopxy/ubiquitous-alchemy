@@ -1,6 +1,10 @@
 import {Link, Switch, Route} from 'react-router-dom'
 import {DataLab} from "./DataLab"
 
+export const breadcrumbNameMap: Record<string, string> = {
+    '/apps': 'Apps',
+    '/apps/datalab': 'Data Lab',
+}
 
 export const Apps = () => {
 

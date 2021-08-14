@@ -7,15 +7,14 @@ import {
   withRouter,
 } from "react-router-dom"
 
-import {Breadcrumb, } from "antd"
-import {Apps} from "./pages"
+import {Breadcrumb, Layout, Menu} from "antd"
+import {Apps, breadcrumbNameMap} from "./pages"
+import {Content, Footer, Header} from "antd/lib/layout/layout"
 
-
-
-const breadcrumbNameMap: Record<string, string> = {
-  '/apps': 'Application List',
-  '/apps/datalab': 'Data Lab',
-}
+const menu = [
+  {to: "/", name: "Home"},
+  {to: "/apps", name: "Apps"}
+]
 
 const App = withRouter(props => {
   const {location} = props
@@ -35,34 +34,37 @@ const App = withRouter(props => {
   ].concat(extraBreadcrumbItems)
 
   return (
-    <div className="App">
-      <header className="App-header">
-        Welcome
-      </header>
+    <Layout style={{minHeight: "100vh"}}>
+      <Header>
+        <Menu mode="horizontal">
+          {
+            menu.map((i, idx) =>
+              <Menu.Item key={idx}>
+                <Link to={i.to}>{i.name}</Link>
+              </Menu.Item>
+            )
+          }
+        </Menu>
+      </Header>
 
-      <div className="App-body" >
-        <Breadcrumb>{breadcrumbItems}</Breadcrumb>
-
-        <Link to="/">Home</Link>
-        <Link to="/apps">Application List</Link>
+      <Content style={{padding: '0 50px'}}>
+        <Breadcrumb
+          style={{margin: '16px 0'}}
+        >
+          {breadcrumbItems}
+        </Breadcrumb>
 
         <Switch>
           <Route path="/apps" component={Apps} />
         </Switch>
+      </Content>
 
-      </div>
-
-      <div className="App-footer">
-        <a
-          className="App-link"
-          href="https://github.com/Jacobbishopxy/ubiquitous-alchemy"
-        >
+      <Footer style={{textAlign: 'center'}}>
+        <a href="https://github.com/Jacobbishopxy/ubiquitous-alchemy">
           https://github.com/Jacobbishopxy/ubiquitous-alchemy
         </a>
-      </div>
-
-
-    </div>
+      </Footer>
+    </Layout>
   )
 })
 

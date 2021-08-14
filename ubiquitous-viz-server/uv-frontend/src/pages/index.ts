@@ -1,4 +1,4 @@
 import {DataLab} from "./DataLab"
-import {Apps} from "./Apps"
+import {Apps, breadcrumbNameMap} from "./Apps"
 
-export {DataLab, Apps}
+export {DataLab, Apps, breadcrumbNameMap}
