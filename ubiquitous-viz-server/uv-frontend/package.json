@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "BROWSER=none PORT=8088 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "BROWSER=none PORT=8088 craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:8080",
@@ -15,6 +15,7 @@
     "@ant-design/pro-form": "^1.34.0",
     "@ant-design/pro-layout": "^6.24.0",
     "@ant-design/pro-table": "^2.48.0",
+    "@craco/craco": "^6.2.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -24,6 +25,7 @@
     "@types/react-dom": "^17.0.9",
     "antd": "^4.16.11",
     "axios": "^0.21.1",
+    "craco-less": "^1.18.0",
     "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
