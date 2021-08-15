@@ -3,6 +3,15 @@ import {UserOutlined, LockOutlined} from '@ant-design/icons'
 
 import './Login.less'
 
+
+// TODO:
+export interface LoginProps {
+	onFinish: (value: any) => Promise<any>
+	onFinishFailed: (errorInfo: any) => void
+	forgetPasswordHref: string
+	registrationHref: string
+}
+
 export const Login = () => {
 	const onFinish = (values: any) => {
 		console.log('Success:', values)

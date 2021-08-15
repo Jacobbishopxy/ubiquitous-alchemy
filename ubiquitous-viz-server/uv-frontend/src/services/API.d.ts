@@ -70,4 +70,23 @@ declare namespace API {
         Desc = "Desc"
     }
 
+    interface Invitation {
+        email: string
+    }
+
+    interface Registration {
+        nickname: string,
+        email: string,
+        password: string,
+    }
+
+    interface Login {
+        email: string,
+        password: string,
+    }
+
+    interface LoginCheck {
+        email: string,
+        role: string,
+    }
 }
