@@ -31,7 +31,7 @@ impl Into<Value> for DataEnum {
     }
 }
 
-fn gen_column_type(c: ColumnDef, col_type: &sqlz::ColumnType) -> ColumnDef {
+fn gen_column_type(c: &mut ColumnDef, col_type: &sqlz::ColumnType) {
     match col_type {
         sqlz::ColumnType::Binary => c.binary(),
         sqlz::ColumnType::Bool => c.boolean(),
@@ -46,27 +46,27 @@ fn gen_column_type(c: ColumnDef, col_type: &sqlz::ColumnType) -> ColumnDef {
         sqlz::ColumnType::VarChar => c.string(),
         sqlz::ColumnType::Text => c.text(),
         sqlz::ColumnType::Json => c.json(),
-    }
+    };
 }
 
 fn gen_column(col: &sqlz::Column) -> ColumnDef {
-    let c = ColumnDef::new(Alias::new(&col.name));
-    let c = gen_column_type(c, &col.col_type);
-    let c = if col.null.unwrap_or(true) == true {
-        c
-    } else {
-        c.not_null()
+    let mut c = ColumnDef::new(Alias::new(&col.name));
+    gen_column_type(&mut c, &col.col_type);
+    if col.null.unwrap_or(true) == false {
+        c.not_null();
     };
-    let c = if let Some(ck) = &col.key {
+    if let Some(ck) = &col.key {
         match ck {
-            sqlz::ColumnKey::NotKey => c,
-            sqlz::ColumnKey::Primary => c.primary_key(),
-            sqlz::ColumnKey::Unique => c.unique_key(),
-            sqlz::ColumnKey::Multiple => c,
-        }
-    } else {
-        c
-    };
+            sqlz::ColumnKey::NotKey => {}
+            sqlz::ColumnKey::Primary => {
+                c.primary_key();
+            }
+            sqlz::ColumnKey::Unique => {
+                c.unique_key();
+            }
+            sqlz::ColumnKey::Multiple => {}
+        };
+    }
 
     c
 }
@@ -95,6 +95,7 @@ fn gen_foreign_key(key: &sqlz::ForeignKeyCreate) -> ForeignKeyCreateStatement {
         .to(Alias::new(&key.to.table), Alias::new(&key.to.column))
         .on_delete(convert_foreign_key_action(&key.on_delete))
         .on_update(convert_foreign_key_action(&key.on_update))
+        .to_owned()
 }
 
 fn filter_builder(qs: &mut SelectStatement, flt: &Vec<sqlz::Expression>) {
@@ -180,11 +181,11 @@ impl Builder {
         }
 
         for c in &table.columns {
-            s.col(gen_column(c));
+            s.col(&mut gen_column(c));
         }
 
         if let Some(f) = &table.foreign_key {
-            s.foreign_key(gen_foreign_key(f));
+            s.foreign_key(&mut gen_foreign_key(f));
         }
 
         match &self {
@@ -195,24 +196,26 @@ impl Builder {
 
     /// alter a table
     pub fn alter_table(&self, table: &sqlz::TableAlter) -> Vec<String> {
-        let s = Table::alter().table(Alias::new(&table.name));
+        let mut s = Table::alter();
+        s.table(Alias::new(&table.name));
+
         let mut alter_series = vec![];
 
         for a in &table.alter {
             match a {
                 sqlz::ColumnAlterCase::Add(c) => {
-                    alter_series.push(s.clone().add_column(gen_column(c)));
+                    alter_series.push(s.add_column(&mut gen_column(c)).to_owned());
                 }
                 sqlz::ColumnAlterCase::Modify(c) => {
-                    alter_series.push(s.clone().modify_column(gen_column(c)));
+                    alter_series.push(s.modify_column(&mut gen_column(c)).to_owned());
                 }
                 sqlz::ColumnAlterCase::Rename(c) => {
                     let from_name = Alias::new(&c.from_name);
                     let to_name = Alias::new(&c.to_name);
-                    alter_series.push(s.clone().rename_column(from_name, to_name));
+                    alter_series.push(s.rename_column(from_name, to_name).to_owned());
                 }
                 sqlz::ColumnAlterCase::Drop(c) => {
-                    alter_series.push(s.clone().drop_column(Alias::new(&c.name)));
+                    alter_series.push(s.drop_column(Alias::new(&c.name)).to_owned());
                 }
             }
         }
@@ -228,7 +231,8 @@ impl Builder {
 
     /// drop a table
     pub fn drop_table(&self, table: &sqlz::TableDrop) -> String {
-        let s = Table::drop().table(Alias::new(&table.name));
+        let mut s = Table::drop();
+        s.table(Alias::new(&table.name));
 
         match &self {
             Builder::MY => s.to_string(MysqlQueryBuilder),
@@ -240,7 +244,8 @@ impl Builder {
     pub fn rename_table(&self, table: &sqlz::TableRename) -> String {
         let from = Alias::new(&table.from);
         let to = Alias::new(&table.to);
-        let s = Table::rename().table(from, to);
+        let mut s = Table::rename();
+        s.table(from, to);
 
         match &self {
             Builder::MY => s.to_string(MysqlQueryBuilder),
@@ -250,7 +255,8 @@ impl Builder {
 
     /// truncate a table
     pub fn truncate_table(&self, table: &sqlz::TableTruncate) -> String {
-        let s = Table::truncate().table(Alias::new(&table.name));
+        let mut s = Table::truncate();
+        s.table(Alias::new(&table.name));
 
         match &self {
             Builder::MY => s.to_string(MysqlQueryBuilder),
@@ -261,15 +267,15 @@ impl Builder {
     /// create an index
     pub fn create_index(&self, index: &sqlz::IndexCreate) -> String {
         let mut s = Index::create();
-        s = s.name(&index.name).table(Alias::new(&index.table));
+        s.name(&index.name).table(Alias::new(&index.table));
 
         for i in &index.columns {
             match &i.order {
                 Some(o) => {
-                    s = s.col((Alias::new(&i.name), convert_index_order(o)));
+                    s.col((Alias::new(&i.name), convert_index_order(o)));
                 }
                 None => {
-                    s = s.col(Alias::new(&i.name));
+                    s.col(Alias::new(&i.name));
                 }
             }
         }
@@ -282,9 +288,8 @@ impl Builder {
 
     /// drop an index
     pub fn drop_index(&self, index: &sqlz::IndexDrop) -> String {
-        let s = Index::drop()
-            .name(&index.name)
-            .table(Alias::new(&index.table));
+        let mut s = Index::drop();
+        s.name(&index.name).table(Alias::new(&index.table));
 
         match &self {
             Builder::MY => s.to_string(MysqlQueryBuilder),
@@ -304,9 +309,8 @@ impl Builder {
 
     /// drop a foreign key
     pub fn drop_foreign_key(&self, key: &sqlz::ForeignKeyDrop) -> String {
-        let s = ForeignKey::drop()
-            .name(&key.name)
-            .table(Alias::new(&key.table));
+        let mut s = ForeignKey::drop();
+        s.name(&key.name).table(Alias::new(&key.table));
 
         match &self {
             Builder::MY => s.to_string(MysqlQueryBuilder),

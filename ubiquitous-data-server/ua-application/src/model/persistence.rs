@@ -25,7 +25,7 @@ impl UaPersistence {
             .init_table()
             .await
             .map(|_| ())
-            .map_err(|_| ConnStoreError::Exception("Init table failed".to_owned()))
+            .map_err(|e| ConnStoreError::Exception(e.to_string()))
     }
 }
 

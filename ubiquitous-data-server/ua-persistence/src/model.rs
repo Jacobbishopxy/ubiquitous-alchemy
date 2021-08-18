@@ -62,7 +62,7 @@ impl PersistenceDao {
             username VARCHAR NOT NULL,
             password VARCHAR NOT NULL,
             host VARCHAR NOT NULL,
-            port INT NOT NOLL,
+            port INT NOT NULL,
             database VARCHAR NOT NULL
         );
         "#;
