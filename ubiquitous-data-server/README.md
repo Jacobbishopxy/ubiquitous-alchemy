@@ -10,7 +10,7 @@
 1. [serde](https://github.com/serde-rs/serde): Json (de)serialize
 1. [sea-query](https://github.com/SeaQL/sea-query): Sql string generator
 1. [sqlx](https://github.com/launchbadge/sqlx): Sql connector & executor
-1. [rbatis](https://github.com/rbatis/rbatis): Sql ORM
+1. [rbatis](https://github.com/rbatis/rbatis): Database ORM
 
 ## Project Structure
 

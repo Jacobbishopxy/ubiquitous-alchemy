@@ -840,7 +840,7 @@ checksum = "77c90badedccf4105eca100756a0b1289e191f6fcbdadd3cee1d2f614f97da8f"
 [[package]]
 name = "dyn-conn"
 version = "0.1.0"
-source = "git+https://github.com/Jacobbishopxy/rustopia#5c7249d2d04b38630a2a9c313dcb7449e5bde26a"
+source = "git+https://github.com/Jacobbishopxy/rustopia#bab38aac482e3ef89c75dc5bd6e38a6caf30c09f"
 dependencies = [
  "async-trait",
  "serde",
@@ -1193,9 +1193,9 @@ dependencies = [
 
 [[package]]
 name = "httparse"
-version = "1.4.1"
+version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3a87b616e37e93c22fb19bcd386f02f3af5ea98a25670ad0fce773de23c5e68"
+checksum = "7ba8d84e9efea6aedae6fed9b6d9cfcaac6c53992b437d79a87a549d5537fea9"
 
 [[package]]
 name = "humantime"
@@ -1398,9 +1398,9 @@ dependencies = [
 
 [[package]]
 name = "memchr"
-version = "2.4.0"
+version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b16bd47d9e329435e309c58469fe0791c2d0d1ba96ec0954152a5ae2b04387dc"
+checksum = "308cc39be01b73d0d18f82a0e7b2a3df85245f84af96fdddc5d202d27e47b86a"
 
 [[package]]
 name = "memoffset"
@@ -2414,7 +2414,7 @@ dependencies = [
 [[package]]
 name = "sqlz"
 version = "0.1.0"
-source = "git+https://github.com/Jacobbishopxy/rustopia#5c7249d2d04b38630a2a9c313dcb7449e5bde26a"
+source = "git+https://github.com/Jacobbishopxy/rustopia#bab38aac482e3ef89c75dc5bd6e38a6caf30c09f"
 dependencies = [
  "serde",
  "serde_json",

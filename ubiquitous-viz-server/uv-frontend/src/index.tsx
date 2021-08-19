@@ -2,25 +2,24 @@ import ReactDOM from 'react-dom'
 
 import {ConfigProvider} from 'antd'
 import enUS from "antd/lib/locale/en_US"
+import {HashRouter} from "react-router-dom"
 
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 
 
-import {
-  HashRouter as Router,
-} from "react-router-dom"
+
 
 // TODO: temporary disable StrictMode for disable DOM warning
 // since some Antd components are not yet supporting this mode
 ReactDOM.render(
   // <React.StrictMode>
-  <Router>
+  <HashRouter>
     <ConfigProvider locale={enUS}>
       <App />
     </ConfigProvider>
-  </Router>,
+  </HashRouter>,
 
   // </React.StrictMode>,
   document.getElementById('root')

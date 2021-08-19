@@ -17,6 +17,7 @@ async fn main() -> std::io::Result<()> {
         CFG.get("SERVICE_PORT").unwrap(),
     );
 
+    // only not offline needs data persistence
     let ua_store = match is_offline() {
         true => UaStore::new(),
         false => {
@@ -52,6 +53,7 @@ async fn main() -> std::io::Result<()> {
     .await
 }
 
+/// check --arg if "offline"
 fn is_offline() -> bool {
     let mut args = std::env::args();
 

@@ -1,5 +1,7 @@
 # Ubiquitous API gateway
 
+This project serves an API gateway service, which depends on [LURA](github.com/luraproject/lura).
+
 ## Ubiquitous-alchemy-server
 
 1. configuration:
@@ -27,3 +29,11 @@
 1. query:
 
    - [ ] [POST] select
+
+1. auth:
+
+   - [ ] [POST] invitation
+   - [ ] [POST] registration
+   - [ ] [POST] login
+   - [ ] [GET] check_alive
+   - [ ] [DELETE] logout
