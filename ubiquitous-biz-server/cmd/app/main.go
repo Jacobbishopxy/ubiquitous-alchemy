@@ -12,29 +12,36 @@ import (
 )
 
 func main() {
+	// Load config from file
 	config, err := util.LoadConfig(".env")
 	if err != nil {
 		panic("config not found")
 	}
 
+	// init services
 	services := initServices(*config)
 
+	// init biz logic
 	innApp := application.NewInnApp(services.InnRepo)
 	innHdl := interfaces.NewInnHandler(*innApp)
 
+	// setup web service
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
 
+	// handlers registry
 	server, err := app.NewServer(*config, innHdl)
 	if err != nil {
 		panic("Failed to build server")
 	}
 
+	// start server
 	if err := server.Start(); err != nil {
 		panic("Failed to start server")
 	}
 }
 
+// services include database for persistence or external API connection
 func initServices(config util.Config) *persistence.Repositories {
 	services, err := persistence.NewRepositories(persistence.RepositoriesConfig{
 		DbDriver:   config.DbDriver,
