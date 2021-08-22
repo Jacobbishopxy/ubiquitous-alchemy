@@ -40,7 +40,7 @@
 curl --request POST \
   --url http://localhost:8072/api/invitation \
   --header 'content-type: application/json' \
-  --data '{"email":"name@domain.com"}'
+  --data '{"nickname":"name", "email":"name@domain.com", "password":"password"}'
 ```
 
 - Registration
@@ -49,7 +49,7 @@ curl --request POST \
 curl --request POST \
   --url http://localhost:8072/api/register/f87910d7-0e33-4ded-a8d8-2264800d1783 \
   --header 'content-type: application/json' \
-  --data '{"nickname":"name", "email":"name@domain.com", "password":"password", "role":"editor"}'
+  --data '{"email":"name@domain.com"}'
 ```
 
 ps: `f87910d7-0e33-4ded-a8d8-2264800d1783` is the Uuid created by Postgres, which is also the invitation id for registration
