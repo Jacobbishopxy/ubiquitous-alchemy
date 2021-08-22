@@ -2,4 +2,4 @@ pub mod invitation;
 pub mod user;
 
 pub use invitation::Invitation;
-pub use user::{Role, User};
+pub use user::{Permission, Role, User};

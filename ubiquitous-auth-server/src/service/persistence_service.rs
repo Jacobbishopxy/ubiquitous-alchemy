@@ -8,13 +8,14 @@ use rbatis::rbatis::Rbatis;
 
 use crate::constant::CONFIG;
 use crate::error::{ServiceError, ServiceResult};
-use crate::model::{Invitation, User};
+use crate::model::{Invitation, Role, User};
 
 pub struct Persistence {
     rb: Rbatis,
 }
 
 impl Persistence {
+    /// constructor
     pub async fn new() -> ServiceResult<Self> {
         let rb = Rbatis::new();
         let mut opt = DBPoolOptions::new();
@@ -25,18 +26,23 @@ impl Persistence {
         Ok(Persistence { rb })
     }
 
+    /// table migrations
     pub async fn initialize(&self, required: bool) -> ServiceResult<()> {
         if required {
+            // invitation table
             let init_invitation = r#"
             CREATE TABLE IF NOT EXISTS
             invitation(
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 email VARCHAR(100) NOT NULL,
+                nickname VARCHAR(100) NOT NULL,
+                hash VARCHAR(122) NOT NULL,
                 expires_at TIMESTAMP NOT NULL
             )
             "#;
             self.rb.exec(init_invitation, &vec![]).await?;
 
+            // users table
             let init_user = r#"
             CREATE TABLE IF NOT EXISTS
             users(
@@ -52,11 +58,13 @@ impl Persistence {
         Ok(())
     }
 
+    /// find invitation by id    
     pub async fn get_invitation_by_id(&self, id: &str) -> ServiceResult<Option<Invitation>> {
         let id = uuid::Uuid::from_str(id)?;
         Ok(self.rb.fetch_by_column("id", &id).await?)
     }
 
+    /// find invitation by email and latest expired (in case of invited several times)
     pub async fn get_invitation_by_email_and_latest_expired(
         &self,
         email: &str,
@@ -72,7 +80,9 @@ impl Persistence {
         Ok(r)
     }
 
+    /// save an invitation
     pub async fn save_invitation(&self, invitation: &Invitation) -> ServiceResult<Invitation> {
+        // skip "id" column and let Postgres to auto gen "id"
         self.rb.save(invitation, &[Skip::Column("id")]).await?;
 
         self.get_invitation_by_email_and_latest_expired(&invitation.email)
@@ -85,12 +95,39 @@ impl Persistence {
             })
     }
 
+    /// get user by email
     pub async fn get_user_by_email(&self, email: &str) -> ServiceResult<Option<User>> {
         Ok(self.rb.fetch_by_column("email", &email.to_owned()).await?)
     }
 
+    /// save user & alter user
     pub async fn save_user(&self, user: &User) -> ServiceResult<()> {
         Ok(self.rb.save(user, &[]).await.map(|_| ())?)
+    }
+
+    /// alter user role (admin permission)    
+    pub async fn alter_user_role(&self, email: &str, role: Role) -> ServiceResult<()> {
+        let w = self.rb.new_wrapper().eq("email", email).limit(1);
+
+        let user: Option<User> = self.rb.fetch_by_wrapper(&w).await?;
+
+        match user {
+            Some(mut u) => {
+                u.role = role;
+                let r: u64 = self.rb.update_by_wrapper(&mut u, &w, &[]).await?;
+                if r == 1 {
+                    Ok(())
+                } else {
+                    Err(ServiceError::InternalServerError(format!(
+                        "update err, effect {:?} row",
+                        r
+                    )))
+                }
+            }
+            None => Err(ServiceError::InternalServerError(
+                "user not found".to_owned(),
+            )),
+        }
     }
 }
 
@@ -155,7 +192,7 @@ mod persistence_test {
         let p = Persistence::new().await.unwrap();
 
         let role: Role = "admin".to_owned().try_into().unwrap();
-        let user = User::from_details("Jacob", "jacob@example.com", "pwd", role);
+        let user = User::from_details("Jacob", "jacob@example.com", "pwd");
 
         let res = p.save_user(&user).await;
 

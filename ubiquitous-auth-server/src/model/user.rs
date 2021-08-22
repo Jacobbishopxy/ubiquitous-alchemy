@@ -14,6 +14,32 @@ pub enum Role {
     Supervisor,
 }
 
+#[derive(PartialEq, Eq)]
+pub enum Permission {
+    AlterUserRole,
+    AlterUserGeneralInfo,
+    AlterSelfGeneralInfo,
+}
+
+impl Role {
+    pub fn permissions(&self) -> Vec<Permission> {
+        match self {
+            Role::Admin => vec![Permission::AlterUserRole, Permission::AlterSelfGeneralInfo],
+            Role::Visitor => vec![Permission::AlterSelfGeneralInfo],
+            Role::Editor => vec![Permission::AlterSelfGeneralInfo],
+            Role::Supervisor => vec![
+                Permission::AlterUserRole,
+                Permission::AlterUserGeneralInfo,
+                Permission::AlterSelfGeneralInfo,
+            ],
+        }
+    }
+
+    pub fn is_permitted(&self, permission: Permission) -> bool {
+        self.permissions().contains(&permission)
+    }
+}
+
 impl TryFrom<String> for Role {
     type Error = ServiceError;
 
@@ -36,23 +62,22 @@ pub struct User {
     pub email: String,
     pub nickname: String,
     pub hash: String,
+    // only allow to be altered by admin+
     pub role: Role,
     pub created_at: NaiveDateTime,
 }
 
 impl User {
-    pub fn from_details<N, E, P, R>(nickname: N, email: E, pwd: P, role: R) -> Self
+    pub fn from_details<T>(nickname: T, email: T, pwd: T) -> Self
     where
-        N: Into<String>,
-        E: Into<String>,
-        P: Into<String>,
-        R: Into<Role>,
+        T: Into<String>,
     {
+        // default role is visitor
         User {
             nickname: nickname.into(),
             email: email.into(),
             hash: pwd.into(),
-            role: role.into(),
+            role: Role::Visitor,
             created_at: chrono::Local::now().naive_local(),
         }
     }
