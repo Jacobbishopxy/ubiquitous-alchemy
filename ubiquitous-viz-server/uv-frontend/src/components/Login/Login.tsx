@@ -23,11 +23,11 @@ export const Login = (props: LoginProps) => {
 			onFinishFailed={props.onFinishFailed}
 		>
 			<Form.Item
-				name="username"
-				rules={[{ required: true, message: 'Please input your Username!' }]}
+				name="email"
+				rules={[{ required: true, message: 'Please input your E-mail!' }]}
 				wrapperCol={{ offset: 8, span: 8 }}
 			>
-				<Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+				<Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="E-mail" />
 			</Form.Item>
 
 			<Form.Item

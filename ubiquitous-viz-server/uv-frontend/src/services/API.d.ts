@@ -71,13 +71,13 @@ declare namespace API {
     }
 
     interface Invitation {
-        email: string
-    }
-
-    interface Registration {
         nickname: string,
         email: string,
         password: string,
+    }
+
+    interface Registration {
+        email: string,
     }
 
     interface Login {

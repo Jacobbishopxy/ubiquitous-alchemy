@@ -5,7 +5,7 @@ import './Login.less'
 
 // TODO: get invitation ID from query
 export interface RegistrationProps {
-    onFinish: (value: API.Registration) => Promise<any>
+    onFinish: (value: API.Invitation) => Promise<any>
     onFinishFailed: (errorInfo: any) => void
 }
 

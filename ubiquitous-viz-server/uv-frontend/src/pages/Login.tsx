@@ -1,20 +1,31 @@
+import { Modal } from "antd"
+import { useState } from "react"
 import { Login } from "../components"
 import * as auth from "../services/auth"
-// TODO: API from services
-export const LoginPage = () => {
+interface LoginPageProps {
+    setLogined: React.Dispatch<React.SetStateAction<boolean>>
+}
+export const LoginPage = (props: LoginPageProps) => {
+    const [succeeded, setSucceeded] = useState(false)
 
     const onFinish = async (value: API.Login) => {
-        return auth.login(value)
+        return auth.login({ email: value.email, password: value.password })
+            .then(_ => {
+                props.setLogined(true)
+                setSucceeded(true)
+            })
     }
     const onFinishFailed = (errorInfo: any) => {
         // console.log('Failed:', errorInfo)
     }
     const registrationHref = "#/registration"
     const forgetPasswordHref = "/"
-    return <Login
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        registrationHref={registrationHref}
-        forgetPasswordHref={forgetPasswordHref}
-    />
+
+    return succeeded ? <a href={"#/"} /> :
+        <Login
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            registrationHref={registrationHref}
+            forgetPasswordHref={forgetPasswordHref}
+        />
 }
