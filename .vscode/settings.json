@@ -1,19 +1,19 @@
 {
-  "rust-analyzer.diagnostics.disabled": [
-    "macro-error",
-    "unresolved-import",
-    "unresolved-macro"
-  ],
-  "rust-analyzer.linkedProjects": [
-    "ubiquitous-data-server/Cargo.toml",
-    "ubiquitous-viz-server/Cargo.toml",
-    "ubiquitous-auth-server/Cargo.toml"
-  ],
-  "gopls": {
-    "experimentalWorkspaceModule": true
-  },
-  "cSpell.words": ["Lettre", "VARCHAR", "postgres"],
-  "files.watcherExclude": {
-    "**/target": true
-  }
+	"rust-analyzer.diagnostics.disabled": [
+		"macro-error",
+		"unresolved-import",
+		"unresolved-macro"
+	],
+	"rust-analyzer.linkedProjects": [
+		"ubiquitous-data-server/Cargo.toml",
+		"ubiquitous-viz-server/Cargo.toml",
+		"ubiquitous-auth-server/Cargo.toml"
+	],
+	"gopls": {
+		"experimentalWorkspaceModule": true
+	},
+	"cSpell.words": ["Lettre", "VARCHAR", "datetime", "postgres"],
+	"files.watcherExclude": {
+		"**/target": true
+	}
 }

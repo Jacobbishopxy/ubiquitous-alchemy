@@ -40,17 +40,21 @@ async fn main() -> std::io::Result<()> {
                 web::scope("/api")
                     .service(
                         web::resource("/invitation")
-                            .route(web::post().to(handler::post_invitation)),
+                            .route(web::post().to(handler::send_invitation)),
                     )
                     .service(
                         web::resource("/register/{invitation_id}")
-                            .route(web::post().to(handler::register_user)),
+                            .route(web::get().to(handler::register_user)),
                     )
                     .service(
                         web::resource("/auth")
                             .route(web::post().to(handler::login))
                             .route(web::delete().to(handler::logout))
                             .route(web::get().to(handler::check_alive)),
+                    )
+                    .service(
+                        web::resource("/auth/alter_user_role")
+                            .route(web::post().to(handler::alter_user_role)),
                     ),
             )
     })

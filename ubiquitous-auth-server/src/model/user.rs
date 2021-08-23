@@ -6,6 +6,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::error::ServiceError;
 
+// TODO: role & permission enhancement
+/// user role
 #[derive(Debug, Serialize, Deserialize)]
 pub enum Role {
     Admin,
@@ -14,6 +16,7 @@ pub enum Role {
     Supervisor,
 }
 
+/// role permission
 #[derive(PartialEq, Eq)]
 pub enum Permission {
     AlterUserRole,
@@ -56,13 +59,29 @@ impl TryFrom<String> for Role {
     }
 }
 
+pub const USER_TABLE: &'static str = r#"
+CREATE TABLE IF NOT EXISTS
+users(
+    email VARCHAR(100) PRIMARY KEY,
+    nickname VARCHAR(100) NOT NULL,
+    hash VARCHAR(122) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL
+)
+"#;
+
+/// users table
+/// email: string
+/// nickname: string
+/// hash: string, hashed password
+/// role: user role, only allow to be altered by admin+
+/// created_at: timestamp
 #[crud_table(table_name:"users" | formats_pg:"created_at:{}::timestamp")]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
     pub email: String,
     pub nickname: String,
     pub hash: String,
-    // only allow to be altered by admin+
     pub role: Role,
     pub created_at: NaiveDateTime,
 }

@@ -46,10 +46,8 @@ curl --request POST \
 - Registration
 
 ```sh
-curl --request POST \
-  --url http://localhost:8072/api/register/f87910d7-0e33-4ded-a8d8-2264800d1783 \
-  --header 'content-type: application/json' \
-  --data '{"email":"name@domain.com"}'
+curl --request GET \
+  --url http://localhost:8072/api/register/f87910d7-0e33-4ded-a8d8-2264800d1783
 ```
 
 ps: `f87910d7-0e33-4ded-a8d8-2264800d1783` is the Uuid created by Postgres, which is also the invitation id for registration
@@ -63,7 +61,7 @@ curl -i --request POST \
   --data '{"email": "name@domain.com","password":"password"}'
 ```
 
-```null
+```txt
 HTTP/1.1 200 OK
 set-cookie: auth=iqsB4KUUjXUjnNRl1dVx9lKiRfH24itiNdJjTAJsU4CcaetPpaSWfrNq6IIoVR5+qKPEVTrUeg==; HttpOnly; Path=/; Domain=localhost; Max-Age=86400
 content-length: 0
@@ -78,7 +76,7 @@ curl -i --request GET \
   --cookie auth=HdS0iPKTBL/4MpTmoUKQ5H7wft5kP7OjP6vbyd05Ex5flLvAkKd+P2GchG1jpvV6p9GQtzPEcg==
 ```
 
-```null
+```txt
 HTTP/1.1 200 OK
 content-length: 27
 content-type: application/json
@@ -94,9 +92,19 @@ curl -i --request DELETE \
   --url http://localhost:8072/api/auth
 ```
 
-```null
+```txt
 HTTP/1.1 200 OK
 set-cookie: auth=; HttpOnly; Path=/; Domain=localhost; Max-Age=0; Expires=Fri, 27 Oct 2017 13:01:52 GMT
 content-length: 0
 date: Sat, 27 Oct 2018 13:01:52 GMT
+```
+
+- Alter user role
+
+```sh
+curl -i --request POST \
+  --url http://localhost:8072/api/auth/alter_user_role \
+  --cookie auth=HdS0iPKTBL/4MpTmoUKQ5H7wft5kP7OjP6vbyd05Ex5flLvAkKd+P2GchG1jpvV6p9GQtzPEcg== \
+  --header 'content-type: application/json' \
+  --data '{"email": "name@domain.com","role":"editor"}'
 ```

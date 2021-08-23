@@ -3,6 +3,23 @@ use rbatis::crud_table;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+pub const INVITATION_TABLE: &'static str = r#"
+CREATE TABLE IF NOT EXISTS
+invitation(
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    email VARCHAR(100) NOT NULL,
+    nickname VARCHAR(100) NOT NULL,
+    hash VARCHAR(122) NOT NULL,
+    expires_at TIMESTAMP NOT NULL
+)
+"#;
+
+/// invitation table
+/// id: uuid, primary key, auto generated
+/// nickname: string
+/// email: string
+/// hash: string, password in hashed form
+/// expires_at: timestamp
 #[crud_table(table_name:"invitation" | formats_pg:"id:{}::uuid,expires_at:{}::timestamp")]
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Invitation {

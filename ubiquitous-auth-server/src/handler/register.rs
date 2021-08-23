@@ -1,37 +1,34 @@
 use std::sync::Arc;
 
 use actix_web::{web, HttpResponse, ResponseError};
-use serde::Deserialize;
 
 use crate::model::User;
 use crate::service::Persistence;
 
-#[derive(Debug, Deserialize)]
-pub struct UserReq {
-    pub email: String,
-}
-
+// confirm user invitation id & email then register user
 pub async fn register_user(
     invitation_id: web::Path<String>,
-    user_req: web::Json<UserReq>,
     persistence: web::Data<Arc<Persistence>>,
 ) -> HttpResponse {
+    // check whether invitation is in database
     let invitation = match persistence.get_invitation_by_id(&invitation_id).await {
         Ok(op) => op,
         Err(e) => return e.error_response(),
     };
+    // check whether invitation is expired
     match invitation {
         Some(inv) => {
-            if inv.expires_at > chrono::Local::now().naive_local() && user_req.email == inv.email {
+            // if inv is not expired, copy user register info from invitation table and save it to user table
+            if inv.expires_at > chrono::Local::now().naive_local() {
                 let user = User::from_details(inv.nickname, inv.email, inv.hash);
-
+                // save user into 'user' table
                 match persistence.save_user(&user).await {
-                    Ok(_) => return HttpResponse::Ok().finish(),
-                    Err(e) => return e.error_response(),
+                    Ok(_) => HttpResponse::Ok().finish(),
+                    Err(e) => e.error_response(),
                 }
+            } else {
+                HttpResponse::BadRequest().body("Invitation is expired")
             }
-
-            HttpResponse::BadRequest().body("Invitation is expired")
         }
         None => HttpResponse::BadRequest().body("Invalid invitation"),
     }

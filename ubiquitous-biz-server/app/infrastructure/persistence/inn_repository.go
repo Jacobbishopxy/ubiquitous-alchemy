@@ -95,6 +95,7 @@ func (inn *InnRepo) GetArticle(id uint) (*entity.Article, error) {
 
 func (inn *InnRepo) GetAllArticle(pagination *entity.PaginationM10) ([]entity.Article, error) {
 	var articles []entity.Article
+	// TODO: order by `CreatedAt`
 	err := inn.db.Debug().
 		Preload("Tags").
 		Preload(clause.Associations).

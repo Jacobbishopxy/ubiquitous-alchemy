@@ -21,6 +21,11 @@ type Common struct {
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`
 }
 
+// TODO:
+type Pagination interface {
+	NextPage()
+}
+
 type PaginationM10 struct {
 	Limit  uint
 	Offset uint
