@@ -1,5 +1,6 @@
 package entity
 
+// Inn tag
 type Tag struct {
 	Common
 	Name        string     `gorm:"size:100;not null;unique"`
@@ -8,6 +9,7 @@ type Tag struct {
 	Articles    []*Article `gorm:"many2many:article_tag;constraint:OnDelete:CASCADE;"`
 }
 
+// Inn article
 type Article struct {
 	Common
 	Title   string `gorm:"size:100;not null"`
