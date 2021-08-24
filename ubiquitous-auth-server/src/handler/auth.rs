@@ -41,7 +41,8 @@ pub async fn login(
                     let user_string = serde_json::to_string(&u).unwrap();
                     // set cookie
                     id.remember(user_string);
-                    HttpResponse::Found().append_header(("auth", "/")).finish()
+                    // `HttpResponse::Found()` is used for multi-pages web app, serving as page redirection
+                    HttpResponse::Ok().finish()
                 } else {
                     HttpResponse::BadRequest().body("Password incorrect")
                 }
@@ -67,7 +68,8 @@ pub async fn check_alive(id: Identity) -> HttpResponse {
 /// user logout
 pub async fn logout(id: Identity) -> HttpResponse {
     id.forget();
-    HttpResponse::Found().append_header(("auth", "/")).finish()
+    // `HttpResponse::Found()` is used for multi-pages web app, serving as page redirection
+    HttpResponse::Ok().finish()
 }
 
 /// alter user role, only role admin+ has the permission

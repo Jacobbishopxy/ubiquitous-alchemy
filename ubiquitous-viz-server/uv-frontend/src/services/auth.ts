@@ -1,21 +1,23 @@
 import axios from "axios"
 
+
 export const sendInvitation = async (param: API.Invitation): Promise<void> => {
     return axios.post("/api/auth/invitation", param)
 }
 
-export const register = async (id: string, param: API.Registration): Promise<void> => {
-    return axios.post(`/api/auth/register/${id}`, param)
+export const register = async (id: string): Promise<void> => {
+    return axios.get(`/api/auth/register/${id}`)
 }
 
 export const login = async (param: API.Login): Promise<void> => {
-    return axios.post("/api/auth", param, {withCredentials: true})
+    return axios.post("/api/auth", param, { withCredentials: true })
 }
 
+//TODO: res is in form of data{}
 export const check = async (): Promise<API.LoginCheck> => {
-    return axios.get("/api/auth", {withCredentials: true})
+    return axios.get("/api/auth", { withCredentials: true })
 }
 
 export const logout = async (): Promise<void> => {
-    return axios.delete("/api/auth", {withCredentials: true})
+    return axios.delete("/api/auth", { withCredentials: true })
 }

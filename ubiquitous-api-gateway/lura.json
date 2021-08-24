@@ -14,7 +14,9 @@
           "encoding": "no-op",
           "method": "POST",
           "url_pattern": "/api/cfg/check_connection",
-          "host": ["localhost:8070"]
+          "host": [
+            "localhost:8070"
+          ]
         }
       ]
     },
@@ -25,7 +27,9 @@
         {
           "encoding": "no-op",
           "url_pattern": "/api/cfg/conn",
-          "host": ["localhost:8070"]
+          "host": [
+            "localhost:8070"
+          ]
         }
       ]
     },
@@ -38,35 +42,125 @@
           "encoding": "no-op",
           "method": "POST",
           "url_pattern": "/api/cfg/conn",
-          "host": ["localhost:8070"]
+          "host": [
+            "localhost:8070"
+          ]
         }
       ]
     },
     {
       "endpoint": "/api/cfg/conn",
       "method": "PUT",
-      "querystring_params": ["db_id"],
+      "querystring_params": [
+        "db_id"
+      ],
       "output_encoding": "no-op",
       "backend": [
         {
           "encoding": "no-op",
           "method": "PUT",
           "url_pattern": "/api/cfg/conn",
-          "host": ["localhost:8070"]
+          "host": [
+            "localhost:8070"
+          ]
         }
       ]
     },
     {
       "endpoint": "/api/cfg/conn",
       "method": "DELETE",
-      "querystring_params": ["db_id"],
+      "querystring_params": [
+        "db_id"
+      ],
       "output_encoding": "no-op",
       "backend": [
         {
           "encoding": "no-op",
           "method": "DELETE",
           "url_pattern": "/api/cfg/conn",
-          "host": ["localhost:8070"]
+          "host": [
+            "localhost:8070"
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/auth/invitation",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "encoding": "no-op",
+          "method": "POST",
+          "url_pattern": "/api/invitation",
+          "host": [
+            "localhost:8072"
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/auth/register/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "encoding": "no-op",
+          "url_pattern": "/api/register/{id}",
+          "host": [
+            "localhost:8072"
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/auth",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "encoding": "no-op",
+          "url_pattern": "/api/auth",
+          "host": [
+            "localhost:8072"
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/auth",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "headers_to_pass": [
+        "Cookie"
+      ],
+      "backend": [
+        {
+          "encoding": "no-op",
+          "url_pattern": "/api/auth",
+          "host": [
+            "localhost:8072"
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/auth",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "headers_to_pass": [
+        "Cookie"
+      ],
+      "backend": [
+        {
+          "encoding": "no-op",
+          "url_pattern": "/api/auth",
+          "host": [
+            "localhost:8072"
+          ],
+          "headers_to_pass": [
+            "Cookie"
+          ]
         }
       ]
     }
