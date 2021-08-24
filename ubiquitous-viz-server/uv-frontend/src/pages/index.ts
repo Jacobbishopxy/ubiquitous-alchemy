@@ -1,7 +1,9 @@
 import {DataLab} from "./DataLab"
 import {Home} from "./Home"
-import {Apps, breadcrumbNameMap} from "./Apps"
+import {Apps} from "./Apps"
 import {LoginPage} from "./Login"
 import {RegisterPage} from "./Register"
+import {LogoutPage} from "./Logout"
+import {Invitation} from "./Invitation"
 
-export {DataLab, Apps, breadcrumbNameMap, Home, LoginPage, RegisterPage}
+export {DataLab, Apps, Home, LoginPage, RegisterPage, LogoutPage, Invitation}

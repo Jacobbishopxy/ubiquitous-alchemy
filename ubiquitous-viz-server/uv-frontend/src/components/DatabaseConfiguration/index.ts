@@ -1,4 +1,4 @@
-import {DatabaseConfiguration} from "./database_configuration"
-import {DatabaseModalForm} from "./database_modal_form"
+import {DatabaseConfiguration} from "./DatabaseConfiguration"
+import {DatabaseModalForm} from "./DatabaseModalForm"
 
 export {DatabaseConfiguration, DatabaseModalForm}

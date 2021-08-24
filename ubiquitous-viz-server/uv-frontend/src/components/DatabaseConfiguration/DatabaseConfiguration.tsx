@@ -2,7 +2,7 @@ import {Button, Tooltip, Modal, message} from "antd"
 import type {ProColumns} from "@ant-design/pro-table"
 import ProTable from "@ant-design/pro-table"
 
-import {DatabaseModalForm} from "./database_modal_form"
+import {DatabaseModalForm} from "./DatabaseModalForm"
 import {useState} from "react"
 
 const columnsFactory = (

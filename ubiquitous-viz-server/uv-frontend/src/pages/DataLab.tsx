@@ -11,7 +11,6 @@ import {DatabaseConfiguration, SelectionModalForm} from "../components"
 import {tableNameEnum, columnNameEnum} from "../components/QuerySelector/temp"
 
 
-
 export const DataLab = () => {
     return (
         <div style={{width: "100%", backgroundColor: "white"}}>

@@ -22,9 +22,20 @@
 
 1. Rust
 
+   set rust tool chain to the nightly version:
+
+   ```sh
+   rustup default nightly
+   ```
+
 1. Golang
 
+   current version: 1.17
+
 1. Typescript
+
+   current node version: 16.6.2
+   current typescript version: 4.3.5
 
 ### Tools
 
