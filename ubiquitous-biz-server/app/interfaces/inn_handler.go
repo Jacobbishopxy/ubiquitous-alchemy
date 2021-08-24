@@ -18,11 +18,13 @@ type InnHandler struct {
 	innApp   application.InnApp
 }
 
+// InnHandler constructor
 func NewInnHandler(innApp application.InnApp) *InnHandler {
 	validate := validator.New()
 	return &InnHandler{validate, innApp}
 }
 
+// implement Handler interface
 func (ih *InnHandler) Register(router *gin.RouterGroup) {
 	inn := router.Group("/inn")
 

@@ -2,8 +2,8 @@ package main
 
 import (
 	"ubiquitous-biz-server/app"
+	"ubiquitous-biz-server/app/adapters/persistence"
 	"ubiquitous-biz-server/app/application"
-	"ubiquitous-biz-server/app/infrastructure/persistence"
 	"ubiquitous-biz-server/app/interfaces"
 	"ubiquitous-biz-server/app/interfaces/middleware"
 	"ubiquitous-biz-server/app/util"
@@ -42,8 +42,8 @@ func main() {
 }
 
 // services include database for persistence or external API connection
-func initServices(config util.Config) *persistence.Repositories {
-	services, err := persistence.NewRepositories(persistence.RepositoriesConfig{
+func initServices(config util.Config) *persistence.Store {
+	services, err := persistence.NewStore(persistence.DatabaseConfig{
 		DbDriver:   config.DbDriver,
 		DbHost:     config.DbHost,
 		DbPassword: config.DbPassword,
