@@ -13,6 +13,7 @@ export const login = async (param: API.Login): Promise<void> => {
     return axios.post("/api/auth", param, { withCredentials: true })
 }
 
+//TODO: res is in form of data{}
 export const check = async (): Promise<API.LoginCheck> => {
     return axios.get("/api/auth", { withCredentials: true })
 }

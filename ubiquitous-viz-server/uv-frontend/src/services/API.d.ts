@@ -86,7 +86,12 @@ declare namespace API {
     }
 
     interface LoginCheck {
+        data: LoginCheckData
+    }
+
+    interface LoginCheckData {
         email: string,
         role: string,
+        nickname: string,
     }
 }

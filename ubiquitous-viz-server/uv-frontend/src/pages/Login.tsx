@@ -1,5 +1,6 @@
 import { Modal } from "antd"
 import { useState } from "react"
+import { Redirect } from "react-router-dom"
 import { Login } from "../components"
 import * as auth from "../services/auth"
 interface LoginPageProps {
@@ -21,7 +22,7 @@ export const LoginPage = (props: LoginPageProps) => {
     const registrationHref = "#/registration"
     const forgetPasswordHref = "/"
 
-    return succeeded ? <a href={"#/"} /> :
+    return succeeded ? <Redirect to="/" /> :
         <Login
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}

@@ -1,4 +1,5 @@
 import './App.less'
+import * as auth from "./services/auth"
 
 import {
 	Switch,
@@ -13,7 +14,7 @@ import { Content, Footer, Header } from "antd/lib/layout/layout"
 
 import { Apps, breadcrumbNameMap, Home, LoginPage, RegisterPage } from "./pages"
 import { OnInvitation } from './pages/OnInvitation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LogoutPage } from './pages/LogoutPage'
 
 const menu = [
@@ -55,21 +56,29 @@ const AppFooter = () => {
 }
 
 interface AppSwitchProps {
+	userName: string
+	isLogin: boolean
 	setIsLogin: React.Dispatch<React.SetStateAction<boolean>>
 }
 const AppSwitch = (props: AppSwitchProps) => {
 	return (
 		<Switch>
-			<Route path="/" exact component={Home} />
-			<Route path="/apps" component={Apps} />
+			<Route path="/" exact  >
+				<Home userName={props.userName}
+					isLogin={props.isLogin} />
+			</Route>
+			<Route path="/apps" >
+				{props.isLogin ? < Apps /> : <>
+					Welcome visitor! Please <a href="#/login" style={{ textDecoration: "underline" }}> Login</a> first! </>}
+			</Route>
 			<Route path="/login">
 				<LoginPage setLogined={props.setIsLogin} />
 			</Route>
-			<Route path="/registration" component={RegisterPage} />
-			<Route path="/register" component={OnInvitation} />
 			<Route path="/logout" >
 				<LogoutPage setLogined={props.setIsLogin} />
 			</Route>
+			<Route path="/registration" component={RegisterPage} />
+			<Route path="/register" component={OnInvitation} />
 		</Switch>
 	)
 }
@@ -97,12 +106,23 @@ const getBreadcrumbItems = (props: AppProps) => {
 const App = withRouter(props => {
 	const breadcrumbItems = getBreadcrumbItems(props)
 	const [isLogin, setIsLogin] = useState(false)
+	const [userName, setUserName] = useState('')
+	useEffect(() => {
+		auth.check().then(res => {
+			setUserName(res.data?.nickname)
+			setIsLogin(true)
+		})
+	}, [isLogin])
+
 	return (
 		<Layout >
 			<AppHeader isLogin={isLogin} />
 			<Content>
 				<Breadcrumb>{breadcrumbItems}</Breadcrumb>
-				<Card><AppSwitch setIsLogin={setIsLogin} /></Card>
+				<Card><AppSwitch
+					userName={userName}
+					isLogin={isLogin}
+					setIsLogin={setIsLogin} /></Card>
 			</Content>
 			<AppFooter />
 		</Layout>

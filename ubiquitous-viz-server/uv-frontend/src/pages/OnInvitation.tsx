@@ -1,6 +1,6 @@
 import { Button } from "antd"
 import * as auth from "../services/auth"
-import { useLocation } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import { useState } from "react";
 
 export const OnInvitation = () => {
@@ -26,6 +26,6 @@ export const OnInvitation = () => {
         </>
 
     return (
-        succeeded ? <a href={"#/login"} /> : invited
+        succeeded ? <Redirect to="/login" /> : invited
     )
 }

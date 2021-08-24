@@ -82,7 +82,8 @@ content-length: 27
 content-type: application/json
 date: Sun, 28 Oct 2018 19:21:04 GMT
 
-{"email":"name@domain.com"}
+{"email":"name@domain.com","password":"hashed",
+"nickname":"name", "role":"role"}
 ```
 
 - Logout
