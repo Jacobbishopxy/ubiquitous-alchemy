@@ -15,6 +15,7 @@ func NewInnApp(ib repository.Inn) *InnApp {
 
 var _ InnApplication = &InnApp{}
 
+// Inn app: layer of Inn domain and Inn adapter
 type InnApplication interface {
 	SaveTag(*entity.Tag) (*entity.Tag, error)
 	GetTag(uint) (*entity.Tag, error)
