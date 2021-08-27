@@ -1,5 +1,15 @@
 # Ubiquitous Auth Server
 
+## Execution
+
+```sh
+# using default `.env` file
+cargo run
+
+# or using custom env file, for example a `.env` file in a relative path
+cargo run -- ../resources/.env
+```
+
 ## Configuration
 
 - DATABASE_URL: data persistence (use Postgres with UUID extension)

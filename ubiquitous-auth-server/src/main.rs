@@ -9,6 +9,11 @@ use ubiquitous_auth_server::{handler, service};
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
+    env_logger::init();
+
+    if let None = dotenv::from_filename(get_env_file()).ok() {
+        panic!("env file not found!");
+    }
 
     let (host, port) = (CONFIG.service_host.clone(), CONFIG.service_port.clone());
 
@@ -23,6 +28,7 @@ async fn main() -> std::io::Result<()> {
 
     let persistence = web::Data::new(Arc::new(persistence));
 
+    log::info!("Ubiquitous Auth Server running... http://{}:{}", host, port);
     HttpServer::new(move || {
         let mut cip = CookieIdentityPolicy::new(CONFIG.secret_key.as_bytes())
             .name("auth")
@@ -36,6 +42,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(persistence.to_owned())
             .wrap(ids)
+            .route("/echo", web::get().to(handler::welcome))
             .service(
                 web::scope("/api")
                     .service(
@@ -61,4 +68,16 @@ async fn main() -> std::io::Result<()> {
     .bind(format!("{}:{}", host, port))?
     .run()
     .await
+}
+
+/// get env file
+fn get_env_file() -> &'static str {
+    let mut args = std::env::args();
+
+    args.next();
+
+    match args.next() {
+        Some(f) => Box::leak(f.into_boxed_str()),
+        None => ".env",
+    }
 }

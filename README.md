@@ -5,7 +5,7 @@
 
    - [dyn-conn](https://github.com/Jacobbishopxy/rustopia): dynamic Sql connection, execution
    - [sqlz](https://github.com/Jacobbishopxy/rustopia): Sql AST model
-   - [tiny-df](https://github.com/Jacobbishopxy/rustopia): Dataframe module crate
+   - [tiny-df](https://github.com/Jacobbishopxy/rustopia): Custom data structure, gluing third party crates
    - [xlz](https://github.com/Jacobbishopxy/rustopia): Xlsx toolkit
 
 1. [ubiquitous-viz-server](./ubiquitous-viz-server/README.md): visualization of ubiquitous-data-server's application
