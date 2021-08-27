@@ -1,0 +1,7 @@
+
+README.md
+.gitignore
+
+ubiquitous-data-server/target/
+ubiquitous-auth-server/target/
+ubiquitous-viz-server/target/

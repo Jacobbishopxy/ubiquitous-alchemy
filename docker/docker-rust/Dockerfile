@@ -1,16 +1,20 @@
-FROM rustlang/rust:nightly-slim AS builder
+FROM    rustlang/rust:nightly AS builder
 
-RUN update-ca-certificates
+COPY    ./sources.list /etc/apt/sources.list
+
+RUN     apt install apt-transport-https ca-certificates
+RUN     update-ca-certificates
+RUN     apt-get update && apt-get upgrade -y
 
 # Create appuser
-ENV USER=docker
-ENV UID=10001
+ENV     USER=docker
+ENV     UID=10001
 
-# RUN adduser \
-#     --disabled-password \
-#     --gecos "" \
-#     --home "/nonexistent" \
-#     --shell "/sbin/nologin" \
-#     --no-create-home \
-#     --uid "${UID}" \
-#     "${USER}"
+RUN     adduser \
+        --disabled-password \
+        --gecos "" \
+        --home "/nonexistent" \
+        --shell "/sbin/nologin" \
+        --no-create-home \
+        --uid "${UID}" \
+        "${USER}"

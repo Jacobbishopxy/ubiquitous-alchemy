@@ -4,7 +4,7 @@
 
 `cp .env.template .env` and replace with your own configs.
 
-## Project Structure (DDD)
+## Project Architecture (DDD)
 
 ```txt
 ├── app
@@ -61,5 +61,7 @@
 
 - cmd
   - app/main.go: main application
+
+![DDD](./DDD.jpg)
 
 Dev path: domain -> application -> adapters -> interfaces
