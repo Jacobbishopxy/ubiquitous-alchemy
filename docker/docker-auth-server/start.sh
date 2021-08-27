@@ -11,5 +11,8 @@ export ENV_PATH=${ENV_PATH}
 
 
 # echo `ls $VOLUME_CONF_EXT`
+# echo $VOLUME_CONF_INN
+# echo $ENV_PATH
+
 docker-compose down
-docker-compose up 
+docker-compose up -d

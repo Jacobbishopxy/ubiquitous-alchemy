@@ -1,5 +1,7 @@
 # Ubiquitous Alchemy
 
+This project is a collection of [Cyberbrick](https://github.com/Jacobbishopxy/cyberbrick) services.
+
 1. [dev](./dev/README.md): development toolkit
 1. [ubiquitous-data-server](./ubiquitous-data-server/README.md) based on deps below:
 
@@ -48,3 +50,5 @@
 - MongoDB
 
 - Redis
+
+- Docker

@@ -8,11 +8,11 @@ ARG     BASE_IMAGE_VERSION
 
 FROM    $BASE_IMAGE_NAME:$BASE_IMAGE_VERSION as builder
 
-RUN apt-get -y update && \
-    apt-get -y install libssl-dev pkg-config openssl && \
-    ln -s libssl.so.1.0.0 libssl.so.10 && \
-    ln -s libcrypto.so.1.0.0 libcrypto.so.10
-# RUN     apt install -y pkg-config libssl-dev openssl
+RUN     apt-get -y update && \
+        apt-get -y install libssl-dev pkg-config openssl && \
+        ln -s libssl.so.1.0.0 libssl.so.10 && \
+        ln -s libcrypto.so.1.0.0 libcrypto.so.10
+
 RUN     apt-get install -y libpq-dev
 
 WORKDIR /app
