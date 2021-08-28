@@ -2,6 +2,10 @@
 README.md
 .gitignore
 
-ubiquitous-data-server/target/
+dev/
+docker/
+resources/
+
 ubiquitous-auth-server/target/
+ubiquitous-data-server/target/
 ubiquitous-viz-server/target/

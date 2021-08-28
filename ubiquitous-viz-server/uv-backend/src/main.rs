@@ -15,7 +15,7 @@ async fn main() -> std::io::Result<()> {
     let cfg = constant::Config::new();
 
     log::info!(
-        "Rust Actix Server running... http://{}:{}",
+        "Ubiquitous Viz Server running... http://{}:{}",
         cfg.service_host,
         cfg.service_port
     );

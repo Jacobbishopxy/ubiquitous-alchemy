@@ -1,5 +1,10 @@
+####################################################################################################
+## Builder
+####################################################################################################
+
 FROM    rustlang/rust:nightly AS builder
 
+# Switch to another proxy mirror image (optional)
 COPY    ./sources.list /etc/apt/sources.list
 
 RUN     apt install apt-transport-https ca-certificates

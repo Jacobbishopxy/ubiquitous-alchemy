@@ -1,16 +1,15 @@
-# Author: Celia Bishop
+# Author: Jacob Bishop
 
 ARG     BASE_IMAGE_NAME
 ARG     BASE_IMAGE_VERSION
 
 FROM $BASE_IMAGE_NAME:$BASE_IMAGE_VERSION
-WORKDIR /go/src/app
+WORKDIR /app
 EXPOSE 8080
 
-RUN go env -w GOPROXY=https://goproxy.cn,direct
-Run go env -w GO111MODULE=on
+RUN go env -w GOPROXY=https://goproxy.io,direct
 
-COPY ./ubiquitous-api-gateway /go/src/app
+COPY ./ubiquitous-api-gateway /app
 RUN go mod tidy
 
 RUN go build
