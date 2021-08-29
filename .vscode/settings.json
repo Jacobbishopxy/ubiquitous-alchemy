@@ -12,7 +12,16 @@
 	"gopls": {
 		"experimentalWorkspaceModule": true
 	},
-	"cSpell.words": ["Lettre", "VARCHAR", "datetime", "postgres", "rustup"],
+	"cSpell.words": [
+		"Actix",
+		"Cyberbrick",
+		"Lettre",
+		"VARCHAR",
+		"datetime",
+		"lura",
+		"postgres",
+		"rustup"
+	],
 	"files.watcherExclude": {
 		"**/target": true
 	},

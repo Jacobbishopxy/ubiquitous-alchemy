@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 
 services:
   auth-server:
@@ -10,10 +10,12 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${VOLUME_CONF_EXT}:${VOLUME_CONF_INN}:ro
-    command: ./ubiquitous-auth-server -- ${ENV_PATH}
+    command: ./ubiquitous-auth-server ${ENV_PATH}
+
+    # only for debugging
+    # tty: true
 
 networks:
   default:
-    external: 
+    external:
       name: prod
-
