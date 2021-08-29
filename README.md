@@ -14,7 +14,7 @@
 
 1. [ubiquitous-biz-server](./ubiquitous-biz-server/README.md): business logic implementation
 
-1. [abiquitous-auth-server](./abiquitous-auth-server/README.md): authentication
+1. [ubiquitous-auth-server](./abiquitous-auth-server/README.md): authentication
 
 ## Tech stack
 
