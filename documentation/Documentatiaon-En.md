@@ -3,7 +3,7 @@
 ## Why Ubiquitous Alchemy?
 Ubiquitous Alchemy provides different services for the [Cyberbrick](https://github.com/Jacobbishopxy/cyberbrick) project such as authentification service and ETL service. Those services have separated logic from each other and the front-end. If all are integrated with a single service, a minor update would affect the whole service. To better manage different services, we put them as different microservices. In this case, refactoring one microservice wouldn't affect other running microservices. 
 
-## Cyberbrick Project Structure
+## Ubiquitous-Alchemy Project Structure
 
 TODO
 
@@ -56,5 +56,152 @@ When receives an invitation request, auth-server first hashes the user password 
 3. Login & Logout
    auth-server handles user login and logout with cookies. 
    1. When receives a login request, the auth-server leaves the client a cookie that contains the user's info. It first checks whether the user exists in the user table. If not, it verifies the password using `encryption_helper.rs` (notice that the password in the database is hashed while the password received from the client is not). If the password is valid, serializing user info to string and setting cookies.
-   2. To prevent unnecessary login, auth-server also provides an api to check whether the user is logged in with cookies.
+   2. To prevent unnecessary login, auth-server also provides an API to check whether the user is logged in with cookies.
    3. To log a user out, simply "delete" the cookies.
+
+## [ubiquitous-data-server](../ubiquitous-data-server/README.md) 
+ubiquitous-data-server is the data layer, data engine and data cache based on deps below:
+
+   - [dyn-conn](https://github.com/Jacobbishopxy/rustopia): provides dynamic SQL connection and execution
+
+   - [sqlz](https://github.com/Jacobbishopxy/rustopia): SQL AST model
+
+   - [tiny-df](https://github.com/Jacobbishopxy/rustopia): custom data structure, gluing third party crates
+
+   - [xlz](https://github.com/Jacobbishopxy/rustopia): xlsx/xml toolkit
+
+   - Other 3-rd party dependencies:
+
+     1. [actix-web](https://github.com/actix/actix-web): Rust Http service
+     2. [serde](https://github.com/serde-rs/serde): JSON (de)serialize
+     3. [sea-query](https://github.com/SeaQL/sea-query): SQL string generator
+     4. [sqlx](https://github.com/launchbadge/sqlx): SQL connector & executor
+     5. [rbatis](https://github.com/rbatis/rbatis): Database ORM
+   
+   ### Project Structure
+   1. ua-application
+      - `main`: read env file, start the data persistence service if the server is not offline, serving http requests and routes http request to controller, configuration, query, or schema service.
+      - `controller`: Map Http routes to corresponding configuration, query, or schema services
+      - `service`: Integrating business logic's implementation. The implementation that is exposed to controller.
+      - `error`: ua-applications error handling. Define the errors for http response. Errors are Dao error, Dao not found, Dao repetitive initialize, Internal Server Error, and Bad Request. 
+      - `constant`: read env file variables and check the validation of env file. Env file should contain variable `URI`, `SERVICE_HOST`, and `SERVICE_PORT`.
+      - `model`: business integration & data persistence. 
+      For business integration, declare a `pub struct CI(ConnectionInformation);` and implements the following methods for CI:
+         `new()` new a CI instance with a connection string as parameter.
+         `ci()`: clone a CI
+         `ConnInfoFunctionality`: convert CI to `ConnInfo`
+      Declare a `pub struct UaConn(DaoOptions);` and implements the following methods for UaConn:
+         `BizPoolFunctionality`: disconnect from the database.
+         `ConnGeneratorFunctionality`: create a connection or check whether the pool is connecting
+      For connection data persistence, declare a `pub struct UaPersistence(PersistenceDao);` and implements:
+         `UaPersistence`: create a new connection (with optional table initialization).
+         `PersistenceFunctionality`: load all connection information from database, save connection, update connection, or delete connection.
+
+   1. ua-persistence:
+
+      - `model`: serves for data persistence. It defines the Rust data structure to process the data, provides SQL schema initialization, and can perform SQL query or mutation. It can insert, update, load, or delete single info or all info from the database.  
+  
+   1. ua-service:
+
+      - `dao`: database access object. The object is defined as
+      ```rust
+      pub struct Dao<T: Database> {
+         pub info: String,
+         pub pool: Pool<T>,
+      }
+      ```
+      `Database` now supports PostgreSQL and MySQL. 
+      `info`: connection string
+      `pool`: connection pool
+
+      `Dao`'s method:
+          `Clone()` that can clone a information.
+           `new()` initialize a new database access
+           `connectable()` check whether current object is connectable
+      - `error`: error handler. Error includes database general error(worker crashed & migration error), database connection (pool time out & pool closed), error, and database operation error (index out of bound error & column decode error). 
+      - `interface`: business logic's interface. Define all the features that serve to implement the business logic.
+      - `repository`: business logic's implementation. Implement the corresponding method declared in the `interface`. Methods include fetch all table names or all column names of a given table; create, alter, truncate or drop tables; create or drop indexes; create or drop foreign indexes.
+      - `provider`: SQL string generator. Generate SQL string for operations including list all columns or all tables' name; create, alter, drop, rename, or truncate a table; create or drop an index; create or drop a foreigh key; select given columns from a given table with given conditions.
+      - `util`: utilities. Miscellaneous helper function
+
+## ubiquitous-viz-server
+ubiquitous-viz-server is the visualization demo of ubiquitous-alchemy application. It's a web client supporting user interaction with backend ubiquitous alchemy server. Servers that give API support are ubiquitous-data-server, ubiquitous-auth-server, and ubiquitous-api-gateway.
+
+In dev mode, ubiquitous-viz-server's frontend we need to config `package.json` property `proxy` to the api-gateway host (eg: "http://localhost:8080"). 
+
+The web client is defined in `frontend`. Based on `React`, it's a single page web-app. 
+
+With `react-router-dom`, map url paths to components. 
+
+### Http Services
+In `./servers`, define the Http API for database configuraion, selection configuration, and authentification. All APIs are mapped to ubiquitous-api-gateway, without worrying which server will actually handle the service logic. Here, we use `axios` to send HTTP request.
+
+### Modal
+In `./services/API.d.ts`, defines all the data type used for `datalab`, `querySelector`, and authentifictaion. 
+
+### React Components
+Using `antd`'s `layout`, define the App header, footer, and breadcrumb from `components/AppAccessory`. Brandcrumb is dynamically generated with current url path. We can get the current url path from `props.location.pathname`. Header consists of links to datalab and query selector. Right hand side of the header links to login/logout pages. 
+
+- `Datalab` is the web client for ubiquitous-data-server. It contains a reusable modal form for editing database connection information. Field `name`, `driver`(db type), `username`, `password`, `host`, `port`, and `database` are required. `description` is optional.
+The main component of `Datalab` is an antd `ProTable`. The columns are generated by `columnsFactory`. Each column is editable and deletable. Each column implements the `check connection` api, that can check database connection with column's info as connection info. When updating column, the modal form contains column's info as default value. When inserting a new column, the modal form doesn't have default value.
+
+- `QuerySelector` is a complex modal form that allow user to perform database query. The value of the form will be converted to data type
+   ```js
+   interface Selection {
+         table: string,
+         columns: ColumnAlias[],
+         filter?: Expression[],
+         order?: Order[],
+         limit?: number,
+         offset?: number,
+      }
+   ```
+   `table` is a single selection while `columns` are the column names of the selected `table`.  `SelectionFilter` is an optional two-layer list. A filter list can be a list of filter list, or the condition item. For exmaple, `filter=[condition item1, condition item2, filter list1=[sub-cond1, sub-cond2]]`. Condition item consists of condition value and condition type
+   ```js
+   enum conditionEnum {
+      Equal = "=",
+      NotEqual = "!=",
+      Greater = ">",
+      GreaterEqual = ">=",
+      Less = "<",
+      LessEqual = "<=",
+      In = "in",
+      Between = "between",
+      Like = "like",
+   }
+   ```
+   Notice that for "Between" we have a pair of input box; for "In" we have a multi-input box; And for the remaining conditions we use a text input box.
+
+   `Order` is the order of selecting data, `limit` and `offset` is used to select certain amount of data.
+
+- `Login` defines the `login`, `logout`, `registration`, and `invitation` page. It's the web client for `ubiquitous-auth-server`. 
+  `login` and `registration` page are forms for inputing user login/registation needed data. 
+  `Registration` page will validate the input before sending http request. Password needs at least 6 characters. 
+  `Invitation` page is the page when a user click the invitation link in the invitation email. `Invitation` page reads the url path query. If query is empty it will prompt user to re-register. If query is valid, user should click the confirm button and being redirect to login page. 
+  `login` page takes user email and password, when user submits the form and API responses 'ok', it'll redirect user to the home page. Otherwise, user has to stay on the login page.
+  `logout` page shows the loading state of logging out or success state of logging out.
+
+- `App` has a react state for user logined state. Users' login or logout action will change the `isLogined` state. `App` will `check` the current login state whenever `isLogined` state is changed by sending a `check` request with cookies. 
+
+## ubiquitous-fs-server
+TODO
+
+## ubiquitous-tg-server
+TODO
+
+## docker
+`./docker` contains dockerFile to deploy an application on docker. 
+
+### Why docker?
+Developing apps today requires so much more than writing code. Multiple languages, frameworks, architectures, and discontinuous interfaces between tools for each lifecycle stage creates enormous complexity. Docker simplifies and accelerates your workflow, while giving developers the freedom to innovate with their choice of tools, application stacks, and deployment environments for each project. ([source](https://www.docker.com/why-docker))
+
+### docker-go, docker-rust
+Base image for actual docker image of applictaion. Whenever we update an applictaion, we only update the business logic of such application. If we didn't change the dependencies of such application, we should avoid rebuilding dependenpies when we re-deploy the application. Thus, we separate part of the application as Base image and build the remaining buisness logic image from the Base image.
+`docker-go` is the image for `golang`.
+`docker-rust` is the image for `rust`.
+
+### docker-api-gateway & docker-auth-server
+Contains all the files needed to build an app image and start a container. Each folder contains two bash file: setup.sh and start.sh. Literally, setup.sh is used to set up the app image while start.sh is used to start a container. Two bash files will read env variable from the `./resources` folder.
+
+## resources
+Contains the env files for different server. This is for keeping environment variables consistence and protect information. The actual env file will not upload to remote github repo. Instead, a template env file is provided, and user can config the env file with their own information such as database connection information.
