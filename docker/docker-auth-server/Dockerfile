@@ -37,7 +37,6 @@ WORKDIR /app
 
 # Copy our build
 COPY    --from=builder /app/target/release/ubiquitous-auth-server ./
-COPY    --from=builder /app/.env ./
 
 # Use an unprivileged user.
 USER    docker:docker

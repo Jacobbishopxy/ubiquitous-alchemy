@@ -11,3 +11,7 @@ Docker folder that holds all the services.
 
 - docker-api-gateway
 - docker-auth-server
+
+## Note
+
+Both `docker-go` & `docker-rust` use the same env file as `docker-api-gateway` & `docker-auth-server`, respectively.

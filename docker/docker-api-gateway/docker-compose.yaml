@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 
 services:
   api-gateway:
@@ -14,6 +14,5 @@ services:
 
 networks:
   default:
-    external: 
+    external:
       name: prod
-

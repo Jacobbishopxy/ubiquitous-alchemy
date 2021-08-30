@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source ../../resources/go.env
+source ../../resources/gateway.env
 
 export APP_IMAGE_NAME=${APP_IMAGE_NAME}
 export APP_IMAGE_VERSION=${APP_IMAGE_VERSION}
