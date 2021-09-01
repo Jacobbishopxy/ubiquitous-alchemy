@@ -6,11 +6,11 @@ services:
     container_name: ${CONTAINER_NAME}
     image: ${APP_IMAGE_NAME}:${APP_IMAGE_VERSION}
     ports:
-      - ${CONTAINER_PORT}:8072
+      - ${CONTAINER_PORT}:8050
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${VOLUME_CONF_EXT}:${VOLUME_CONF_INN}:ro
-    command: ./ubiquitous-auth-server ${ENV_PATH}
+    command: [./ubiquitous-auth-server, $ENV_PATH]
 
     # only for debugging
     # tty: true
