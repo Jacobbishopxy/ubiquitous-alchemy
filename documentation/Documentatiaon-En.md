@@ -5,7 +5,7 @@ Ubiquitous Alchemy provides different services for the [Cyberbrick](https://gith
 
 ## Ubiquitous-Alchemy Project Structure
 
-TODO
+![alt text](sturcture.png)
 
 ## ubiquitous-api-gateway
 
