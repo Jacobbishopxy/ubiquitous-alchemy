@@ -2,4 +2,4 @@
 # please create your own x.env files, refering to their template files, respectively
 
 auth.env
-go.env
+gateway.env

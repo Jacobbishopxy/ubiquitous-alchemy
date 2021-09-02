@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 
 services:
   api-gateway:
@@ -6,14 +6,13 @@ services:
     container_name: ${CONTAINER_NAME}
     image: ${APP_IMAGE_NAME}:${APP_IMAGE_VERSION}
     ports:
-      - ${CONTAINER_PORT}:8080
+      - ${CONTAINER_PORT}:8010
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${VOLUME_CONF_EXT}:${VOLUME_CONF_INN}:ro
-    command: ./ubiquitous-api-gateway -c ${LURA_PATH}
+    command: [./ubiquitous-api-gateway, -c, $LURA_PATH]
 
 networks:
   default:
-    external: 
+    external:
       name: prod
-

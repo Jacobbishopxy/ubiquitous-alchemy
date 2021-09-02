@@ -21,5 +21,4 @@ Ubiquitous viz server, as a web server supporting user interaction with backend,
 
 ## Notice
 
-uv-frontend in `dev` mode: config `package.json` property `proxy` to the api-gateway host (eg: "http://localhost:8080").
-
+uv-frontend in `dev` mode: config `package.json` property `proxy` to the api-gateway host (eg: "http://localhost:8010").
