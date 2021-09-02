@@ -15,4 +15,4 @@ export ENV_PATH=${ENV_PATH}
 # echo $ENV_PATH
 
 docker-compose down
-docker-compose up -d
+docker-compose up 

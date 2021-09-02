@@ -193,15 +193,15 @@ TODO
 `./docker` contains dockerFile to deploy an application on docker. 
 
 ### Why docker?
-Developing apps today requires so much more than writing code. Multiple languages, frameworks, architectures, and discontinuous interfaces between tools for each lifecycle stage creates enormous complexity. Docker simplifies and accelerates your workflow, while giving developers the freedom to innovate with their choice of tools, application stacks, and deployment environments for each project. ([source](https://www.docker.com/why-docker))
+Developing apps today requires so much more than writing code. Multiple languages, frameworks, architectures, and discontinuous interfaces between tools for each lifecycle stage create enormous complexity. Docker simplifies and accelerates your workflow while giving developers the freedom to innovate with their choice of tools, application stacks, and deployment environments for each project. ([source](https://www.docker.com/why-docker))
 
 ### docker-go, docker-rust
-Base image for actual docker image of applictaion. Whenever we update an applictaion, we only update the business logic of such application. If we didn't change the dependencies of such application, we should avoid rebuilding dependenpies when we re-deploy the application. Thus, we separate part of the application as Base image and build the remaining buisness logic image from the Base image.
+The base image for actual docker image of application. Whenever we update an application, we only update the business logic of such application. If we didn't change the dependencies of such an application, we should avoid rebuilding dependencies when we re-deploy the application. Thus, we separate part of the application as a Base image and build the remaining business logic image from the Base image.
 `docker-go` is the image for `golang`.
 `docker-rust` is the image for `rust`.
 
 ### docker-api-gateway & docker-auth-server
-Contains all the files needed to build an app image and start a container. Each folder contains two bash file: setup.sh and start.sh. Literally, setup.sh is used to set up the app image while start.sh is used to start a container. Two bash files will read env variable from the `./resources` folder.
+Contains all the files needed to build an app image and start a container. Each folder contains two bash files: setup.sh and start.sh. Literally, setup.sh is used to set up the app image while start.sh is used to start a container. Two bash files will read the env variable from the `./resources` folder.
 
 ## resources
-Contains the env files for different server. This is for keeping environment variables consistence and protect information. The actual env file will not upload to remote github repo. Instead, a template env file is provided, and user can config the env file with their own information such as database connection information.
+Contains the env files for different servers. This is for keeping environment variables consistent and protect information. The actual env file will not upload to remote github repo. Instead, a template env file is provided, and users can config the env file with their own information such as database-connection information.
