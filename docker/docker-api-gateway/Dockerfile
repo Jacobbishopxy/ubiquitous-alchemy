@@ -9,7 +9,9 @@ WORKDIR /app
 
 COPY    ./ubiquitous-api-gateway /app
 
+# install deps & build
 RUN     go mod tidy
 RUN     go build
 
+# switch to "release" mode in production
 ENV     GIN_MODE=release

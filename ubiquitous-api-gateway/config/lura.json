@@ -1,9 +1,9 @@
 {
-	"version": 2,
-	"name": "Ubiquitous API Gateway",
-	"port": 8010,
-	"timeout": "10s",
-	"cache_ttl": "3600s",
+	"version": {{ .service.version }},
+	"name": "{{ .service.name }}",
+	"port": {{ .service.port }},
+	"timeout": "{{ .service.timeout }}",
+	"cache_ttl": "{{ .service.cache_ttl }}",
 	"endpoints": [
 		{
 			"endpoint": "/api/cfg/check_connection",
@@ -14,7 +14,9 @@
 					"encoding": "no-op",
 					"method": "POST",
 					"url_pattern": "/api/cfg/check_connection",
-					"host": ["host.docker.internal:8051"]
+					"host": [
+						"{{ .host.host }}:{{ .host.server_data_port }}"
+					]
 				}
 			]
 		},
@@ -25,7 +27,9 @@
 				{
 					"encoding": "no-op",
 					"url_pattern": "/api/cfg/conn",
-					"host": ["host.docker.internal:8051"]
+					"host": [
+						"{{ .host.host }}:{{ .host.server_data_port }}"
+					]
 				}
 			]
 		},
@@ -38,7 +42,9 @@
 					"encoding": "no-op",
 					"method": "POST",
 					"url_pattern": "/api/cfg/conn",
-					"host": ["host.docker.internal:8051"]
+					"host": [
+						"{{ .host.host }}:{{ .host.server_data_port }}"
+					]
 				}
 			]
 		},
@@ -52,7 +58,9 @@
 					"encoding": "no-op",
 					"method": "PUT",
 					"url_pattern": "/api/cfg/conn",
-					"host": ["host.docker.internal:8051"]
+					"host": [
+						"{{ .host.host }}:{{ .host.server_data_port }}"
+					]
 				}
 			]
 		},
@@ -66,7 +74,9 @@
 					"encoding": "no-op",
 					"method": "DELETE",
 					"url_pattern": "/api/cfg/conn",
-					"host": ["host.docker.internal:8051"]
+					"host": [
+						"{{ .host.host }}:{{ .host.server_data_port }}"
+					]
 				}
 			]
 		},
@@ -79,7 +89,9 @@
 					"encoding": "no-op",
 					"method": "POST",
 					"url_pattern": "/api/invitation",
-					"host": ["host.docker.internal:8050"]
+					"host": [
+						"{{ .host.host }}:{{ .host.server_auth_port }}"
+					]
 				}
 			]
 		},
@@ -91,7 +103,9 @@
 				{
 					"encoding": "no-op",
 					"url_pattern": "/api/register/{id}",
-					"host": ["host.docker.internal:8050"]
+					"host": [
+						"{{ .host.host }}:{{ .host.server_auth_port }}"
+					]
 				}
 			]
 		},
@@ -103,7 +117,9 @@
 				{
 					"encoding": "no-op",
 					"url_pattern": "/api/auth",
-					"host": ["host.docker.internal:8050"]
+					"host": [
+						"{{ .host.host }}:{{ .host.server_auth_port }}"
+					]
 				}
 			]
 		},
@@ -116,7 +132,9 @@
 				{
 					"encoding": "no-op",
 					"url_pattern": "/api/auth",
-					"host": ["host.docker.internal:8050"]
+					"host": [
+						"{{ .host.host }}:{{ .host.server_auth_port }}"
+					]
 				}
 			]
 		},
@@ -129,7 +147,9 @@
 				{
 					"encoding": "no-op",
 					"url_pattern": "/api/auth",
-					"host": ["host.docker.internal:8050"],
+					"host": [
+						"{{ .host.host }}:{{ .host.server_auth_port }}"
+					],
 					"headers_to_pass": ["Cookie"]
 				}
 			]

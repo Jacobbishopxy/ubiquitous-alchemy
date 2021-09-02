@@ -2,6 +2,8 @@
 
 This project serves an API gateway service, which depends on [LURA](github.com/luraproject/lura).
 
+While in product mode, please make sure configurations under `config` folder are all set (execute `make env-setup` at the first time).
+
 ## Ubiquitous-alchemy-server
 
 1. configuration:
@@ -32,8 +34,8 @@ This project serves an API gateway service, which depends on [LURA](github.com/l
 
 1. auth:
 
-   - [ ] [POST] invitation
-   - [ ] [POST] registration
-   - [ ] [POST] login
-   - [ ] [GET] check_alive
-   - [ ] [DELETE] logout
+   - [x] [POST] invitation
+   - [x] [POST] registration
+   - [x] [POST] login
+   - [x] [GET] check_alive
+   - [x] [DELETE] logout
