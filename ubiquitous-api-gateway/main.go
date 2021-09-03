@@ -21,6 +21,9 @@ const (
 	fcEnable    = "FC_ENABLE"
 )
 
+// lura config (any API mutation goes here)
+const configFile = "./config/lura.json"
+
 // load env file
 func loadEnv(path string) {
 	err := godotenv.Load(path)
@@ -33,26 +36,28 @@ func loadEnv(path string) {
 
 func main() {
 	// load .env
-	loadEnv(".env")
+	envFile := flag.String("c", "lura.env", "Path to the configuration filename")
+	loadEnv(*envFile)
 	var cfg config.Parser
 	cfg = config.NewParser()
 	if os.Getenv(fcEnable) != "" {
 		cfg = flexibleconfig.NewTemplateParser(flexibleconfig.Config{
 			Parser:    cfg,
 			Partials:  os.Getenv(fcPartials),
-			Settings:  os.Getenv(fcSettings), //dynamically set this
+			Settings:  os.Getenv(fcSettings),
 			Path:      os.Getenv(fcPath),
 			Templates: os.Getenv(fcTemplates),
 		})
 	}
 
+	// get arguments from command line
 	port := flag.Int("p", 0, "Port of the service")
 	logLevel := flag.String("l", "ERROR", "Logging level")
 	debug := flag.Bool("d", false, "Enable the debug")
-	configFile := flag.String("c", "./config/lura.json", "Path to the configuration filename")
 	flag.Parse()
 
-	serviceConfig, err := cfg.Parse(*configFile)
+	// lura service config
+	serviceConfig, err := cfg.Parse(configFile)
 	if err != nil {
 		log.Fatal("ERROR", err.Error())
 	}
@@ -65,5 +70,6 @@ func main() {
 
 	routerFactory := gin.DefaultFactory(proxy.DefaultFactory(logger), logger)
 
+	// start API gateway server
 	routerFactory.New().Run(serviceConfig)
 }

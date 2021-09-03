@@ -1,6 +1,6 @@
 # Ubiquitous Alchemy
 
-This project serves as a collection of [Cyberbrick](https://github.com/Jacobbishopxy/cyberbrick) services.
+This project serves as a collection of [Cyberbrick](https://github.com/Jacobbishopxy/cyberbrick) backend services.
 
 1. [dev](./dev/README.md): development toolkit/ scripts
 
