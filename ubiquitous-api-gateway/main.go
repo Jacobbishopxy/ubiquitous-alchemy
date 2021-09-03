@@ -35,8 +35,14 @@ func loadEnv(path string) {
 }
 
 func main() {
-	// load .env
+	// get arguments from command line
 	envFile := flag.String("c", "lura.env", "Path to the configuration filename")
+	port := flag.Int("p", 0, "Port of the service")
+	logLevel := flag.String("l", "ERROR", "Logging level")
+	debug := flag.Bool("d", false, "Enable the debug")
+	flag.Parse()
+
+	// lura flexible config
 	loadEnv(*envFile)
 	var cfg config.Parser
 	cfg = config.NewParser()
@@ -49,12 +55,6 @@ func main() {
 			Templates: os.Getenv(fcTemplates),
 		})
 	}
-
-	// get arguments from command line
-	port := flag.Int("p", 0, "Port of the service")
-	logLevel := flag.String("l", "ERROR", "Logging level")
-	debug := flag.Bool("d", false, "Enable the debug")
-	flag.Parse()
 
 	// lura service config
 	serviceConfig, err := cfg.Parse(configFile)
