@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 sqlz = { git = "https://github.com/Jacobbishopxy/rustopia", version = "0.1.0" }
 
-sea-query = { version = "0.14.1", features = ["with-json", "with-chrono", "with-uuid"] }
+sea-query = { version = "0.16.0", features = ["with-json", "with-chrono", "with-uuid"] }
 sqlx = { version = "0.5.5", features = ["any", "postgres", "mysql"] }
 async-trait = "0.1.50"
 derive_more = "0.99.14"

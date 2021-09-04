@@ -22,11 +22,12 @@ impl From<sqlz::DataEnum> for DataEnum {
 impl Into<Value> for DataEnum {
     fn into(self) -> Value {
         match self {
-            DataEnum::Integer(v) => Value::BigInt(v),
-            DataEnum::Float(v) => Value::Double(v),
-            DataEnum::String(v) => Value::String(Box::new(v)),
-            DataEnum::Bool(v) => Value::Bool(v),
-            DataEnum::Null => Value::Null,
+            DataEnum::Integer(v) => Value::BigInt(Some(v)),
+            DataEnum::Float(v) => Value::Double(Some(v)),
+            DataEnum::String(v) => Value::String(Some(Box::new(v))),
+            DataEnum::Bool(v) => Value::Bool(Some(v)),
+            // TODO: null is not always a string value, consider to redesign `DataEnum`?
+            DataEnum::Null => Value::String(None),
         }
     }
 }
