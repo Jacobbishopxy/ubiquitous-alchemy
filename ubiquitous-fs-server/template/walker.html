@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>public</title>
+		<!-- Bootstrap -->
+		<link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div>
+			<h3 class="text-center" id="path" data-relative="{{.RelativePath}}">
+				current path: {{.CurrentPath}}
+			</h3>
+		</div>
+		<div class="container">
+			<table class="table table-striped table-condensed table-bordered">
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>Size</td>
+						<td>Type</td>
+						<td>ModTime</td>
+						<td>Operation</td>
+					</tr>
+				</thead>
+				<tbody>
+					{{range $i, $v := .FileInfos}}
+					<tr>
+						<td>{{$v.Name}}</td>
+						<td>{{$v.Size}}</td>
+						<td>{{$v.Type}}</td>
+						<td>{{$v.ModifyDate.Format "2006-01-02 15:04:05"}}</td>
+						<td>
+							{{if eq $v.Type "folder"}}
+							<a data-name="{{$v.Name}}" class="showDir btn btn-primary btn-sm"
+								>View Menu</a
+							>
+							{{else}}
+							<a
+								data-name="{{$v.Name}}"
+								class="downloadFile btn btn-success btn-sm"
+								>View File</a
+							>
+							{{end}}
+						</td>
+					</tr>
+					{{end}}
+				</tbody>
+			</table>
+		</div>
+		<button
+			id="back"
+			class="btn btn-default"
+			style="
+				position: fixed;
+				top: 45%;
+				width: 80px;
+				height: 80px;
+				border-radius: 40px;
+			"
+		>
+			return
+		</button>
+		<script src="/static/jquery/jquery-3.1.1.min.js"></script>
+		<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+		<script>
+			(function ($) {
+				$(function () {
+					const ROOT_HREF = window.location.href;
+					var relativePath = $("#path").data("relative");
+					$.each($(".showDir"), function (index, item) {
+						var $showDir = $(item);
+						$showDir.attr("href", ROOT_HREF + "/" + $showDir.data("name"));
+					});
+
+					$.each($(".downloadFile"), function (index, item) {
+						var $downloadFile = $(item);
+						$downloadFile.attr(
+							"href",
+							"/download/" + relativePath + "/" + $downloadFile.data("name")
+						);
+					});
+
+					$("#back").on("click", function () {
+						window.history.back();
+					});
+				});
+			})(jQuery);
+		</script>
+	</body>
+</html>
