@@ -11,6 +11,7 @@ import (
 	"sort"
 	"strings"
 	"text/template"
+	"time"
 )
 
 type FileServer struct {
@@ -91,15 +92,25 @@ func ListDirectory(w http.ResponseWriter, r *http.Request, f http.File, template
 	for _, d := range dirs {
 		name := d.Name()
 		fileExtension := "page"
+		var atime, mtime, ctime time.Time
 		if d.IsDir() {
 			name += "/"
 			fileExtension = "folder"
 		} else if len(filepath.Ext(name)) > 1 {
+			atime, mtime, ctime, _ = statTimes(name)
 			fileExtension = filepath.Ext(name)[1:]
 		}
 
 		url := url.URL{Path: name}
-		fileContent := FileInfo{Name: name, Size: getHumanReadableSize(d), URL: url, Extension: fileExtension}
+		fileContent := FileInfo{
+			Name:      name,
+			Size:      getHumanReadableSize(d),
+			URL:       url,
+			Extension: fileExtension,
+			ATime:     time2string(atime, "", time.RFC822),
+			MTime:     time2string(mtime, "", time.RFC822),
+			CTime:     time2string(ctime, "", time.RFC822),
+		}
 		dirContents.Files = append(dirContents.Files, fileContent)
 	}
 	dirContents.IPAddr = r.Host
@@ -131,9 +142,13 @@ type DirectoryInfo struct {
 	IPAddr  string
 }
 
+// TODO: rich
 type FileInfo struct {
 	Name      string
 	Size      string
 	URL       url.URL
 	Extension string
+	ATime     string
+	MTime     string
+	CTime     string
 }

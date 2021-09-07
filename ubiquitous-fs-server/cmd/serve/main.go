@@ -15,8 +15,10 @@ func main() {
 	directory := flag.String("d", ".", "the directory of static file to host")
 	flag.Parse()
 
+	// FileServer instance
 	fs := files.NewFileSever(http.Dir(*directory))
 
+	// Start FS server
 	log.Printf("Serving %s on HTTP port: %s\n", *directory, *port)
 	err := http.ListenAndServe(":"+*port, files.RequestLogger(fs))
 	if err != nil {

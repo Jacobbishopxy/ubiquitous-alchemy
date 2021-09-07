@@ -5,7 +5,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"syscall"
 	"text/template"
+	"time"
 )
 
 func getHumanReadableSize(f os.FileInfo) string {
@@ -23,6 +25,25 @@ func getTemplateHTML() *template.Template {
 		panic("template.html not found!")
 	}
 	return dirListTemplateHTMLPro
+}
+
+func statTimes(name string) (atime, mtime, ctime time.Time, err error) {
+	fi, err := os.Stat(name)
+	if err != nil {
+		return
+	}
+	mtime = fi.ModTime()
+	stat := fi.Sys().(*syscall.Stat_t)
+	atime = time.Unix(int64(stat.Atim.Sec), int64(stat.Atim.Nsec))
+	ctime = time.Unix(int64(stat.Ctim.Sec), int64(stat.Ctim.Nsec))
+	return
+}
+
+func time2string(t time.Time, defaultString string, format string) string {
+	if t.IsZero() {
+		return defaultString
+	}
+	return t.Format(format)
 }
 
 func RequestLogger(handler http.Handler) http.Handler {

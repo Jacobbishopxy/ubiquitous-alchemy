@@ -4,11 +4,15 @@ File management system.
 
 Reference: [github.com/prdpx7/go-fileserver](https://github.com/prdpx7/go-fileserver)
 
+## Dependency
+
+- [afero](https://github.com/spf13/afero): A FileSystem Abstraction System for Go (file CRUD and permissions...)
+
 ## TODO
 
+1. REST API
 1. custom styles (default template)
 1. custom template.html (pluggable)
-1. enriched file info
 1. file(s) upload
 1. dynamic register file root (persistency)
 1. tagging (file identifier: name/md5) and persistency
