@@ -50,19 +50,19 @@ impl CI {
 
 impl ConnInfoFunctionality for CI {
     fn to_conn_info(&self) -> ConnInfo {
-        let drv = if self.0.driver == "postgres" {
+        let driver = if self.0.driver == "postgres" {
             Driver::Postgres
         } else {
             Driver::Mysql
         };
-        ConnInfo {
-            driver: drv,
-            username: self.0.username.clone(),
-            password: self.0.password.clone(),
-            host: self.0.host.clone(),
-            port: self.0.port.clone(),
-            database: self.0.database.clone(),
-        }
+        ConnInfo::new(
+            driver,
+            &self.0.username,
+            &self.0.password,
+            &self.0.host,
+            self.0.port,
+            &self.0.database,
+        )
     }
 }
 pub struct UaConn(DaoOptions);

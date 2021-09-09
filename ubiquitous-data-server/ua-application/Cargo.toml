@@ -5,7 +5,7 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-dyn-conn = { git = "https://github.com/Jacobbishopxy/rustopia", version = "0.1.0" }
+dyn-conn = { git = "https://github.com/Jacobbishopxy/rustopia", version = "0.1.1" }
 sqlz = { git = "https://github.com/Jacobbishopxy/rustopia", version = "0.1.0" }
 ua-service = { path = "../ua-service" }
 ua-persistence = { path = "../ua-persistence" }

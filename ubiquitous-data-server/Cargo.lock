@@ -827,8 +827,8 @@ checksum = "77c90badedccf4105eca100756a0b1289e191f6fcbdadd3cee1d2f614f97da8f"
 
 [[package]]
 name = "dyn-conn"
-version = "0.1.0"
-source = "git+https://github.com/Jacobbishopxy/rustopia#e978334717cf4c4e591637d20226674ea4b6601e"
+version = "0.1.1"
+source = "git+https://github.com/Jacobbishopxy/rustopia#23def6c73e6e3dee3362a991fe6f728cc131ecd8"
 dependencies = [
  "async-trait",
  "serde",
@@ -2381,7 +2381,7 @@ dependencies = [
 [[package]]
 name = "sqlz"
 version = "0.1.0"
-source = "git+https://github.com/Jacobbishopxy/rustopia#e978334717cf4c4e591637d20226674ea4b6601e"
+source = "git+https://github.com/Jacobbishopxy/rustopia#23def6c73e6e3dee3362a991fe6f728cc131ecd8"
 dependencies = [
  "serde",
  "serde_json",

@@ -2,7 +2,7 @@
 
 File management system.
 
-Reference: [github.com/prdpx7/go-fileserver](https://github.com/prdpx7/go-fileserver)
+Studied from [this post](https://shockerli.net/post/golang-pkg-http-file-server/) and [blog](https://go.googlesource.com/proposal/+/master/design/draft-iofs.md).
 
 ## Dependency
 
