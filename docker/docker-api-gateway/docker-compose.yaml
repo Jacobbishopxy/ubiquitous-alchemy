@@ -10,7 +10,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${VOLUME_CONF_EXT}:${VOLUME_CONF_INN}:ro
+      - ${VOLUME_LURA_EXT}:${VOLUME_LURA_INN}:ro
     command: [./ubiquitous-api-gateway, -c, $LURA_PATH]
+    # tty: true
 
 networks:
   default:
