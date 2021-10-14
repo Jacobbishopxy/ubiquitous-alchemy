@@ -1,4 +1,3 @@
-import { isLength } from "lodash"
 
 export interface homeProps {
     isLogin: boolean
@@ -10,7 +9,7 @@ export const Home = (props: homeProps) => {
             Hi {props.userName} & Welcome
         </> :
         <>
-            Welcome visitor! Please<a href="#/login" style={{ textDecoration: "underline" }}> Login</a> first!
+            Welcome visitor! Please<a href="#/login" style={{textDecoration: "underline"}}> Login</a> first!
         </>
     )
 }
