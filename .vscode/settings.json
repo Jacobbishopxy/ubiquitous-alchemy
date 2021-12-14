@@ -15,32 +15,26 @@
 	"cSpell.words": [
 		"Actix",
 		"Cyberbrick",
-		"Lettre",
-		"VARCHAR",
 		"datetime",
+		"FILEBROWSER",
+		"Lettre",
 		"lura",
 		"postgres",
-		"rustup"
+		"rustup",
+		"VARCHAR"
 	],
 	"files.watcherExclude": {
 		"**/target": true
 	},
 	"grammarly.overrides": [
 		{
-			"files": [
-				"**/documentation/Documentatiaon-En.md"
-			],
+			"files": ["**/documentation/Documentatiaon-En.md"],
 			"config": {
 				"audience": "general",
 				"dialect": "american",
 				"domain": "technical",
-				"emotions": [
-					"neutral"
-				],
-				"goals": [
-					"inform",
-					"describe"
-				]
+				"emotions": ["neutral"],
+				"goals": ["inform", "describe"]
 			}
 		}
 	]
