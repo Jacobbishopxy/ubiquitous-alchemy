@@ -1,9 +1,9 @@
 package gallery
 
-import "ubiquitous-biz-server/app/domain/entity"
+import "ubiquitous-biz-server/api/entity"
 
 type PrivateTag struct {
-	entity.Common
+	entity.UintID
 	Name        string `gorm:"size:256;not null"`
 	Type        string `gorm:"szie:100"`
 	Description string

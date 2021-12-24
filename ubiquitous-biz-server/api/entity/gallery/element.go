@@ -1,6 +1,6 @@
 package gallery
 
-import "ubiquitous-biz-server/app/domain/entity"
+import "ubiquitous-biz-server/api/entity"
 
 // TODO: BeforeSave hook
 type ElementType string
@@ -28,7 +28,7 @@ const (
 )
 
 type Element struct {
-	entity.UnitId
+	entity.UintID
 	Name       string `gorm:"size:256;not null"`
 	Type       string `gorm:"size:256;not null"`
 	TimeSeries bool   `gorm:"default:false"`

@@ -2,13 +2,13 @@ package gallery
 
 import (
 	"time"
-	"ubiquitous-biz-server/app/domain/entity"
+	"ubiquitous-biz-server/api/entity"
 
 	"gorm.io/datatypes"
 )
 
 type Pointer struct {
-	entity.Common
+	entity.UintID
 	Date        time.Time `grom:"default:CURRENT_TIMESTAMP"`
 	Title       string    `gorm:"size:256;not null" `
 	Data        datatypes.JSONMap

@@ -1,11 +1,11 @@
 package gallery
 
 import (
-	"ubiquitous-biz-server/app/domain/entity"
+	"ubiquitous-biz-server/api/entity"
 )
 
 type CategoryBase struct {
-	entity.Common
+	entity.UintID
 	Name        string `gorm:"size:256;not null;unique"`
 	Type        string `gorm:"szie:100;not null"`
 	Description string
