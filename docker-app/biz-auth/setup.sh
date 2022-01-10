@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # author: Celia Xiao
 
+source ../../resources/rust.env
 source ../../resources/auth.env
 docker build \
     -t "${APP_IMAGE_NAME}":"${APP_IMAGE_VERSION}" \
