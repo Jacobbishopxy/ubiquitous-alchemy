@@ -1,12 +1,28 @@
 
 README.md
+.dockerignore
+.git
 .gitignore
+.idea
+.prettierrc
 
 dev/
 docker/
+docker-app/
+docker-base/
 resources/
+
+
+cache
+data
+doc
 
 ubiquitous-auth-server/target/
 ubiquitous-data-server/target/
 ubiquitous-viz-server/target/
 ubiquitous-api-gateway/config/
+
+**/node_modules
+**/backend
+**/frontend
+

@@ -1,3 +1,0 @@
-[submodule "filebrowser"]
-	path = ubiquitous-fb-server
-	url = git@github.com:filebrowser/filebrowser.git

@@ -2,5 +2,4 @@
 # please create your own x.env files, refering to their template files, respectively
 
 auth.env
-gateway.env
-lura.env
+config.json
