@@ -11,8 +11,8 @@ def get_database_source(loader: Loader, db_id: str):
 
     try:
         source = loader.read(q)
-    except Exception:
-        return "Error: illegal `db_id`"
+    except Exception as e:
+        return f"Error: {e}"
 
     if not len(source):
         return "Error: source is empty"
