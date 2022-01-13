@@ -26,16 +26,5 @@
 	"files.watcherExclude": {
 		"**/target": true
 	},
-	"grammarly.overrides": [
-		{
-			"files": ["**/documentation/Documentatiaon-En.md"],
-			"config": {
-				"audience": "general",
-				"dialect": "american",
-				"domain": "technical",
-				"emotions": ["neutral"],
-				"goals": ["inform", "describe"]
-			}
-		}
-	]
+	"python.formatting.provider": "black"
 }

@@ -22,7 +22,7 @@ export class UploadController {
   private getUploadPath() {
     const serverConfig = this.configService.get("server")
 
-    return `http://${serverConfig.serverPyHost}:${serverConfig.serverPyPort}/api/upload`
+    return `http://${serverConfig.SERVER_PY_HOST}:${serverConfig.SERVER_PY_PORT}/api/upload`
 
   }
 

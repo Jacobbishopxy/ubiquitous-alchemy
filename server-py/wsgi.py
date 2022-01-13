@@ -11,9 +11,10 @@ from app import assemble_app, AppConfig, controllers
 
 
 @click.command()
-@click.option('--env', default="dev", help="environment: dev/prod")
-@click.option('--debug', default="default", help="debug: default/true/false")
+@click.option("--env", default="dev", help="environment: dev/prod")
+@click.option("--debug", default="default", help="debug: default/true/false")
 def start(env: str, debug: str):
+
     cfg = AppConfig.prod if env == "prod" else AppConfig.dev
     host, port = "0.0.0.0", cfg.value.server_port
 
@@ -32,5 +33,5 @@ def start(env: str, debug: str):
         app.run(debug=dbg, host=host, port=port)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     start()

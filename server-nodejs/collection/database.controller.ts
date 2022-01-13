@@ -26,7 +26,7 @@ export class DatabaseController {
   private getDbPath() {
     const serverConfig = this.configService.get("server")
 
-    return `http://${serverConfig.serverPyHost}:${serverConfig.serverPyPort}/api/database`
+    return `http://${serverConfig.SERVER_PY_HOST}:${serverConfig.SERVER_PY_PORT}/api/database`
   }
 
 

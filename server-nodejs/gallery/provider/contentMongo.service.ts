@@ -29,7 +29,7 @@ export class MongoService {
   private getGoMongoApiPath() {
     const serverConfig = this.configService.get("server")
 
-    return `http://${serverConfig.serverGoHost}:${serverConfig.serverGoPort}/api/mongo`
+    return `http://${serverConfig.SERVER_GO_HOST}:${serverConfig.SERVER_GO_PORT}/api/mongo`
   }
 
   /**

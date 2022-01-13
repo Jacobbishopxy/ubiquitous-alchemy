@@ -6,45 +6,53 @@
 from enum import Enum
 from os import getenv, path
 from pathlib import Path
-import json
+from dotenv import load_dotenv
 
 base_dir = Path(__file__).parent
 resources_dir = Path(__file__).parents[3]
 
-config_name = "resources/config.json"
-config_template_name = "resources/config.template.json"
+config_name = "resources/secret.env"
+config_template_name = "resources/secret.template.env"
 
 
 def read_config():
     try:
         config_path = path.join(resources_dir, config_name)
-        with open(config_path) as cf:
-            return json.loads(cf.read())
+        load_dotenv(dotenv_path=config_path)
     except FileNotFoundError:
         config_path = path.join(resources_dir, config_template_name)
-        with open(config_path) as cf:
-            return json.loads(cf.read())
+        load_dotenv(dotenv_path=config_path)
     except Exception as e:
-        err = f"Please check if {config_name} or {config_template_name} exists! \n\n {e}"
+        err = (
+            f"Please check if {config_name} or {config_template_name} exists! \n\n {e}"
+        )
         raise Exception(err)
+
+
+# read config
+read_config()
 
 
 class Config(object):
     SECRET_KEY = getenv("SECRET_KEY", "secret_key")
     DEBUG = False
-    CFG = read_config()
+    conn = {
+        "type": getenv("GALLERY_TYPE"),
+        "host": getenv("GALLERY_HOST"),
+        "port": getenv("GALLERY_PORT"),
+        "database": getenv("GALLERY_DATABASE"),
+        "username": getenv("GALLERY_USERNAME"),
+        "password": getenv("GALLERY_PASSWORD"),
+    }
+    server_port = getenv("SERVER_PY_PORT")
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    conn = Config.CFG['connDevGallery']
-    server_port = Config.CFG["serverPyPort"]
 
 
 class ProductionConfig(Config):
     DEBUG = False
-    conn = Config.CFG['connProdGallery']
-    server_port = Config.CFG["serverPyPort"]
 
 
 class AppConfig(Enum):
@@ -54,7 +62,7 @@ class AppConfig(Enum):
 
 key = Config.SECRET_KEY
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     x1 = DevelopmentConfig().conn
     print(x1)
     x2 = ProductionConfig().conn

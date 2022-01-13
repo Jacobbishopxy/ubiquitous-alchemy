@@ -17,7 +17,7 @@ export class FileManagerMiddleware implements NestMiddleware {
   ) {}
 
   use(req: Request, res: Response) {
-    const fsRoot = this.configService.get("server").fmRoot
+    const fsRoot = this.configService.get("server").FM_ROOT
     const fmm = this.fmService.generateFileManager(fsRoot)
 
     return fmm(req, res)

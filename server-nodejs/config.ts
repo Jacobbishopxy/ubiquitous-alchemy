@@ -2,8 +2,8 @@
  * Created by Jacob Xie on 10/21/2020.
  */
 
-import fs from "fs"
 import path from "path"
+import dotenv from 'dotenv'
 import {Routes, RouterModule} from "nest-router"
 import {TypeOrmModule} from "@nestjs/typeorm"
 import {ConfigModule, registerAs} from "@nestjs/config"
@@ -32,20 +32,67 @@ import {InnModule} from "./inn/inn.module"
 const isProd = process.env.NODE_ENV === "production"
 const rootDir = isProd ? path.join(__dirname, "../..") : path.join(__dirname, "..")
 
+
+interface ENV {
+  SERVER_PY_HOST: string
+  SERVER_PY_PORT: number
+  SERVER_GO_HOST: string
+  SERVER_GO_PORT: number
+
+  GALLERY_NAME: string
+  GALLERY_TYPE: string
+  GALLERY_HOST: string
+  GALLERY_PORT: number
+  GALLERY_USERNAME: string
+  GALLERY_PASSWORD: string
+  GALLERY_DATABASE: string
+  GALLERY_SYNCHRONIZE: boolean
+  GALLERY_AUTO_LOAD_ENTITIES: boolean
+  GALLERY_LOGGING: boolean
+  GALLERY_UUID_EXTENSION: string
+
+  INN_NAME: string
+  INN_TYPE: string
+  INN_SYNCHRONIZE: boolean
+  INN_AUTO_LOAD_ENTITIES: boolean
+  INN_LOGGING: boolean
+
+  FM_ROOT: string
+}
+
+
 /**
  * read config file. If `config.json` not existed, use `config.template.json`
  */
-const readConfig = () => {
-  const configFile = path.join(rootDir, "./resources/config.json")
-  let f
-  if (fs.existsSync(configFile)) {
-    f = fs.readFileSync(configFile)
-  } else {
-    const templateConfigFile = path.join(rootDir, "./resources/config.template.json")
-    f = fs.readFileSync(templateConfigFile)
-  }
+const readConfig = (): ENV => {
+  dotenv.config({path: path.join(rootDir, "./resources/secret.env")})
 
-  return JSON.parse(f.toString())
+  return {
+    SERVER_PY_HOST: process.env.SERVER_PY_HOST || "localhost",
+    SERVER_PY_PORT: Number(process.env.SERVER_PY_PORT) || 8020,
+    SERVER_GO_HOST: process.env.SERVER_GO_HOST || "localhost",
+    SERVER_GO_PORT: Number(process.env.SERVER_GO_PORT) || 8040,
+
+    GALLERY_NAME: process.env.GALLERY_NAME || "gallery",
+    GALLERY_TYPE: process.env.GALLERY_TYPE || "postgres",
+    GALLERY_HOST: process.env.GALLERY_HOST || "localhost",
+    GALLERY_PORT: Number(process.env.GALLERY_PORT) || 5432,
+    GALLERY_USERNAME: process.env.GALLERY_USERNAME || "root",
+    GALLERY_PASSWORD: process.env.GALLERY_PASSWORD || "secret",
+    GALLERY_DATABASE: process.env.GALLERY_DATABASE || "dev",
+    GALLERY_SYNCHRONIZE: Boolean(process.env.GALLERY_SYNCHRONIZE) || true,
+    GALLERY_AUTO_LOAD_ENTITIES: Boolean(process.env.GALLERY_AUTO_LOAD_ENTITIES) || true,
+    GALLERY_LOGGING: Boolean(process.env.GALLERY_LOGGING) || false,
+    GALLERY_UUID_EXTENSION: process.env.GALLERY_UUID_EXTENSION || "uuid-ossp",
+
+    INN_NAME: process.env.INN_NAME || "inn",
+    INN_TYPE: process.env.INN_TYPE || "sqlite",
+    INN_SYNCHRONIZE: Boolean(process.env.INN_SYNCHRONIZE) || true,
+    INN_AUTO_LOAD_ENTITIES: Boolean(process.env.INN_AUTO_LOAD_ENTITIES) || true,
+    INN_LOGGING: Boolean(process.env.INN_LOGGING) || false,
+
+    FM_ROOT: process.env.FM_ROOT || "/home",
+  }
 }
 
 const config = readConfig()
@@ -88,7 +135,6 @@ const routerImports = RouterModule.forRoutes(routes)
 /**
  * database gallery module
  */
-const databaseGalleryConfig = isProd ? config.connProdGallery : config.connDevGallery
 const galleryEntities = [
   Author,
   Category,
@@ -100,21 +146,36 @@ const galleryEntities = [
   Tag,
   Template,
 ]
+
 const databaseGalleryImports = TypeOrmModule.forRoot({
-  ...databaseGalleryConfig,
+  name: config.GALLERY_NAME,
+  type: config.GALLERY_TYPE as any,
+  host: config.GALLERY_HOST,
+  port: config.GALLERY_PORT,
+  username: config.GALLERY_USERNAME,
+  password: config.GALLERY_PASSWORD,
+  database: config.GALLERY_DATABASE,
+  synchronize: config.GALLERY_SYNCHRONIZE,
+  autoLoadEntities: config.GALLERY_AUTO_LOAD_ENTITIES,
+  logging: config.GALLERY_LOGGING,
+  uuidExtension: config.GALLERY_UUID_EXTENSION as any,
   entities: galleryEntities,
 })
 
 /**
  * database inn module
  */
-const databaseInnConfig = config.connInn
 const innEntities = [
   Update,
   UpdateTag
 ]
+
 const databaseInnImports = TypeOrmModule.forRoot({
-  ...databaseInnConfig,
+  name: config.INN_NAME,
+  type: config.INN_TYPE as any,
+  synchronize: config.INN_SYNCHRONIZE,
+  autoLoadEntities: config.INN_AUTO_LOAD_ENTITIES,
+  logging: config.INN_LOGGING,
   entities: innEntities,
   database: `${rootDir}/inn/inn.sqlite`
 })
