@@ -23,6 +23,8 @@
 		"axios": "^0.23.0",
 		"class-transformer": "^0.4.0",
 		"class-validator": "^0.13.1",
+		"cookie-parser": "^1.4.6",
+		"crypto": "^1.0.1",
 		"dotenv": "^11.0.0",
 		"express": "^4.17.1",
 		"form-data": "^4.0.0",
@@ -38,6 +40,7 @@
 	"devDependencies": {
 		"@nestjs/cli": "^8.1.2",
 		"@nestjs/schematics": "^8.0.3",
+		"@types/cookie-parser": "^1.4.2",
 		"@types/echarts": "^4.9.10",
 		"@types/express": "^4.17.13",
 		"@types/history": "^4.7.9",

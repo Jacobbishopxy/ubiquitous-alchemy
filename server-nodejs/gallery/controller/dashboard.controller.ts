@@ -2,7 +2,8 @@
  * Created by Jacob Xie on 8/29/2020.
  */
 
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Query} from '@nestjs/common'
+import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Query, Req} from '@nestjs/common'
+import {Request} from "express"
 
 import * as dashboardService from "../provider/dashboard.service"
 import {Dashboard} from "../entity"
@@ -71,7 +72,9 @@ export class DashboardController {
   }
 
   @Post("modifyDashboard")
-  modifyDashboard(@Body(DashboardModifyPipe) dashboard: DashboardModifyDto) {
+  modifyDashboard(
+    @Body(DashboardModifyPipe) dashboard: DashboardModifyDto
+  ) {
     try {
       return this.service.modifyDashboard(dashboard as Dashboard)
     } catch (err: any) {
@@ -90,8 +93,10 @@ export class DashboardController {
   }
 
   @Delete("deleteDashboardInCategory")
-  deleteDashboardInCategory(@Query("categoryName") categoryName: string,
-    @Query("dashboardName") dashboardName: string) {
+  deleteDashboardInCategory(
+    @Query("categoryName") categoryName: string,
+    @Query("dashboardName") dashboardName: string
+  ) {
     try {
       return this.service.deleteDashboardInCategory(categoryName, dashboardName)
     } catch (err: any) {
@@ -109,7 +114,9 @@ export class DashboardController {
   }
 
   @Delete("deleteDashboards")
-  deleteDashboards(@Query("ids", new ParseArray({type: String, separator: ","})) ids: string[]) {
+  deleteDashboards(
+    @Query("ids", new ParseArray({type: String, separator: ","})) ids: string[]
+  ) {
     try {
       return this.service.deleteDashboards(ids)
     } catch (err: any) {
@@ -118,8 +125,16 @@ export class DashboardController {
   }
 
   @Post("updateDashboardsInCategory")
-  updateDashboardsInCategory(@Query("categoryName") categoryName: string,
-    @Body() dashboards: Dashboard[]) {
+  updateDashboardsInCategory(
+    @Req() request: Request,
+    @Query("categoryName") categoryName: string,
+    @Body() dashboards: Dashboard[]
+  ) {
+
+    // TODO: in order to auto bind user to dashboard, first we need to get
+    // the user email from the request
+    console.log(request.cookies)
+
     try {
       return this.service.updateDashboardsInCategory(categoryName, dashboards)
     } catch (err: any) {

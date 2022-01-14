@@ -18,7 +18,6 @@ import {Element} from "./element.entity"
 import {Category} from "./category.entity"
 import {Tag} from "./tag.entity"
 import {Mark} from "./mark.entity"
-import {Author} from "./author.entity"
 
 @Entity({name: common.content})
 @Unique([common.category, common.element, common.date, common.tabId])
@@ -41,9 +40,6 @@ export class Content {
 
   @ManyToMany(() => Tag, t => t.contents, {cascade: true, nullable: true})
   tags!: Tag[]
-
-  @ManyToOne(() => Author, a => a.contents, {nullable: true})
-  author!: Author
 
   @Column("timestamp", {nullable: false})
   date!: string

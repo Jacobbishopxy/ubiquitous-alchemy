@@ -6,16 +6,16 @@ import {
   Entity,
   Column,
   ManyToOne,
+  ManyToMany,
   OneToMany,
   Unique,
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from "typeorm"
+import {Author, Category, Template} from "."
 
 import * as common from "../common"
-import {Category} from "./category.entity"
-import {Template} from "./template.entity"
 
 @Entity({name: common.dashboard})
 @Unique([common.name, common.category])
@@ -29,6 +29,9 @@ export class Dashboard {
 
   @OneToMany(() => Template, t => t.dashboard, {nullable: true})
   templates!: Template[]
+
+  @ManyToMany(() => Author, c => c.dashboards, {nullable: true, onDelete: "SET NULL"})
+  authors!: Author[]
 
   @Column("varchar")
   name!: string

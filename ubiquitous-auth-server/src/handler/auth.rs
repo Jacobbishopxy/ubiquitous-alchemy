@@ -39,6 +39,7 @@ pub async fn login(
                 if b {
                     // serialize user info to string
                     let user_string = serde_json::to_string(&u).unwrap();
+                    // dbg!("login...", &user_string);
                     // set cookie
                     id.remember(user_string);
                     // `HttpResponse::Found()` is used for multi-pages web app, serving as page redirection
@@ -57,10 +58,13 @@ pub async fn login(
 /// check whether user is logged in
 pub async fn check_alive(id: Identity) -> HttpResponse {
     match id.identity() {
-        Some(i) => match serde_json::from_str::<User>(&i) {
-            Ok(u) => HttpResponse::Ok().json(u),
-            Err(e) => e.error_response(),
-        },
+        Some(i) => {
+            // dbg!("check alive...", &i);
+            match serde_json::from_str::<User>(&i) {
+                Ok(u) => HttpResponse::Ok().json(u),
+                Err(e) => e.error_response(),
+            }
+        }
         None => HttpResponse::Unauthorized().body("unauthorized".to_owned()),
     }
 }

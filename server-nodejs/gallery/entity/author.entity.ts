@@ -6,22 +6,34 @@ import {
   Entity,
   PrimaryColumn,
   Column,
-  OneToMany
+  ManyToMany,
+  JoinTable
 } from "typeorm"
-import {author} from "../common"
-import {Content} from "./content.entity"
+import {Dashboard} from "."
+import {author, RoleType} from "../common"
 
 
 @Entity({name: author})
 export class Author {
 
   @PrimaryColumn("varchar")
-  name!: string
+  email!: string
+
+  @ManyToMany(() => Dashboard, t => t.authors, {nullable: true})
+  @JoinTable()
+  dashboards!: Dashboard[]
+
+  @Column("varchar")
+  nickname!: string
+
+  @Column("varchar")
+  hash!: string
+
+  @Column("enum", {nullable: false, enum: RoleType})
+  role!: RoleType
 
   @Column("text", {nullable: true})
   description?: string
 
-  @OneToMany(() => Content, c => c.author, {nullable: true})
-  contents!: Content[]
 }
 
