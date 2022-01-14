@@ -17,7 +17,7 @@ import (
 )
 
 const base = "../resources/"
-const mongoConnEnv = "mongo.connection.env"
+const mongoConnEnv = "go.env"
 const devConnString = "DB_LOCALHOST_URL"
 const prodConnString = "DB_URL"
 const dbEnvName = "go.env"
