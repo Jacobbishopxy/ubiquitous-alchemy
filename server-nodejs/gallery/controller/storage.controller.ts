@@ -2,9 +2,7 @@
  * Created by Jacob Xie on 10/22/2020.
  */
 
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Query, Req} from '@nestjs/common'
-import {Request} from 'express'
-import crypto from 'crypto'
+import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Query} from '@nestjs/common'
 
 import * as storageService from "../provider/storage.service"
 import {Storage} from "../entity"
@@ -54,24 +52,8 @@ export class StorageController {
 
   // ===================================================================================================================
 
-  // TODO: test case
   @Get("getAllStorageSimple")
-  getAllStorageSimple(@Req() req: Request) {
-
-    console.log(req.cookies)
-
-    let key = "secret_key_for_hash_password_and_verify"
-
-    let keyBuffer = Buffer.from(key, 'utf8')
-
-    let decipher = crypto.createDecipheriv('aes-256-gcm', keyBuffer, null)
-
-    let decrypted = decipher.update(req.cookies.auth, 'base64', 'utf8')
-
-    decrypted += decipher.final('utf8')
-
-    console.log(decrypted)
-
+  getAllStorageSimple() {
     return this.service.getAllStorageSimple()
   }
 

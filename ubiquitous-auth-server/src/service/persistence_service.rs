@@ -116,6 +116,7 @@ mod persistence_test {
     use std::assert_matches::assert_matches;
 
     use crate::model::user::Role;
+    use crate::service::encryption::hash_password;
 
     use super::*;
 
@@ -132,7 +133,7 @@ mod persistence_test {
     async fn save_invitation_test() {
         let p = Persistence::new().await.unwrap();
 
-        let invitation = Invitation::from_details("jacob", "jacobxy@qq.com", "hashed_pw");
+        let invitation = Invitation::from_details("jacob", "jacob@example.com", "hashed_pw");
 
         let res = p.save_invitation(&invitation).await;
 
@@ -171,7 +172,8 @@ mod persistence_test {
     async fn save_user_test() {
         let p = Persistence::new().await.unwrap();
 
-        let user = User::from_details("Jacob", "jacob@example.com", "pwd");
+        let pw = hash_password("123456").unwrap();
+        let user = User::from_details("Jacob", "jacob@example.com", &pw);
 
         let res = p.save_user(&user).await;
 
