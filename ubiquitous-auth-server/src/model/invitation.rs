@@ -3,7 +3,7 @@ use rbatis::crud_table;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-pub const INVITATION_TABLE: &'static str = r#"
+pub const INVITATION_TABLE: &str = r#"
 CREATE TABLE IF NOT EXISTS
 invitation(
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,

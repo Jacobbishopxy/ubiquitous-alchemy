@@ -1,7 +1,7 @@
-pub mod email_service;
+pub mod email;
 pub mod encryption;
-pub mod persistence_service;
+pub mod persistence;
 
-pub use email_service::EmailService;
+pub use email::EmailService;
 pub use encryption::{hash_password, verify_password};
-pub use persistence_service::Persistence;
+pub use persistence::Persistence;

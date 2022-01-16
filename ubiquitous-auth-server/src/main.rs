@@ -12,7 +12,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     // read env file
-    if let None = dotenv::from_filename(get_env_file()).ok() {
+    if dotenv::from_filename(get_env_file()).ok().is_none() {
         panic!("env file not found!");
     }
 
@@ -64,8 +64,9 @@ async fn main() -> std::io::Result<()> {
                             .route(web::get().to(handler::check_alive)),
                     )
                     .service(
-                        web::resource("/auth/alter_user_role")
-                            .route(web::post().to(handler::alter_user_role)),
+                        web::resource("/user")
+                            .route(web::get().to(handler::get_user_info))
+                            .route(web::post().to(handler::alter_user_info)),
                     ),
             )
     })
