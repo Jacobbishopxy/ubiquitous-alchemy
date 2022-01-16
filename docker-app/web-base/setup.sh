@@ -3,6 +3,7 @@
 #
 # base image of web, including JS deps
 
+source ../../resources/nodejs.env
 source ../../resources/web.env
 docker build \
     -t "${FRONTEND_BASE_NAME}":"${FRONTEND_BASE_VERSION}" \

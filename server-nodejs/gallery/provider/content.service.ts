@@ -20,13 +20,14 @@ const contentFullRelations = {
     common.category,
     common.mark,
     common.tags,
-    common.author
   ]
 }
 
 @Injectable()
 export class ContentService {
-  constructor(@InjectRepository(Content, common.db) private repo: Repository<Content>,
+  constructor(
+    @InjectRepository(Content, common.db)
+    private repo: Repository<Content>,
     private readonly mongoService: MongoService.MongoService,
     private readonly elementService: ElementService.ElementService
   ) {}
@@ -149,7 +150,6 @@ export class ContentService {
     if (content.element) ctn = {...ctn, element: content.element}
     if (content.mark) ctn = {...ctn, mark: content.mark}
     if (content.tags) ctn = {...ctn, tags: content.tags}
-    if (content.author) ctn = {...ctn, author: content.author}
     if (content.config) ctn = {...ctn, config: content.config}
     if (content.storageType) ctn = {...ctn, storageType: content.storageType}
     if (content.tabId) ctn = {...ctn, tabId: content.tabId}

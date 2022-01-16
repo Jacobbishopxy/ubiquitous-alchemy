@@ -108,7 +108,7 @@ impl EmailHelper {
 
         match mailer.send(&email) {
             Ok(_) => Ok(()),
-            Err(e) => Err(e)?,
+            Err(e) => Err(e.into()),
         }
     }
 

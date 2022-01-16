@@ -6,9 +6,10 @@ use rbatis::crud::{Skip, CRUD};
 use rbatis::executor::Executor;
 use rbatis::rbatis::Rbatis;
 
+use super::hash_password;
 use crate::constant::CONFIG;
 use crate::error::{ServiceError, ServiceResult};
-use crate::model::{Invitation, Role, User, INVITATION_TABLE, USER_TABLE};
+use crate::model::{Invitation, User, UserAlteration, INVITATION_TABLE, USER_TABLE};
 
 pub struct Persistence {
     rb: Rbatis,
@@ -21,7 +22,8 @@ impl Persistence {
         let mut opt = DBPoolOptions::new();
 
         opt.connect_timeout = Duration::new(5, 0);
-        rb.link_opt(&CONFIG.database_url, &opt).await?;
+        let url = &CONFIG.database_url;
+        rb.link_opt(url, opt).await?;
 
         Ok(Persistence { rb })
     }
@@ -30,10 +32,10 @@ impl Persistence {
     pub async fn initialize(&self, required: bool) -> ServiceResult<()> {
         if required {
             // invitation table
-            self.rb.exec(INVITATION_TABLE, &vec![]).await?;
+            self.rb.exec(INVITATION_TABLE, vec![]).await?;
 
             // users table
-            self.rb.exec(USER_TABLE, &vec![]).await?;
+            self.rb.exec(USER_TABLE, vec![]).await?;
         }
         Ok(())
     }
@@ -56,7 +58,7 @@ impl Persistence {
             .order_by(false, &["expires_at"])
             .limit(1);
 
-        let r: Option<Invitation> = self.rb.fetch_by_wrapper(&w).await?;
+        let r: Option<Invitation> = self.rb.fetch_by_wrapper(w).await?;
         Ok(r)
     }
 
@@ -86,15 +88,24 @@ impl Persistence {
     }
 
     /// alter user role (admin permission)
-    pub async fn alter_user_role(&self, email: &str, role: Role) -> ServiceResult<()> {
-        let w = self.rb.new_wrapper().eq("email", email);
+    pub async fn alter_user_info(&self, alter: &UserAlteration) -> ServiceResult<()> {
+        let w = self.rb.new_wrapper().eq("email", &alter.email);
 
-        let user: Option<User> = self.rb.fetch_by_wrapper(&w).await?;
+        let user: Option<User> = self.rb.fetch_by_wrapper(w.clone()).await?;
 
         match user {
             Some(mut u) => {
-                u.role = role;
-                let r: u64 = self.rb.update_by_wrapper(&mut u, &w, &[]).await?;
+                if let Some(nickname) = &alter.nickname {
+                    u.nickname = nickname.to_owned();
+                }
+                if let Some(password) = &alter.password {
+                    u.hash = hash_password(password)?;
+                }
+                if let Some(role) = &alter.role {
+                    u.role = role.clone();
+                }
+
+                let r = self.rb.update_by_wrapper(&u, w, &[]).await?;
                 if r == 1 {
                     Ok(())
                 } else {
@@ -115,8 +126,6 @@ impl Persistence {
 mod persistence_test {
     use std::assert_matches::assert_matches;
 
-    use crate::model::user::Role;
-
     use super::*;
 
     #[actix_rt::test]
@@ -132,7 +141,7 @@ mod persistence_test {
     async fn save_invitation_test() {
         let p = Persistence::new().await.unwrap();
 
-        let invitation = Invitation::from_details("jacob", "jacobxy@qq.com", "hashed_pw");
+        let invitation = Invitation::from_details("jacob", "jacob@example.com", "hashed_pw");
 
         let res = p.save_invitation(&invitation).await;
 
@@ -143,13 +152,9 @@ mod persistence_test {
     async fn get_invitation_by_email_test() {
         let p = Persistence::new().await.unwrap();
 
-        let invitation = "jacob@example.com";
-
         let res = p
-            .get_invitation_by_email_and_latest_expired(&invitation)
+            .get_invitation_by_email_and_latest_expired("jacob@example.com")
             .await;
-
-        println!("{:#?}", res);
 
         assert_matches!(res, Ok(_));
     }
@@ -162,8 +167,6 @@ mod persistence_test {
             .get_invitation_by_id("82834e08-6d73-4d29-9006-c240b4c3aa42")
             .await;
 
-        println!("{:#?}", res);
-
         assert_matches!(res, Ok(_));
     }
 
@@ -171,7 +174,7 @@ mod persistence_test {
     async fn save_user_test() {
         let p = Persistence::new().await.unwrap();
 
-        let user = User::from_details("Jacob", "jacob@example.com", "pwd");
+        let user = User::from_details("Jacob", "jacob@example.com", "123456");
 
         let res = p.save_user(&user).await;
 
@@ -193,9 +196,12 @@ mod persistence_test {
     async fn alter_user_test() {
         let p = Persistence::new().await.unwrap();
 
-        let email = "jacob@example.com";
+        let mut alter = UserAlteration::new("jacob@example.com");
+        alter.nickname("Jacob(1)");
+        alter.password("12345678");
+        alter.role("admin").unwrap();
 
-        let res = p.alter_user_role(email, Role::Editor).await;
+        let res = p.alter_user_info(&alter).await;
 
         assert_matches!(res, Ok(_))
     }

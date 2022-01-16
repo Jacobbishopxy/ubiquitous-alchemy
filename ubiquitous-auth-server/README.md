@@ -48,7 +48,7 @@ cargo run -- ../resources/.env
 
 ```sh
 curl --request POST \
-  --url http://localhost:8050/api/invitation \
+  --url http://localhost:8072/api/invitation \
   --header 'content-type: application/json' \
   --data '{"nickname":"name", "email":"name@domain.com", "password":"password"}'
 ```
@@ -57,7 +57,7 @@ curl --request POST \
 
 ```sh
 curl --request GET \
-  --url http://localhost:8050/api/register/f87910d7-0e33-4ded-a8d8-2264800d1783
+  --url http://localhost:8072/api/register/f87910d7-0e33-4ded-a8d8-2264800d1783
 ```
 
 ps: `f87910d7-0e33-4ded-a8d8-2264800d1783` is the Uuid created by Postgres, which is also the invitation id for registration
@@ -66,7 +66,7 @@ ps: `f87910d7-0e33-4ded-a8d8-2264800d1783` is the Uuid created by Postgres, whic
 
 ```sh
 curl -i --request POST \
-  --url http://localhost:8050/api/auth \
+  --url http://localhost:8072/api/auth \
   --header 'content-type: application/json' \
   --data '{"email": "name@domain.com","password":"password"}'
 ```
@@ -82,7 +82,7 @@ date: Sun, 28 Oct 2018 12:36:43 GMT
 
 ```sh
 curl -i --request GET \
-  --url http://localhost:8050/api/auth \
+  --url http://localhost:8072/api/auth \
   --cookie auth=HdS0iPKTBL/4MpTmoUKQ5H7wft5kP7OjP6vbyd05Ex5flLvAkKd+P2GchG1jpvV6p9GQtzPEcg==
 ```
 
@@ -100,7 +100,7 @@ date: Sun, 28 Oct 2018 19:21:04 GMT
 
 ```sh
 curl -i --request DELETE \
-  --url http://localhost:8050/api/auth
+  --url http://localhost:8072/api/auth
 ```
 
 ```txt
@@ -114,7 +114,7 @@ date: Sat, 27 Oct 2018 13:01:52 GMT
 
 ```sh
 curl -i --request POST \
-  --url http://localhost:8050/api/auth/alter_user_role \
+  --url http://localhost:8072/api/auth/alter_user_role \
   --cookie auth=HdS0iPKTBL/4MpTmoUKQ5H7wft5kP7OjP6vbyd05Ex5flLvAkKd+P2GchG1jpvV6p9GQtzPEcg== \
   --header 'content-type: application/json' \
   --data '{"email": "name@domain.com","role":"editor"}'

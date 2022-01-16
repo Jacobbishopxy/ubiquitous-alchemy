@@ -7,8 +7,8 @@ pub struct EmailService {
     helper: EmailHelper,
 }
 
-impl EmailService {
-    pub fn new() -> Self {
+impl Default for EmailService {
+    fn default() -> Self {
         let helper = EmailHelper::new(
             CONFIG.is_secure,
             CONFIG.smtp_username.clone(),
@@ -16,8 +16,13 @@ impl EmailService {
             CONFIG.smtp_host.clone(),
             CONFIG.smtp_port as u16,
         );
-
         Self { helper }
+    }
+}
+
+impl EmailService {
+    pub fn new() -> Self {
+        Self::default()
     }
 
     // send an invitation email

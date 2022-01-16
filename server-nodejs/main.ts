@@ -6,6 +6,7 @@ import {NestFactory} from "@nestjs/core"
 import {NestExpressApplication} from "@nestjs/platform-express"
 import {BadRequestException, ValidationError, ValidationPipe} from "@nestjs/common"
 import {json} from "body-parser"
+import cookieParser from "cookie-parser"
 
 import {AppModule} from "./app.module"
 
@@ -13,7 +14,10 @@ import {AppModule} from "./app.module"
 const port = 8030
 
 async function bootstrap(): Promise<string> {
+  // app
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
+
+  // pipe for validation
   app.useGlobalPipes(
     new ValidationPipe({
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
@@ -21,8 +25,16 @@ async function bootstrap(): Promise<string> {
       },
     })
   )
+
+  // promote json body limit to 50MB
   app.use(json({limit: "50mb"}))
+
+  // enable cookie parser
+  app.use(cookieParser())
+
+  // start server
   await app.listen(port)
+
   return `App listening on port ${port}`
 }
 

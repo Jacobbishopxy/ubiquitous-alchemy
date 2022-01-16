@@ -1,14 +1,17 @@
-use std::convert::TryFrom;
+//! Model: user
+//!
+//!  
+
+use std::str::FromStr;
 
 use chrono::NaiveDateTime;
-use rbatis::crud_table;
 use serde::{Deserialize, Serialize};
 
-use crate::error::ServiceError;
+use crate::error::{ServiceError, ServiceResult};
 
 // TODO: role & permission enhancement
 /// user role
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum Role {
     Admin,
     Visitor,
@@ -43,11 +46,11 @@ impl Role {
     }
 }
 
-impl TryFrom<String> for Role {
-    type Error = ServiceError;
+impl FromStr for Role {
+    type Err = ServiceError;
 
-    fn try_from(value: String) -> Result<Self, Self::Error> {
-        match &value.to_lowercase()[..] {
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value {
             "admin" => Ok(Self::Admin),
             "visitor" => Ok(Self::Visitor),
             "editor" => Ok(Self::Editor),
@@ -59,7 +62,7 @@ impl TryFrom<String> for Role {
     }
 }
 
-pub const USER_TABLE: &'static str = r#"
+pub const USER_TABLE: &str = r#"
 CREATE TABLE IF NOT EXISTS
 users(
     email VARCHAR(100) PRIMARY KEY,
@@ -99,5 +102,56 @@ impl User {
             role: Role::Visitor,
             created_at: chrono::Local::now().naive_local(),
         }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UserInfo {
+    pub email: String,
+    pub nickname: String,
+    pub role: Role,
+}
+
+impl From<User> for UserInfo {
+    fn from(user: User) -> Self {
+        UserInfo {
+            email: user.email,
+            nickname: user.nickname,
+            role: user.role,
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UserAlteration {
+    pub email: String,
+    pub nickname: Option<String>,
+    pub password: Option<String>,
+    pub role: Option<Role>,
+}
+
+impl UserAlteration {
+    pub fn new(email: &str) -> Self {
+        UserAlteration {
+            email: email.to_owned(),
+            nickname: None,
+            password: None,
+            role: None,
+        }
+    }
+
+    pub fn nickname(&mut self, nickname: &str) -> &mut Self {
+        self.nickname = Some(nickname.to_owned());
+        self
+    }
+
+    pub fn password(&mut self, password: &str) -> &mut Self {
+        self.password = Some(password.to_owned());
+        self
+    }
+
+    pub fn role(&mut self, role: &str) -> ServiceResult<&mut Self> {
+        self.role = Some(Role::from_str(role)?);
+        Ok(self)
     }
 }

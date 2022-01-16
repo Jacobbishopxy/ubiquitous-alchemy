@@ -65,7 +65,7 @@ export const dashboardsTemplates = `${dashboards}.${templates}`
 
 export const dateFormat = "YYYY-MM-DD"
 
-// column enum
+// element_type column is an enum type
 export enum ElementType {
   EmbedLink = "embedLink",
   Text = "text",
@@ -92,10 +92,6 @@ export enum ElementType {
   Excel = "excel",
 }
 
-export enum flexTableType {
-  file = "file",
-  dataset = "dataset"
-}
 export const getElementType = (v: string) => {
   switch (v) {
     case "embedLink":
@@ -146,6 +142,28 @@ export const getElementType = (v: string) => {
       return ElementType.Excel
     default:
       return undefined
+  }
+}
+
+export enum RoleType {
+  Admin = "admin",
+  Editor = "editor",
+  Visitor = "visitor",
+  Supervisor = "supervisor",
+}
+
+export const getRoleType = (v: string) => {
+  switch (v) {
+    case "admin":
+      return RoleType.Admin
+    case "editor":
+      return RoleType.Editor
+    case "visitor":
+      return RoleType.Visitor
+    case "supervisor":
+      return RoleType.Supervisor
+    default:
+      return RoleType.Visitor
   }
 }
 
