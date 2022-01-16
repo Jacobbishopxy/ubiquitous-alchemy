@@ -124,7 +124,7 @@ pub async fn alter_user_info(
                         return HttpResponse::BadRequest().body(e.to_string());
                     }
                     // execute `alter_user_role`, TODO: admin cannot promote a user to `Supervisor`
-                    match persistence.alter_user_info(&ua.unwrap()).await {
+                    match persistence.alter_user_info(ua.unwrap()).await {
                         Ok(_) => HttpResponse::Accepted().finish(),
                         Err(e) => e.error_response(),
                     }

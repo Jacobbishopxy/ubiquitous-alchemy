@@ -1,6 +1,7 @@
 {
-	"label": "production",
-	"host": "localhost",
+	"label": "development",
+	"server_auth_host": "localhost",
 	"server_auth_port": 8050,
+	"server_data_host": "localhost",
 	"server_data_port": 8051
 }

@@ -41,3 +41,9 @@ While in product mode, please make sure configurations under `config` folder are
    - [x] [POST] login
    - [x] [GET] check_alive
    - [x] [DELETE] logout
+   - [x] [GET] user_info
+   - [x] [POST] alter_user
+
+## TODO
+
+- While in production mode, docker needs to read config from `./resources` folder.

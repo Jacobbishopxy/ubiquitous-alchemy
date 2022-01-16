@@ -15,7 +15,7 @@
 					"method": "POST",
 					"url_pattern": "/api/cfg/check_connection",
 					"host": [
-						"{{ .host.host }}:{{ .host.server_data_port }}"
+						"{{ .host.server_data_host }}:{{ .host.server_data_port }}"
 					]
 				}
 			]
@@ -28,7 +28,7 @@
 					"encoding": "no-op",
 					"url_pattern": "/api/cfg/conn",
 					"host": [
-						"{{ .host.host }}:{{ .host.server_data_port }}"
+						"{{ .host.server_data_host }}:{{ .host.server_data_port }}"
 					]
 				}
 			]
@@ -43,7 +43,7 @@
 					"method": "POST",
 					"url_pattern": "/api/cfg/conn",
 					"host": [
-						"{{ .host.host }}:{{ .host.server_data_port }}"
+						"{{ .host.server_data_host }}:{{ .host.server_data_port }}"
 					]
 				}
 			]
@@ -59,7 +59,7 @@
 					"method": "PUT",
 					"url_pattern": "/api/cfg/conn",
 					"host": [
-						"{{ .host.host }}:{{ .host.server_data_port }}"
+						"{{ .host.server_data_host }}:{{ .host.server_data_port }}"
 					]
 				}
 			]
@@ -75,7 +75,7 @@
 					"method": "DELETE",
 					"url_pattern": "/api/cfg/conn",
 					"host": [
-						"{{ .host.host }}:{{ .host.server_data_port }}"
+						"{{ .host.server_data_host }}:{{ .host.server_data_port }}"
 					]
 				}
 			]
@@ -90,7 +90,7 @@
 					"method": "POST",
 					"url_pattern": "/api/invitation",
 					"host": [
-						"{{ .host.host }}:{{ .host.server_auth_port }}"
+						"{{ .host.server_auth_host }}:{{ .host.server_auth_port }}"
 					]
 				}
 			]
@@ -104,7 +104,7 @@
 					"encoding": "no-op",
 					"url_pattern": "/api/register/{id}",
 					"host": [
-						"{{ .host.host }}:{{ .host.server_auth_port }}"
+						"{{ .host.server_auth_host }}:{{ .host.server_auth_port }}"
 					]
 				}
 			]
@@ -118,7 +118,7 @@
 					"encoding": "no-op",
 					"url_pattern": "/api/auth",
 					"host": [
-						"{{ .host.host }}:{{ .host.server_auth_port }}"
+						"{{ .host.server_auth_host }}:{{ .host.server_auth_port }}"
 					]
 				}
 			]
@@ -133,7 +133,7 @@
 					"encoding": "no-op",
 					"url_pattern": "/api/auth",
 					"host": [
-						"{{ .host.host }}:{{ .host.server_auth_port }}"
+						"{{ .host.server_auth_host }}:{{ .host.server_auth_port }}"
 					]
 				}
 			]
@@ -148,11 +148,43 @@
 					"encoding": "no-op",
 					"url_pattern": "/api/auth",
 					"host": [
-						"{{ .host.host }}:{{ .host.server_auth_port }}"
+						"{{ .host.server_auth_host }}:{{ .host.server_auth_port }}"
 					],
 					"headers_to_pass": ["Cookie"]
 				}
 			]
-		}
+		},
+		{
+			"endpoint": "/gateway/api/user",
+			"method": "GET",
+			"output_encoding": "no-op",
+			"headers_to_pass": ["Cookie"],
+			"backend": [
+				{
+					"encoding": "no-op",
+					"url_pattern": "/api/user",
+					"host": [
+						"{{ .host.server_auth_host }}:{{ .host.server_auth_port }}"
+					],
+					"headers_to_pass": ["Cookie"]
+				}
+			]
+		},
+		{
+			"endpoint": "/gateway/api/user",
+			"method": "POST",
+			"output_encoding": "no-op",
+			"headers_to_pass": ["Cookie"],
+			"backend": [
+				{
+					"encoding": "no-op",
+					"url_pattern": "/api/user",
+					"host": [
+						"{{ .host.server_auth_host }}:{{ .host.server_auth_port }}"
+					],
+					"headers_to_pass": ["Cookie"]
+				}
+			]
+		},
 	]
 }

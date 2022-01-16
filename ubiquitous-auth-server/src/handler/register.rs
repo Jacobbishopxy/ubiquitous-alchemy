@@ -22,7 +22,7 @@ pub async fn register_user(
             if inv.expires_at > chrono::Local::now().naive_local() {
                 let user = User::from_details(inv.nickname, inv.email, inv.hash);
                 // save user into 'user' table
-                match persistence.save_user(&user).await {
+                match persistence.save_user(user).await {
                     Ok(_) => HttpResponse::Ok().finish(),
                     Err(e) => e.error_response(),
                 }

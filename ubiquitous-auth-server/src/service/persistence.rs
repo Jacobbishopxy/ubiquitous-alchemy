@@ -83,26 +83,26 @@ impl Persistence {
     }
 
     /// save user & alter user
-    pub async fn save_user(&self, user: &User) -> ServiceResult<()> {
-        Ok(self.rb.save(user, &[]).await.map(|_| ())?)
+    pub async fn save_user(&self, user: User) -> ServiceResult<()> {
+        Ok(self.rb.save(&user, &[]).await.map(|_| ())?)
     }
 
     /// alter user role (admin permission)
-    pub async fn alter_user_info(&self, alter: &UserAlteration) -> ServiceResult<()> {
+    pub async fn alter_user_info(&self, alter: UserAlteration) -> ServiceResult<()> {
         let w = self.rb.new_wrapper().eq("email", &alter.email);
 
         let user: Option<User> = self.rb.fetch_by_wrapper(w.clone()).await?;
 
         match user {
             Some(mut u) => {
-                if let Some(nickname) = &alter.nickname {
-                    u.nickname = nickname.to_owned();
+                if let Some(nickname) = alter.nickname {
+                    u.nickname = nickname;
                 }
-                if let Some(password) = &alter.password {
+                if let Some(ref password) = alter.password {
                     u.hash = hash_password(password)?;
                 }
-                if let Some(role) = &alter.role {
-                    u.role = role.clone();
+                if let Some(role) = alter.role {
+                    u.role = role;
                 }
 
                 let r = self.rb.update_by_wrapper(&u, w, &[]).await?;
@@ -176,7 +176,7 @@ mod persistence_test {
 
         let user = User::from_details("Jacob", "jacob@example.com", "123456");
 
-        let res = p.save_user(&user).await;
+        let res = p.save_user(user).await;
 
         assert_matches!(res, Ok(_));
     }
@@ -201,7 +201,7 @@ mod persistence_test {
         alter.password("12345678");
         alter.role("admin").unwrap();
 
-        let res = p.alter_user_info(&alter).await;
+        let res = p.alter_user_info(alter).await;
 
         assert_matches!(res, Ok(_))
     }
