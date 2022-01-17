@@ -2,4 +2,3 @@
 out.json
 
 config/settings/prod/host.json
-config/settings/prod/service.json

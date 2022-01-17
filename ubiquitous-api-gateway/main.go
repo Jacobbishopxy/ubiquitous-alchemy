@@ -29,16 +29,16 @@ func loadEnv(path string) {
 	err := godotenv.Load(path)
 
 	if err != nil {
-		log.Print(err)
-		log.Fatalf("Error loading " + path + " file\n")
+		log.Fatalf("Error loading file %s: %s", path, err.Error())
 	}
 }
 
 func main() {
 	// get arguments from command line
+	// `lura.env` keeps track of the env vars for storing lura's flexible-config
 	envFile := flag.String("c", "lura.env", "Path to the configuration filename")
 	port := flag.Int("p", 0, "Port of the service")
-	logLevel := flag.String("l", "ERROR", "Logging level")
+	logLevel := flag.String("l", "INFO", "Logging level")
 	debug := flag.Bool("d", false, "Enable the debug")
 	flag.Parse()
 

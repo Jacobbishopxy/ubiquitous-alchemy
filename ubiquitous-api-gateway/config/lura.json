@@ -1,5 +1,18 @@
 {
 	"version": {{ .service.version }},
+	"extra_config": {
+		"github_com/devopsfaith/krakend-logstash": {
+			"enabled": true
+		},
+		"github_com/devopsfaith/krakend-gologging": {
+      "level": "INFO",
+      "prefix": "[UA-GATEWAY]",
+      "syslog": true,
+      "stdout": true,
+      "format": "custom",
+      "custom_format": "%{message}"
+    }
+	},
 	"name": "{{ .service.name }}",
 	"port": {{ .service.port }},
 	"timeout": "{{ .service.timeout }}",
