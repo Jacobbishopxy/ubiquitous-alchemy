@@ -8,6 +8,7 @@ use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
 use crate::error::{ServiceError, ServiceResult};
+use crate::service::encryption::hash_password;
 
 // TODO: role & permission enhancement
 /// user role
@@ -90,18 +91,20 @@ pub struct User {
 }
 
 impl User {
-    pub fn from_details<T>(nickname: T, email: T, pwd: T) -> Self
+    pub fn from_details<T>(nickname: T, email: T, pwd: T) -> ServiceResult<Self>
     where
         T: Into<String>,
     {
         // default role is visitor
-        User {
+        let hash = hash_password(&pwd.into())?;
+        let user = User {
             nickname: nickname.into(),
             email: email.into(),
-            hash: pwd.into(),
+            hash,
             role: Role::Visitor,
             created_at: chrono::Local::now().naive_local(),
-        }
+        };
+        Ok(user)
     }
 }
 

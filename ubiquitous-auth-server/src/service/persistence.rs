@@ -174,7 +174,7 @@ mod persistence_test {
     async fn save_user_test() {
         let p = Persistence::new().await.unwrap();
 
-        let user = User::from_details("Jacob", "jacob@example.com", "123456");
+        let user = User::from_details("Jacob", "jacob@example.com", "123456").unwrap();
 
         let res = p.save_user(user).await;
 

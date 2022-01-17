@@ -21,8 +21,11 @@ pub async fn register_user(
             // if inv is not expired, copy user register info from invitation table and save it to user table
             if inv.expires_at > chrono::Local::now().naive_local() {
                 let user = User::from_details(inv.nickname, inv.email, inv.hash);
+                if let Err(e) = user {
+                    return e.error_response();
+                }
                 // save user into 'user' table
-                match persistence.save_user(user).await {
+                match persistence.save_user(user.unwrap()).await {
                     Ok(_) => HttpResponse::Ok().finish(),
                     Err(e) => e.error_response(),
                 }
