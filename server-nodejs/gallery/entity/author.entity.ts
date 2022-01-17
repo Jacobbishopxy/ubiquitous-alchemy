@@ -26,14 +26,10 @@ export class Author {
   @Column("varchar")
   nickname!: string
 
-  @Column("varchar")
-  hash!: string
-
   @Column("enum", {nullable: false, enum: RoleType})
   role!: RoleType
 
   @Column("text", {nullable: true})
   description?: string
-
 }
 

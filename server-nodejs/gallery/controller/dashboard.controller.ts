@@ -5,7 +5,7 @@
 import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Query, Req} from '@nestjs/common'
 import {Request} from "express"
 
-import * as dashboardService from "../provider/dashboard.service"
+import {DashboardService} from "../provider"
 import {Dashboard} from "../entity"
 import {DashboardModifyDto} from "../dto"
 import {DashboardModifyPipe, ParseArray} from "../pipe"
@@ -13,7 +13,7 @@ import {DashboardModifyPipe, ParseArray} from "../pipe"
 
 @Controller()
 export class DashboardController {
-  constructor(private readonly service: dashboardService.DashboardService) {}
+  constructor(private readonly service: DashboardService) {}
 
   @Get("dashboards")
   getAllDashboards() {
@@ -130,13 +130,8 @@ export class DashboardController {
     @Query("categoryName") categoryName: string,
     @Body() dashboards: Dashboard[]
   ) {
-
-    // TODO: in order to auto bind user to dashboard, first we need to get
-    // the user email from the request
-    console.log(request.cookies)
-
     try {
-      return this.service.updateDashboardsInCategory(categoryName, dashboards)
+      return this.service.updateDashboardsInCategory(request, categoryName, dashboards)
     } catch (err: any) {
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
     }

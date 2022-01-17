@@ -11,8 +11,8 @@ import moment from "moment"
 import * as common from "../common"
 import * as utils from "../../utils"
 import {Content} from "../entity"
-import * as MongoService from "./contentMongo.service"
-import * as ElementService from "./element.service"
+import {MongoService} from "./contentMongo.service"
+import {ElementService} from "./element.service"
 
 const contentFullRelations = {
   relations: [
@@ -28,8 +28,8 @@ export class ContentService {
   constructor(
     @InjectRepository(Content, common.db)
     private repo: Repository<Content>,
-    private readonly mongoService: MongoService.MongoService,
-    private readonly elementService: ElementService.ElementService
+    private mongoService: MongoService,
+    private elementService: ElementService,
   ) {}
 
   getAllContents() {

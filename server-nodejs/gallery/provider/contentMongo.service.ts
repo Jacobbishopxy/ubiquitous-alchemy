@@ -23,8 +23,7 @@ export interface MData {
 // const base = 'http://localhost:8089/api/mongo'
 @Injectable()
 export class MongoService {
-  constructor(private configService: ConfigService) {
-  }
+  constructor(private configService: ConfigService) {}
 
   private getGoMongoApiPath() {
     const serverConfig = this.configService.get("server")

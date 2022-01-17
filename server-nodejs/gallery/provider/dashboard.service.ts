@@ -5,11 +5,13 @@
 import {Injectable} from "@nestjs/common"
 import {InjectRepository} from "@nestjs/typeorm"
 import {Repository} from "typeorm"
+import {Request} from "express"
 import _ from "lodash"
 
 import * as common from "../common"
 import * as utils from "../../utils"
 import {Dashboard, Category} from "../entity"
+import {AuthService, AuthorService} from "."
 
 
 const dashboardFullRelations = {
@@ -40,8 +42,14 @@ const categoryDashboardRelations = {
 
 @Injectable()
 export class DashboardService {
-  constructor(@InjectRepository(Dashboard, common.db) private repoDashboard: Repository<Dashboard>,
-    @InjectRepository(Category, common.db) private repoCategory: Repository<Category>) {}
+  constructor(
+    @InjectRepository(Dashboard, common.db)
+    private repoDashboard: Repository<Dashboard>,
+    @InjectRepository(Category, common.db)
+    private repoCategory: Repository<Category>,
+    private authorService: AuthorService,
+    private authService: AuthService,
+  ) {}
 
   getAllDashboards() {
     return this.repoDashboard.find(dashboardFullRelations)
@@ -139,7 +147,15 @@ export class DashboardService {
     return this.repoDashboard.delete(dashboardIds)
   }
 
-  async updateDashboardsInCategory(categoryName: string, dashboards: Dashboard[]) {
+  /*
+  This method is a CRUD API for dashboard in a category.
+  Automatically bind the author from the request into the dashboard.
+  */
+  async updateDashboardsInCategory(
+    request: Request,
+    categoryName: string,
+    dashboards: Dashboard[]
+  ) {
     const cat = await this.repoCategory.findOne({
       ...categoryDashboardRelations,
       ...utils.whereNameEqual(categoryName)
@@ -153,8 +169,14 @@ export class DashboardService {
       if (dashboardsRemove.length > 0)
         await this.deleteDashboards(dashboardsRemove.map(d => d.id))
 
-      const newDashboards = dashboards.map(d => ({...d, category: {name: categoryName}})) as Dashboard[]
-      await this.saveDashboards(newDashboards)
+      let newDashboards = dashboards.map(d => ({...d, category: {name: categoryName}})) as Dashboard[]
+      newDashboards = await this.saveDashboards(newDashboards)
+
+      // bind new dashboards to author, we don't need to concern about unbind
+      // because `deleteDashboards()` will automatically unbind author relation
+      let newDashboardsIds = newDashboards.map(d => d.id)
+      let author = await this.authService.getUserInfo(request)
+      await this.authorService.bindDashboardsToAuthor(author.email, newDashboardsIds)
 
       return true
     }

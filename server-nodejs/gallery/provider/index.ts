@@ -2,6 +2,9 @@
  * Created by Jacob Xie on 10/26/2020.
  */
 
+import {AuthService} from "./auth.service"
+import {AuthorService} from "./author.service"
+import {MongoService} from "./contentMongo.service"
 import {CategoryService} from "./category.service"
 import {ContentService} from "./content.service"
 import {DashboardService} from "./dashboard.service"
@@ -13,6 +16,9 @@ import {TemplateService} from "./template.service"
 
 
 export {
+  AuthService,
+  AuthorService,
+  MongoService,
   CategoryService,
   ContentService,
   DashboardService,

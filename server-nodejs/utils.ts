@@ -14,6 +14,7 @@ export const whereIdEqual = (v: string) => ({where: {id: Equal(v)}})
 export const whereTabIdEqual = (v: string) => ({where: {tabId: Equal(v)}})
 export const whereIdsIn = (v: string[]) => ({where: {id: In(v)}})
 export const whereTypeEqual = (v: string) => ({where: {type: Equal(v)}})
+export const whereEmailEqual = (v: string) => ({where: {email: Equal(v)}})
 
 // query orders
 export type OrderType = "ASC" | "DESC"

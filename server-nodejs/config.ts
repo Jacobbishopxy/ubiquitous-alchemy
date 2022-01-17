@@ -38,6 +38,8 @@ interface ENV {
   SERVER_PY_PORT: number
   SERVER_GO_HOST: string
   SERVER_GO_PORT: number
+  SERVER_GATEWAY_HOST: string
+  SERVER_GATEWAY_PORT: number
 
   GALLERY_NAME: string
   GALLERY_TYPE: string
@@ -72,6 +74,8 @@ const readConfig = (): ENV => {
     SERVER_PY_PORT: Number(process.env.SERVER_PY_PORT) || 8020,
     SERVER_GO_HOST: process.env.SERVER_GO_HOST || "localhost",
     SERVER_GO_PORT: Number(process.env.SERVER_GO_PORT) || 8040,
+    SERVER_GATEWAY_HOST: process.env.SERVER_GATEWAY_HOST || "localhost",
+    SERVER_GATEWAY_PORT: Number(process.env.SERVER_GATEWAY_PORT) || 8010,
 
     GALLERY_NAME: process.env.GALLERY_NAME || "gallery",
     GALLERY_TYPE: process.env.GALLERY_TYPE || "postgres",

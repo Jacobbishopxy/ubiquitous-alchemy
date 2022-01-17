@@ -185,6 +185,6 @@
 					"headers_to_pass": ["Cookie"]
 				}
 			]
-		},
+		}
 	]
 }

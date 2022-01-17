@@ -20,8 +20,11 @@ const templateAndContentRelations = {
 
 @Injectable()
 export class ElementService {
-  constructor(@InjectRepository(Element, common.db) private repo: Repository<Element>,
-    private readonly mongoService: MongoService.MongoService) {}
+  constructor(
+    @InjectRepository(Element, common.db)
+    private repo: Repository<Element>,
+    private readonly mongoService: MongoService.MongoService
+  ) {}
 
   getAllElements() {
     return this.repo.find(templateAndContentRelations)

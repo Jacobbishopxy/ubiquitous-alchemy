@@ -18,6 +18,7 @@ export const mark = "mark"
 export const tag = "tag"
 export const author = "author"
 export const storage = "storage"
+export const auth = "auth"
 
 // column name
 export const id = "id"
@@ -227,3 +228,10 @@ export function MongoContentValidation(data?: Record<string, any>) {
   if (data?.id && data?.collection) return true
   return false
 }
+
+export interface Auth {
+  email: string
+  nickname: string
+  role: RoleType
+}
+
