@@ -3,7 +3,6 @@
 	"version": "0.0.0",
 	"private": true,
 	"description": "Cyberbrick nodejs API service",
-	"type": "module",
 	"scripts": {
 		"build": "nest build",
 		"dev": "cross-env ts-node-dev --project tsconfig.server.json main.ts",

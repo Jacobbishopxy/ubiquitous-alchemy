@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source ../../resources/auth.env
+source ../../resources/secret.env
 
 export APP_IMAGE_NAME=${APP_IMAGE_NAME}
 export APP_IMAGE_VERSION=${APP_IMAGE_VERSION}

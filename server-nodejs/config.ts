@@ -84,16 +84,16 @@ const readConfig = (): ENV => {
     GALLERY_USERNAME: process.env.GALLERY_USERNAME || "root",
     GALLERY_PASSWORD: process.env.GALLERY_PASSWORD || "secret",
     GALLERY_DATABASE: process.env.GALLERY_DATABASE || "dev",
-    GALLERY_SYNCHRONIZE: Boolean(process.env.GALLERY_SYNCHRONIZE) || true,
-    GALLERY_AUTO_LOAD_ENTITIES: Boolean(process.env.GALLERY_AUTO_LOAD_ENTITIES) || true,
-    GALLERY_LOGGING: Boolean(process.env.GALLERY_LOGGING) || false,
+    GALLERY_SYNCHRONIZE: process.env.GALLERY_SYNCHRONIZE === "true",
+    GALLERY_AUTO_LOAD_ENTITIES: process.env.GALLERY_AUTO_LOAD_ENTITIES === "true",
+    GALLERY_LOGGING: process.env.GALLERY_LOGGING === "true",
     GALLERY_UUID_EXTENSION: process.env.GALLERY_UUID_EXTENSION || "uuid-ossp",
 
     INN_NAME: process.env.INN_NAME || "inn",
     INN_TYPE: process.env.INN_TYPE || "sqlite",
-    INN_SYNCHRONIZE: Boolean(process.env.INN_SYNCHRONIZE) || true,
-    INN_AUTO_LOAD_ENTITIES: Boolean(process.env.INN_AUTO_LOAD_ENTITIES) || true,
-    INN_LOGGING: Boolean(process.env.INN_LOGGING) || false,
+    INN_SYNCHRONIZE: process.env.INN_SYNCHRONIZE == "true",
+    INN_AUTO_LOAD_ENTITIES: process.env.INN_AUTO_LOAD_ENTITIES == "true",
+    INN_LOGGING: process.env.INN_LOGGING == "true",
 
     FM_ROOT: process.env.FM_ROOT || "/home",
   }
