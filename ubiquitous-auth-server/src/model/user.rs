@@ -1,6 +1,6 @@
 //! Model: user
 //!
-//!  
+//!
 
 use std::str::FromStr;
 
@@ -12,11 +12,15 @@ use crate::service::encryption::hash_password;
 
 // TODO: role & permission enhancement
 /// user role
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
 pub enum Role {
+    #[serde(rename = "admin")]
     Admin,
+    #[serde(rename = "visitor")]
     Visitor,
+    #[serde(rename = "editor")]
     Editor,
+    #[serde(rename = "supervisor")]
     Supervisor,
 }
 
@@ -51,7 +55,7 @@ impl FromStr for Role {
     type Err = ServiceError;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        match value {
+        match value.to_lowercase().as_str() {
             "admin" => Ok(Self::Admin),
             "visitor" => Ok(Self::Visitor),
             "editor" => Ok(Self::Editor),
@@ -63,15 +67,36 @@ impl FromStr for Role {
     }
 }
 
+// `enum` is not yet unsupported by rbatis crate, temporary use string
+// pub const ROLE_TYPE: &str = r#"
+//     DO $$ BEGIN
+//         IF NOT EXISTS (
+//             SELECT *
+//             FROM pg_type typ
+//             INNER JOIN pg_namespace nsp
+//             ON nsp.oid = typ.typnamespace
+//             WHERE nsp.nspname = current_schema()
+//             AND typ.typname = 'ai'
+//         ) THEN
+//         CREATE TYPE RoleType AS ENUM (
+//             'admin',
+//             'visitor',
+//             'editor',
+//             'supervisor'
+//         );
+//         END IF;
+//     END$$;
+// "#;
+
 pub const USER_TABLE: &str = r#"
-CREATE TABLE IF NOT EXISTS
-users(
-    email VARCHAR(100) PRIMARY KEY,
-    nickname VARCHAR(100) NOT NULL,
-    hash VARCHAR(122) NOT NULL,
-    role VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP NOT NULL
-)
+    CREATE TABLE IF NOT EXISTS
+    users(
+        email VARCHAR PRIMARY KEY,
+        nickname VARCHAR NOT NULL,
+        hash VARCHAR NOT NULL,
+        role VARCHAR NOT NULL,
+        created_at TIMESTAMP NOT NULL
+    )
 "#;
 
 /// users table
@@ -81,7 +106,7 @@ users(
 /// role: user role, only allow to be altered by admin+
 /// created_at: timestamp
 #[crud_table(table_name:"users" | formats_pg:"created_at:{}::timestamp")]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct User {
     pub email: String,
     pub nickname: String,
@@ -91,12 +116,12 @@ pub struct User {
 }
 
 impl User {
-    pub fn from_details<T>(nickname: T, email: T, pwd: T) -> ServiceResult<Self>
+    pub fn from_details<T>(nickname: T, email: T, password: T) -> ServiceResult<Self>
     where
         T: Into<String>,
     {
         // default role is visitor
-        let hash = hash_password(&pwd.into())?;
+        let hash = hash_password(&password.into())?;
         let user = User {
             nickname: nickname.into(),
             email: email.into(),
@@ -156,5 +181,38 @@ impl UserAlteration {
     pub fn role(&mut self, role: &str) -> ServiceResult<&mut Self> {
         self.role = Some(Role::from_str(role)?);
         Ok(self)
+    }
+}
+
+#[cfg(test)]
+mod test_user {
+    use super::*;
+
+    #[test]
+    fn test_user_from_details() {
+        let user = User::from_details("nickname", "email", "password").unwrap();
+        assert_eq!(user.email, "email");
+        assert_eq!(user.nickname, "nickname");
+        assert_eq!(user.role, Role::Visitor);
+    }
+
+    #[test]
+    fn test_user_from_str() {
+        let user = Role::from_str("admin").unwrap();
+        assert_eq!(user, Role::Admin);
+    }
+
+    #[test]
+    fn test_user_json() {
+        let user = User::from_details("nickname", "email", "password").unwrap();
+        let json = serde_json::to_string(&user).unwrap();
+
+        // println!("{:?}", json);
+
+        let user_from_str: User = serde_json::from_str(&json).unwrap();
+
+        // println!("{:?}", user);
+
+        assert_eq!(user, user_from_str);
     }
 }

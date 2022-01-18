@@ -1,4 +1,7 @@
-use std::str::FromStr;
+//! Persistence
+//!
+//! CRUD of `invitation` & `users` tables
+
 use std::time::Duration;
 
 use rbatis::core::db::DBPoolOptions;
@@ -34,6 +37,9 @@ impl Persistence {
             // invitation table
             self.rb.exec(INVITATION_TABLE, vec![]).await?;
 
+            // users table's role type, not yet supported by rbatis
+            // self.rb.exec(ROLE_TYPE, vec![]).await?;
+
             // users table
             self.rb.exec(USER_TABLE, vec![]).await?;
         }
@@ -42,7 +48,6 @@ impl Persistence {
 
     /// find invitation by id
     pub async fn get_invitation_by_id(&self, id: &str) -> ServiceResult<Option<Invitation>> {
-        let id = uuid::Uuid::from_str(id)?;
         Ok(self.rb.fetch_by_column("id", &id).await?)
     }
 
@@ -79,12 +84,13 @@ impl Persistence {
 
     /// get user by email
     pub async fn get_user_by_email(&self, email: &str) -> ServiceResult<Option<User>> {
-        Ok(self.rb.fetch_by_column("email", &email.to_owned()).await?)
+        Ok(self.rb.fetch_by_column("email", email).await?)
     }
 
     /// save user & alter user
     pub async fn save_user(&self, user: User) -> ServiceResult<()> {
-        Ok(self.rb.save(&user, &[]).await.map(|_| ())?)
+        self.rb.save(&user, &[]).await?;
+        Ok(())
     }
 
     /// alter user role (admin permission)
@@ -149,7 +155,7 @@ mod persistence_test {
     }
 
     #[actix_rt::test]
-    async fn get_invitation_by_email_test() {
+    async fn get_invitation_test() {
         let p = Persistence::new().await.unwrap();
 
         let res = p
@@ -157,15 +163,10 @@ mod persistence_test {
             .await;
 
         assert_matches!(res, Ok(_));
-    }
 
-    #[actix_rt::test]
-    async fn get_invitation_by_id_test() {
-        let p = Persistence::new().await.unwrap();
+        let id = res.unwrap().unwrap().id.unwrap();
 
-        let res = p
-            .get_invitation_by_id("82834e08-6d73-4d29-9006-c240b4c3aa42")
-            .await;
+        let res = p.get_invitation_by_id(&id).await;
 
         assert_matches!(res, Ok(_));
     }

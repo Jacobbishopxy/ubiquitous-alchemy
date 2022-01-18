@@ -27,7 +27,7 @@ impl EmailService {
 
     // send an invitation email
     pub fn send_invitation(&self, invitation: &Invitation) -> ServiceResult<()> {
-        let id = match invitation.id {
+        let id = match &invitation.id {
             Some(i) => i,
             None => {
                 return Err(ServiceError::InternalServerError(
@@ -66,15 +66,13 @@ impl EmailService {
 fn test_send_invitation() {
     use std::assert_matches::assert_matches;
 
-    use uuid::Uuid;
-
     use super::*;
 
     let es = EmailService::new();
 
     // Change it to an available email address
     let mut invitation = Invitation::from_details("jacob", "jacobxy@qq.com", "hashed_pw");
-    invitation.id = Some(Uuid::parse_str("02207087-ab01-4a57-ad8a-bcbcddf500ea").unwrap());
+    invitation.id = Some("02207087-ab01-4a57-ad8a-bcbcddf500ea".to_owned());
 
     let res = es.send_invitation(&invitation);
 

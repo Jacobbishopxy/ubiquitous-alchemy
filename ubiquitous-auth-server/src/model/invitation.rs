@@ -1,17 +1,16 @@
 use chrono::NaiveDateTime;
 use rbatis::crud_table;
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 
 pub const INVITATION_TABLE: &str = r#"
-CREATE TABLE IF NOT EXISTS
-invitation(
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    email VARCHAR(100) NOT NULL,
-    nickname VARCHAR(100) NOT NULL,
-    hash VARCHAR(122) NOT NULL,
-    expires_at TIMESTAMP NOT NULL
-)
+    CREATE TABLE IF NOT EXISTS
+    invitation(
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        email VARCHAR NOT NULL,
+        nickname VARCHAR NOT NULL,
+        hash VARCHAR NOT NULL,
+        expires_at TIMESTAMP NOT NULL
+    )
 "#;
 
 /// invitation table
@@ -23,7 +22,7 @@ invitation(
 #[crud_table(table_name:"invitation" | formats_pg:"id:{}::uuid,expires_at:{}::timestamp")]
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Invitation {
-    pub id: Option<Uuid>,
+    pub id: Option<String>,
     pub nickname: String,
     pub email: String,
     pub hash: String,
