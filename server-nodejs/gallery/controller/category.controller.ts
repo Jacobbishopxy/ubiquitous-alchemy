@@ -2,9 +2,9 @@
  * Created by Jacob Xie on 9/14/2020.
  */
 
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Query} from '@nestjs/common'
+import {Body, Controller, Delete, Get, Post, Query} from '@nestjs/common'
 
-import * as categoryService from "../provider/category.service"
+import {CategoryService} from "../provider"
 import {Category, Mark, Tag} from "../entity"
 import {CategoryPureDto} from "../dto"
 import {CategoryPurePipe} from "../pipe"
@@ -12,136 +12,84 @@ import {CategoryPurePipe} from "../pipe"
 
 @Controller()
 export class CategoryController {
-  constructor(private readonly service: categoryService.CategoryService) {}
+  constructor(private readonly service: CategoryService) {}
 
   @Get("categories")
   getAllCategories() {
-    try {
-      return this.service.getAllCategories()
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getAllCategories()
   }
 
   @Get("category")
   getCategoryByName(@Query("name") name: string) {
-    try {
-      return this.service.getCategoryByName(name)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getCategoryByName(name)
   }
 
   @Post("category")
   saveCategory(@Body() category: Category) {
-    try {
-      return this.service.saveCategory(category)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.saveCategory(category)
   }
 
   @Delete("category")
   deleteCategory(@Query("name") name: string) {
-    try {
-      return this.service.deleteCategory(name)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.deleteCategory(name)
   }
 
   // ===================================================================================================================
 
   @Get("getAllCategoriesByType")
   getAllCategoriesByType(@Query("type") type: string) {
-    try {
-      return this.service.getAllCategoriesByType(type)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getAllCategoriesByType(type)
   }
 
   @Get("getAllCategories")
   getAllCategoriesName() {
-    try {
-      return this.service.getAllCategoriesNameWithType()
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getAllCategoriesNameWithType()
   }
 
   @Get("getAllCategoriesWithoutContents")
   getAllCategoriesWithoutContents() {
-    try {
-      return this.service.getAllCategoriesWithoutContents()
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getAllCategoriesWithoutContents()
   }
 
   @Get("getAllCategoriesDashboardsTemplates")
   getAllCategoriesDashboardsTemplates() {
-    try {
-      return this.service.getAllCategoriesDashboardsTemplates()
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getAllCategoriesDashboardsTemplates()
   }
 
   @Get("getCategoryMarkAndTagByName")
   getCategoryMarkAndTagByName(@Query("name") name: string) {
-    try {
-      return this.service.getCategoryMarkAndTagByName(name)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getCategoryMarkAndTagByName(name)
   }
 
   @Get("getCategoryContentByName")
   getCategoryContentByName(@Query("name") name: string) {
-    try {
-      return this.service.getCategoryContentByName(name)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getCategoryContentByName(name)
   }
 
   @Get("getCategoryDashboardByName")
   getCategoryDashboardByName(@Query("name") name: string) {
-    try {
-      return this.service.getCategoryDashboardByName(name)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getCategoryDashboardByName(name)
   }
 
   @Post("saveCategory")
   savePureCategory(@Body(CategoryPurePipe) category: CategoryPureDto) {
-    try {
-      return this.service.saveCategory(category as Category)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.saveCategory(category as Category)
   }
 
   @Post("saveCategoryMark")
-  saveCategoryMark(@Query("name") name: string,
-    @Body() mark: Mark) {
-    try {
-      return this.service.saveCategoryMark(name, mark)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+  saveCategoryMark(
+    @Query("name") name: string,
+    @Body() mark: Mark
+  ) {
+    return this.service.saveCategoryMark(name, mark)
   }
 
   @Post("saveCategoryTag")
-  saveCategoryTag(@Query("name") name: string,
-    @Body() tag: Tag) {
-    try {
-      return this.service.saveCategoryTag(name, tag)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+  saveCategoryTag(
+    @Query("name") name: string,
+    @Body() tag: Tag
+  ) {
+    return this.service.saveCategoryTag(name, tag)
   }
 }
 

@@ -2,50 +2,34 @@
  * Created by Jacob Xie on 8/29/2020.
  */
 
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Query} from '@nestjs/common'
+import {Body, Controller, Delete, Get, Post, Query} from '@nestjs/common'
 
-import * as elementService from "../provider/element.service"
+import {ElementService} from "../provider"
 import {Element} from "../entity"
 
 
 @Controller()
 export class ElementController {
-  constructor(private readonly service: elementService.ElementService) {}
+  constructor(private readonly service: ElementService) {}
 
   @Get("elements")
   getAllElements() {
-    try {
-      return this.service.getAllElements()
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getAllElements()
   }
 
   @Get("element")
   getElementsByIds(@Query("ids") ids: string) {
-    try {
-      return this.service.getElementsByIds(ids.split(","))
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getElementsByIds(ids.split(","))
   }
 
   @Post("element")
   saveElement(@Body() element: Element) {
-    try {
-      return this.service.saveElement(element)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.saveElement(element)
   }
 
   @Delete("element")
   deleteElement(@Query("id") id: string) {
-    try {
-      return this.service.deleteElement(id)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.deleteElement(id)
   }
 
   // ===================================================================================================================
@@ -55,41 +39,29 @@ export class ElementController {
     @Query("id") id: string,
     @Query("markName") markName?: string
   ) {
-    try {
-      return this.service.getElementContentDates(id, markName)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getElementContentDates(id, markName)
   }
 
   @Get("getElementContent")
-  getElementContent(@Query("id") id: string,
+  getElementContent(
+    @Query("id") id: string,
     @Query("date") date?: string,
-    @Query("markName") markName?: string) {
-    try {
-      return this.service.getElementContentAndFetchQuery(id, date, markName)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    @Query("markName") markName?: string,
+  ) {
+    return this.service.getElementContentAndFetchQuery(id, date, markName)
   }
 
   @Post("modifyElement")
-  modifyElement(@Query("id") id: string,
-    @Body() element: Element) {
-    try {
-      return this.service.modifyElement(id, element)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+  modifyElement(
+    @Query("id") id: string,
+    @Body() element: Element,
+  ) {
+    return this.service.modifyElement(id, element)
   }
 
   @Post("updateElements")
   updateElements(@Body() elements: Element[]) {
-    try {
-      return this.service.saveElements(elements)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.saveElements(elements)
   }
 }
 

@@ -2,9 +2,9 @@
  * Created by Jacob Xie on 10/22/2020.
  */
 
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Query} from '@nestjs/common'
+import {Body, Controller, Delete, Get, Post, Query} from '@nestjs/common'
 
-import * as storageService from "../provider/storage.service"
+import {StorageService} from "../provider"
 import {Storage} from "../entity"
 import {ReadDto} from "../dto"
 import {ReadPipe} from "../pipe"
@@ -12,42 +12,26 @@ import {ReadPipe} from "../pipe"
 
 @Controller()
 export class StorageController {
-  constructor(private readonly service: storageService.StorageService) {}
+  constructor(private service: StorageService) {}
 
   @Get("storages")
   getAllStorages() {
-    try {
-      return this.service.getAllStorages()
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getAllStorages()
   }
 
   @Get("storage")
   getStorageById(@Query("id") id: string) {
-    try {
-      return this.service.getStorageById(id)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.getStorageById(id)
   }
 
   @Post("storage")
   saveStorage(@Body() storage: Storage) {
-    try {
-      return this.service.saveStorage(storage)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.saveStorage(storage)
   }
 
   @Delete("storage")
   deleteStorage(@Query("id") id: string) {
-    try {
-      return this.service.deleteStorage(id)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return this.service.deleteStorage(id)
   }
 
   // ===================================================================================================================
@@ -68,23 +52,20 @@ export class StorageController {
   }
 
   @Get("executeSql")
-  executeSql(@Query("id") id: string,
-    @Query("sqlString") sqlString: string) {
-    try {
-      return this.service.executeSql(id, sqlString)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+  executeSql(
+    @Query("id") id: string,
+    @Query("sqlString") sqlString: string,
+  ) {
+    return this.service.executeSql(id, sqlString)
   }
 
   @Post("read")
-  read(@Query("id") id: string, @Query("databaseType") databaseType: string,
-    @Body(ReadPipe) readDto: ReadDto) {
-    try {
-      return this.service.readFromDB(id, readDto, databaseType)
-    } catch (err: any) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+  read(
+    @Query("id") id: string,
+    @Query("databaseType") databaseType: string,
+    @Body(ReadPipe) readDto: ReadDto,
+  ) {
+    return this.service.readFromDB(id, readDto, databaseType)
   }
 }
 

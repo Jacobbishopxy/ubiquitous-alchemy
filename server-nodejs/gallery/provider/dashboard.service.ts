@@ -167,10 +167,9 @@ export class DashboardService {
         cat.dashboards, dashboards, (prev, curr) => prev.id === curr.id
       )
 
+      // delete dashboards as well as their authors' bindings
       if (dashboardsRemove.length > 0)
         await this.deleteDashboards(dashboardsRemove.map(d => d.id))
-
-
 
       // save dashboards. notice that brand new dashboards (without id) will be created
       // and unchanged dashboards (with id) will be updated
