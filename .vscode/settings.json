@@ -21,6 +21,7 @@
 		"lura",
 		"postgres",
 		"rustup",
+		"upsert",
 		"VARCHAR"
 	],
 	"files.watcherExclude": {

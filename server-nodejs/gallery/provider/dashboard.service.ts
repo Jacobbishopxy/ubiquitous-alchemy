@@ -162,6 +162,7 @@ export class DashboardService {
     })
 
     if (cat) {
+      // check difference between old and new dashboards
       const dashboardsRemove = _.differenceWith(
         cat.dashboards, dashboards, (prev, curr) => prev.id === curr.id
       )
@@ -169,12 +170,19 @@ export class DashboardService {
       if (dashboardsRemove.length > 0)
         await this.deleteDashboards(dashboardsRemove.map(d => d.id))
 
-      let newDashboards = dashboards.map(d => ({...d, category: {name: categoryName}})) as Dashboard[]
-      newDashboards = await this.saveDashboards(newDashboards)
+      // only new ids should be bind to the author who created the dashboards,
+      // get unchanged ids in order to compare with the new ids
+      let unchangedDashboardIds = dashboards.filter(d => d.id !== undefined).map(d => d.id)
+
+      // save dashboards. notice that brand new dashboards (without id) will be created
+      // and unchanged dashboards (with id) will be updated
+      let upsertDashboards = dashboards.map(d => ({...d, category: {name: categoryName}})) as Dashboard[]
+      upsertDashboards = await this.saveDashboards(upsertDashboards)
+      let upsertDashboardIds = upsertDashboards.map(d => d.id)
 
       // bind new dashboards to author, we don't need to concern about unbind
       // because `deleteDashboards()` will automatically unbind author relation
-      let newDashboardsIds = newDashboards.map(d => d.id)
+      let newDashboardsIds = _.difference(upsertDashboardIds, unchangedDashboardIds)
       let author = await this.authService.getUserInfo(request)
       await this.authorService.bindDashboardsToAuthor(author.email, newDashboardsIds)
 

@@ -91,9 +91,9 @@ const readConfig = (): ENV => {
 
     INN_NAME: process.env.INN_NAME || "inn",
     INN_TYPE: process.env.INN_TYPE || "sqlite",
-    INN_SYNCHRONIZE: process.env.INN_SYNCHRONIZE == "true",
-    INN_AUTO_LOAD_ENTITIES: process.env.INN_AUTO_LOAD_ENTITIES == "true",
-    INN_LOGGING: process.env.INN_LOGGING == "true",
+    INN_SYNCHRONIZE: process.env.INN_SYNCHRONIZE === "true",
+    INN_AUTO_LOAD_ENTITIES: process.env.INN_AUTO_LOAD_ENTITIES === "true",
+    INN_LOGGING: process.env.INN_LOGGING === "true",
 
     FM_ROOT: process.env.FM_ROOT || "/home",
   }
