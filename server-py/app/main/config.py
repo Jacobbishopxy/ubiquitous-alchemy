@@ -39,12 +39,12 @@ class Config(object):
     conn = {
         "type": getenv("GALLERY_TYPE"),
         "host": getenv("GALLERY_HOST"),
-        "port": getenv("GALLERY_PORT"),
+        "port": int(getenv("GALLERY_PORT")),
         "database": getenv("GALLERY_DATABASE"),
         "username": getenv("GALLERY_USERNAME"),
         "password": getenv("GALLERY_PASSWORD"),
     }
-    server_port = getenv("SERVER_PY_PORT")
+    server_port = int(getenv("SERVER_PY_PORT"))
 
 
 class DevelopmentConfig(Config):

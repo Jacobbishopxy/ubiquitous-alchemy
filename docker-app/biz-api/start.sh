@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+source ../../resources/secret.env
 source ../../resources/go.env
 
 export APP_IMAGE_NAME=${APP_IMAGE_NAME}

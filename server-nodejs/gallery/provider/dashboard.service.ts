@@ -30,12 +30,6 @@ const dashboardTemplateRelations = {
   ]
 }
 
-const dashboardCategoryRelations = {
-  relations: [
-    common.category
-  ]
-}
-
 const categoryDashboardRelations = {
   relations: [common.dashboards]
 }
@@ -199,7 +193,7 @@ export class DashboardService {
 
   async searchDashboards(keyword: string) {
     return this.repoDashboard.find({
-      ...dashboardCategoryRelations,
+      ...dashboardTemplateRelations,
       ...utils.whereNameLike(keyword)
     })
   }
