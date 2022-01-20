@@ -12,6 +12,7 @@ import {StorageController} from "./storage.controller"
 import {TagController} from "./tag.controller"
 import {TemplateController} from "./template.controller"
 import {ContentMongoController} from "./contentMongo.controller"
+import {RecordController} from "./record.controller"
 
 export {
   AuthorController,
@@ -24,5 +25,6 @@ export {
   TagController,
   TemplateController,
   ContentMongoController,
+  RecordController,
 }
 

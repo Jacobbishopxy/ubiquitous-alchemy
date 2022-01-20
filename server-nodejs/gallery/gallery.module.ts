@@ -16,6 +16,7 @@ import {
   Storage,
   Tag,
   Template,
+  Record,
 } from "./entity"
 import {
   AuthService,
@@ -29,6 +30,7 @@ import {
   TagService,
   TemplateService,
   MongoService,
+  RecordService,
 } from "./provider"
 import {StorageSubscriber} from "./subscriber"
 import {
@@ -42,6 +44,7 @@ import {
   TagController,
   TemplateController,
   ContentMongoController,
+  RecordController,
 } from "./controller"
 
 
@@ -57,6 +60,7 @@ import {
       Storage,
       Tag,
       Template,
+      Record,
     ], db)
   ],
   providers: [
@@ -72,6 +76,7 @@ import {
     TemplateService,
     StorageSubscriber,
     MongoService,
+    RecordService,
   ],
   controllers: [
     AuthorController,
@@ -84,6 +89,7 @@ import {
     TagController,
     TemplateController,
     ContentMongoController,
+    RecordController,
   ],
 
 })
