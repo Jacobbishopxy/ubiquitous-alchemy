@@ -113,10 +113,12 @@ export class DatabaseController {
    * insert data into a table by json data
    */
   @Post("insert")
-  async insertData(@Query("id") dbId: string,
+  async insertData(
+    @Query("id") dbId: string,
     @Query("tableName") tableName: string,
     @Query("insertOption") insertOption: string,
-    @Body() data: Record<string, any>) {
+    @Body() data: Record<string, any>
+  ) {
     let url = `${this.getDbPath()}/insert?id=${dbId}&tableName=${tableName}`
     if (insertOption) url += `&insertOption=${insertOption}`
     const ans = await axios.post(encodeURI(url), data)
@@ -127,10 +129,12 @@ export class DatabaseController {
    * update data in a table by json data
    */
   @Post("update")
-  async updateData(@Query("id") dbId: string,
+  async updateData(
+    @Query("id") dbId: string,
     @Query("tableName") tableName: string,
     @Query("itemId") itemId: string,
-    @Body() data: Record<string, any>) {
+    @Body() data: Record<string, any>
+  ) {
     const url = `${this.getDbPath()}/update?id=${dbId}&tableName=${tableName}&itemId=${itemId}`
     const ans = await axios.post(encodeURI(url), data)
     return ans.data

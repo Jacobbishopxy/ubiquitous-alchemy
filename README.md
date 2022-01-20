@@ -16,13 +16,7 @@ This project serves as a collection of [Cyberbrick](https://github.com/Jacobbish
 
 1. [ubiquitous-data-server](./ubiquitous-data-server/README.md) data layer, data engine and data cache based on deps below:
 
-   - [dyn-conn](https://github.com/Jacobbishopxy/rustopia): dynamic Sql connection, execution
-
-   - [sqlz](https://github.com/Jacobbishopxy/rustopia): sql AST model
-
-   - [tiny-df](https://github.com/Jacobbishopxy/rustopia): custom data structure, gluing third party crates
-
-   - [xlz](https://github.com/Jacobbishopxy/rustopia): xlsx/xml toolkit
+   - [fabrix](https://github.com/Jacobbishopxy/fabrix): custom data structure, providing custom ETL interface and multiple data sources' adapters
 
 1. [ubiquitous-fs-server](./ubiquitous-fs-server/README.md): file manage system
 

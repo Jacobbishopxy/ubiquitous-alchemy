@@ -10,7 +10,7 @@ import {CollectionService} from "./collection.service"
 
 @Controller()
 export class MiscController {
-  constructor(private readonly service: CollectionService) {}
+  constructor(private service: CollectionService) {}
 
   @Get("misc/random-unicorn")
   async getRandomUnicorn(@Res() res: Response) {
@@ -28,8 +28,10 @@ export class MiscController {
   }
 
   @Get("manual/getManualImage")
-  async getManualImage(@Query("name") name: string,
-                       @Res() res: Response) {
+  async getManualImage(
+    @Query("name") name: string,
+    @Res() res: Response,
+  ) {
     return res.sendFile(this.service.getManualImage(name))
   }
 }
