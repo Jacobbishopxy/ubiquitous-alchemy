@@ -50,15 +50,16 @@ export class RecordService {
         dashboardId: record.dashboardId,
         templateId: record.templateId,
         elementId: record.elementId,
-        ...utils.orderByCreatedAt("DESC")
-      }
+      },
+      ...utils.orderByCreatedAt("ASC")
     })
 
-    if (previousRecord) {
+    if (previousRecord && newRecord.id != previousRecord.id) {
       const diff = utils.dateDiff(
         new Date(previousRecord.createdAt),
-        new Date(newRecord.createdAt)
+        new Date(newRecord.createdAt),
       )
+
       if (diff < 1) {
         await this.repo.delete(previousRecord.id)
       }
