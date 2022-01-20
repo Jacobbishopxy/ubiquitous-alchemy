@@ -13,7 +13,7 @@ import {MarkService} from "./mark.service"
 import {StorageService} from "./storage.service"
 import {TagService} from "./tag.service"
 import {TemplateService} from "./template.service"
-
+import {RecordService} from "./record.service"
 
 export {
   AuthService,
@@ -27,5 +27,6 @@ export {
   StorageService,
   TagService,
   TemplateService,
+  RecordService,
 }
 

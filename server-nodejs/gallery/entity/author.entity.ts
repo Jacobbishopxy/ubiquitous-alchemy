@@ -7,10 +7,12 @@ import {
   PrimaryColumn,
   Column,
   ManyToMany,
-  JoinTable
+  JoinTable,
+  OneToMany
 } from "typeorm"
 import {Dashboard} from "."
 import {author, RoleType} from "../common"
+import {Record} from "./record.entity"
 
 
 @Entity({name: author})
@@ -22,6 +24,9 @@ export class Author {
   @ManyToMany(() => Dashboard, t => t.authors, {nullable: true})
   @JoinTable()
   dashboards!: Dashboard[]
+
+  @OneToMany(() => Record, r => r.author, {nullable: true})
+  records!: Record[]
 
   @Column("varchar")
   nickname!: string

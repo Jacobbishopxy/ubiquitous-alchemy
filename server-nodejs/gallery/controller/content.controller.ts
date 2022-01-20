@@ -11,7 +11,7 @@ import {Content} from "../entity"
 
 @Controller()
 export class ContentController {
-    constructor(private readonly service: ContentService) {}
+    constructor(private service: ContentService) {}
 
     @Get("contents")
     getAllContents() {

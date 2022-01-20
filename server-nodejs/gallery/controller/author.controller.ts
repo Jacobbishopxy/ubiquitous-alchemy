@@ -63,5 +63,5 @@ export class AuthorController {
 }
 
 const authorizedRoles = (role: string): boolean => {
-  return role === "Admin" || role === "Supervisor"
+  return role === "admin" || role === "supervisor"
 }

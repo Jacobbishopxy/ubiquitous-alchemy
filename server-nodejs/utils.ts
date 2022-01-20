@@ -20,6 +20,7 @@ export const whereEmailEqual = (v: string) => ({where: {email: Equal(v)}})
 export type OrderType = "ASC" | "DESC"
 export const orderByDate = (orderType: OrderType) => ({order: {date: orderType}})
 export const orderByName = (orderType: OrderType) => ({order: {name: orderType}})
+export const orderByCreatedAt = (orderType: OrderType) => ({order: {createdAt: orderType}})
 
 // string extract
 export const regSkip = new RegExp("^\\((\\d+),")
@@ -69,3 +70,7 @@ export const arrayLikeGet = (arr: QueryStr) => {
   return undefined
 }
 
+export const dateDiff = (d1: Date, d2: Date) => {
+  const diff = d2.getTime() - d1.getTime()
+  return diff / (1000 * 60 * 60 * 24)
+}

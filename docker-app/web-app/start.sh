@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # author: Jacob Bishop
 
+source ../../resources/secret.env
 source ../../resources/go.env
 
 export BACKEND_WEB_NAME=${BACKEND_WEB_NAME}

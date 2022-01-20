@@ -11,6 +11,7 @@ import {Mark} from "./mark.entity"
 import {Storage} from "./storage.entity"
 import {Tag} from "./tag.entity"
 import {Template} from "./template.entity"
+import {Record} from "./record.entity"
 
 export {
   Author,
@@ -22,5 +23,6 @@ export {
   Storage,
   Tag,
   Template,
+  Record,
 }
 

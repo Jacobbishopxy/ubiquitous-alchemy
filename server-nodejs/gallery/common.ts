@@ -19,6 +19,7 @@ export const tag = "tag"
 export const author = "author"
 export const storage = "storage"
 export const auth = "auth"
+export const record = "record"
 
 // column name
 export const id = "id"

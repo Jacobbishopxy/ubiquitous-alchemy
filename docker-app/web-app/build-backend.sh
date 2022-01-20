@@ -5,7 +5,6 @@
 
 # read config
 source ../../resources/go.env
-source ../../resources/secret.env
 
 # build a prod image. Golang HTTP service serves static HTML files.
 docker build \
