@@ -184,11 +184,12 @@ export class DashboardService {
         let newDashboardsIds = _.difference(upsertDashboardIds, unchangedDashboardIds)
         await this.authorService.bindDashboardsToAuthor(author.email, newDashboardsIds)
       }
-
-      return true
     }
 
-    return false
+    return this.repoCategory.findOne({
+      ...categoryDashboardRelations,
+      ...utils.whereNameEqual(categoryName)
+    })
   }
 
   async searchDashboards(keyword: string) {
