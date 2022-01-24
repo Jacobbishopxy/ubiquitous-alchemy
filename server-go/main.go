@@ -17,10 +17,10 @@ import (
 )
 
 const base = "../resources/"
-const mongoConnEnv = "go.env"
+const mongoConnEnv = "secret.env"
+const dbEnvName = "secret.env"
 const devConnString = "DB_LOCALHOST_URL"
 const prodConnString = "DB_URL"
-const dbEnvName = "go.env"
 const databaseName = "DB_NAME"
 const collectionsList = "DB_COLLECTION_NAME"
 const port = ":8040"
