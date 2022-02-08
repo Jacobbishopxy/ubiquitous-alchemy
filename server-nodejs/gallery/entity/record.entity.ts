@@ -13,6 +13,9 @@ import {
 
 import {record} from "../common"
 import {Author} from "./author.entity"
+import {Dashboard} from "./dashboard.entity"
+import {Template} from "./template.entity"
+import {Element} from "./element.entity"
 
 @Entity({name: record})
 export class Record {
@@ -23,14 +26,14 @@ export class Record {
   @ManyToOne(() => Author, a => a.records, {nullable: false})
   author!: Author
 
-  @Column("varchar", {nullable: false})
-  dashboardId!: string
+  @ManyToOne(() => Dashboard, d => d.records, {nullable: false})
+  dashboard!: Dashboard
 
-  @Column("varchar", {nullable: false})
-  templateId!: string
+  @ManyToOne(() => Template, t => t.records, {nullable: false})
+  template!: Template
 
-  @Column("varchar", {nullable: false})
-  elementId!: string
+  @ManyToOne(() => Element, e => e.records, {nullable: false})
+  element!: Element
 
   @Column("text", {nullable: true})
   note?: string

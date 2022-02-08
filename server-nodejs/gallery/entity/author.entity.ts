@@ -31,6 +31,9 @@ export class Author {
   @Column("varchar")
   nickname!: string
 
+  @Column("varchar", {nullable: true})
+  color!: string
+
   @Column("enum", {nullable: false, enum: RoleType})
   role!: RoleType
 

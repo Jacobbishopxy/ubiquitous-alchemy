@@ -13,9 +13,7 @@ import {
 } from "typeorm"
 
 import * as common from "../common"
-import {Template} from "./template.entity"
-import {Content} from "./content.entity"
-
+import {Template, Content, Record as GRecord} from "."
 
 @Entity({name: common.element})
 @Unique([common.template, common.name])
@@ -32,6 +30,9 @@ export class Element {
 
   @OneToMany(() => Content, ct => ct.element, {cascade: true, nullable: true})
   contents!: Content[]
+
+  @OneToMany(() => GRecord, r => r.element, {nullable: true})
+  records!: GRecord[]
 
   @Column("varchar", {nullable: false})
   name!: string

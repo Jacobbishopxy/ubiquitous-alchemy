@@ -8,19 +8,22 @@ import {Repository} from "typeorm"
 
 import * as common from "../common"
 import * as utils from "../../utils"
-import {Record} from "../entity"
+import {Record as GRecord} from "../entity"
 
 const recordRelations = {
   relations: [
-    common.author
+    common.author,
+    common.dashboard,
+    common.template,
+    common.element,
   ]
 }
 
 @Injectable()
 export class RecordService {
   constructor(
-    @InjectRepository(Record, common.db)
-    private repo: Repository<Record>,
+    @InjectRepository(GRecord, common.db)
+    private repo: Repository<GRecord>,
   ) {}
 
 
@@ -28,7 +31,7 @@ export class RecordService {
     return this.repo.find({
       ...recordRelations,
       ...utils.paginationGet(pagination),
-      ...utils.orderByCreatedAt("DESC")
+      ...utils.orderByCreatedAt("DESC"),
     })
   }
 
@@ -41,15 +44,16 @@ export class RecordService {
    * @param record `Record`
    * @returns `Record`
    */
-  async saveLatestRecord(record: Record) {
+  async saveLatestRecord(record: GRecord) {
     let newRecord = this.repo.create(record)
     newRecord = await this.repo.save(newRecord)
 
     let previousRecord = await this.repo.findOne({
+      ...recordRelations,
       where: {
-        dashboardId: record.dashboardId,
-        templateId: record.templateId,
-        elementId: record.elementId,
+        dashboard: {id: record.dashboard.id},
+        template: {id: record.template.id},
+        element: {id: record.element.id},
       },
       ...utils.orderByCreatedAt("ASC")
     })
