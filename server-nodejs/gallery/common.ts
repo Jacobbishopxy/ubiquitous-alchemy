@@ -7,6 +7,7 @@ import {Content} from "./entity/content.entity"
 
 // db name
 export const db = "gallery"
+export const dbExt = "galleryExt"
 
 // table name
 export const category = "category"

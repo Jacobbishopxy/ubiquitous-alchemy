@@ -12,6 +12,7 @@ import {Storage} from "./storage.entity"
 import {Tag} from "./tag.entity"
 import {Template} from "./template.entity"
 import {Record} from "./record.entity"
+import {FlexContent} from "./flexContent.entity"
 
 export {
   Author,
@@ -24,5 +25,6 @@ export {
   Tag,
   Template,
   Record,
+  FlexContent,
 }
 

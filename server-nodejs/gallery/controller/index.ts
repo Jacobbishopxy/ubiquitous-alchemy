@@ -13,6 +13,7 @@ import {TagController} from "./tag.controller"
 import {TemplateController} from "./template.controller"
 import {ContentMongoController} from "./contentMongo.controller"
 import {RecordController} from "./record.controller"
+import {FlexContentController} from "./flexContent.controller"
 
 export {
   AuthorController,
@@ -26,5 +27,6 @@ export {
   TemplateController,
   ContentMongoController,
   RecordController,
+  FlexContentController,
 }
 

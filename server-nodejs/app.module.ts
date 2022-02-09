@@ -12,6 +12,7 @@ import {
   routerImports,
   databaseGalleryImports,
   databaseInnImports,
+  databaseGalleryExtImports,
 } from "./config"
 
 
@@ -21,6 +22,7 @@ import {
     routerImports,
     CollectionModule,
     databaseGalleryImports,
+    databaseGalleryExtImports,
     GalleryModule,
     databaseInnImports,
     InnModule,
