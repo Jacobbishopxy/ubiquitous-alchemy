@@ -5,7 +5,8 @@
 import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common"
 import {InjectRepository} from "@nestjs/typeorm"
 import {FlexContent} from "../entity"
-import {DeleteResult, MongoRepository, ObjectID, UpdateResult} from "typeorm"
+import {DeleteResult, MongoRepository, UpdateResult} from "typeorm"
+import {ObjectId} from "mongodb"
 
 import * as common from "../common"
 
@@ -22,7 +23,7 @@ export class FlexContentService {
 
   async findOne(id: string): Promise<FlexContent> {
     // validate id
-    if (!ObjectID.isValid(id)) throw new BadRequestException("Invalid id")
+    if (!ObjectId.isValid(id)) throw new BadRequestException("Invalid id")
     // find one
     const fc = await this.repo.findOne(id)
     if (!fc) throw new NotFoundException("FlexContent not found")
@@ -38,7 +39,7 @@ export class FlexContentService {
 
   async update(id: string, content: FlexContent): Promise<UpdateResult> {
     // validate id
-    if (!ObjectID.isValid(id)) throw new BadRequestException("Invalid id")
+    if (!ObjectId.isValid(id)) throw new BadRequestException("Invalid id")
     // check existence
     const exists = await this.repo.findOne(id)
     if (!exists) throw new NotFoundException("FlexContent not found")
@@ -49,7 +50,7 @@ export class FlexContentService {
 
   async delete(id: string): Promise<DeleteResult> {
     // turn string into ObjectID
-    if (!ObjectID.isValid(id)) throw new BadRequestException("Invalid id")
+    if (!ObjectId.isValid(id)) throw new BadRequestException("Invalid id")
     return await this.repo.delete(id)
   }
 }
