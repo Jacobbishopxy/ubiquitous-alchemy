@@ -45,7 +45,6 @@ import {
   StorageController,
   TagController,
   TemplateController,
-  ContentMongoController,
   RecordController,
   FlexContentController,
 } from "./controller"
@@ -95,7 +94,6 @@ import {
     StorageController,
     TagController,
     TemplateController,
-    ContentMongoController,
     RecordController,
     FlexContentController,
   ],

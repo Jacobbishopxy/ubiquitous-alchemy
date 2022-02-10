@@ -207,6 +207,8 @@ export const shouldQueryAfterReceivingContent = (v: string, content: Content) =>
       return true
     case ElementType.XlsxTable:
       return true
+    case ElementType.Excel:
+      return true
     default:
       return false
   }
@@ -219,6 +221,8 @@ export const ContentValidationByType = (v: string, data?: Record<string, any>) =
     case ElementType.Image:
       return MongoContentValidation(data)
     case ElementType.XlsxTable:
+      return MongoContentValidation(data)
+    case ElementType.Excel:
       return MongoContentValidation(data)
     default:
       return false

@@ -2,23 +2,23 @@
  * Created by Jacob Xie on 10/22/2020.
  */
 
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common"
-import { InjectRepository } from "@nestjs/typeorm"
-import { createConnection, getConnection, Repository } from "typeorm"
+import {BadRequestException, Injectable} from "@nestjs/common"
+import {InjectRepository} from "@nestjs/typeorm"
+import {createConnection, getConnection, Repository} from "typeorm"
 import _ from "lodash"
 
 import * as common from "../common"
 import * as utils from "../../utils"
-import { Storage } from "../entity"
-import { ReadDto, ConditionDto, OrderDto } from "../dto"
-import { MongoReadDto, PostgresReadDto } from "../dto/read.dto"
+import {Storage} from "../entity"
+import {ReadDto, ConditionDto, OrderDto} from "../dto"
+import {MongoReadDto, PostgresReadDto} from "../dto/read.dto"
 import * as MongoService from "./contentMongo.service"
 
 @Injectable()
 export class StorageService {
   constructor(@InjectRepository(Storage, common.db) private repo: Repository<Storage>,
     private readonly mongoService: MongoService.MongoService
-  ) { }
+  ) {}
 
   getAllStorages() {
     return this.repo.find()
@@ -38,7 +38,7 @@ export class StorageService {
   async deleteStorage(id: string) {
     const i = await this.getStorageById(id)
     if (i) {
-      await this.repo.remove(i, { listeners: true })
+      await this.repo.remove(i, {listeners: true})
       return true
     }
     return false
@@ -47,7 +47,7 @@ export class StorageService {
   // ===================================================================================================================
 
   getAllStorageSimple = () => {
-    return this.repo.find({ select: [common.id, common.name, common.description] })
+    return this.repo.find({select: [common.id, common.name, common.description]})
   }
 
   testConnection = (id: string) => {
@@ -83,7 +83,7 @@ export class StorageService {
         return this.mongoService.getContentData(mongoReadDto.collection, id)
     }
     //if storage type is not pg or mongo, return error
-    throw new HttpException("Mismatch storage type! Currently only support pg or mongo", HttpStatus.INTERNAL_SERVER_ERROR)
+    throw new BadRequestException("Mismatch storage type! Currently only support pg or mongo")
   }
 
   readFromPostgres = (id: string, readDto: PostgresReadDto) => {

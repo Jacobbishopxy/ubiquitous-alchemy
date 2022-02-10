@@ -17,11 +17,18 @@ export class FlexContentService {
     private repo: MongoRepository<FlexContent>
   ) {}
 
-  findAll(): Promise<FlexContent[]> {
+  // switch collection
+  private switchCollection(collection: string): void {
+    this.repo.metadata.tableName = collection
+  }
+
+  findAll(collection: string): Promise<FlexContent[]> {
+    this.switchCollection(collection)
     return this.repo.find()
   }
 
-  async findOne(id: string): Promise<FlexContent> {
+  async findOne(collection: string, id: string): Promise<FlexContent> {
+    this.switchCollection(collection)
     // validate id
     if (!ObjectId.isValid(id)) throw new BadRequestException("Invalid id")
     // find one
@@ -30,25 +37,29 @@ export class FlexContentService {
     return fc
   }
 
-  create(content: FlexContent): Promise<FlexContent> {
+  create(collection: string, content: FlexContent): Promise<FlexContent> {
+    this.switchCollection(collection)
     // remove id
     content.id = undefined
     const create = this.repo.create(content)
     return this.repo.save(create)
   }
 
-  async update(id: string, content: FlexContent): Promise<UpdateResult> {
+  async update(collection: string, id: string, content: FlexContent): Promise<FlexContent> {
+    this.switchCollection(collection)
     // validate id
     if (!ObjectId.isValid(id)) throw new BadRequestException("Invalid id")
     // check existence
     const exists = await this.repo.findOne(id)
     if (!exists) throw new NotFoundException("FlexContent not found")
     // update by id
-    const update = await this.repo.update(content.id!, content)
-    return update
+    await this.repo.update(content.id!, content)
+    const update = await this.repo.findOne(id)
+    return update!
   }
 
-  async delete(id: string): Promise<DeleteResult> {
+  async delete(collection: string, id: string): Promise<DeleteResult> {
+    this.switchCollection(collection)
     // turn string into ObjectID
     if (!ObjectId.isValid(id)) throw new BadRequestException("Invalid id")
     return await this.repo.delete(id)

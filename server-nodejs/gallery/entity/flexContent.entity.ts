@@ -11,21 +11,13 @@ export class Anchor {
   categoryName!: string
 
   @Column()
-  dashboardId!: string
-
-  @Column()
-  templateId!: string
-
-  @Column()
   elementId!: string
 
   @Column()
-  contentId!: string
+  contentId?: string
 
-  constructor(categoryName: string, dashboardId: string, templateId: string, elementId: string, contentId: string) {
+  constructor(categoryName: string, elementId: string, contentId?: string) {
     this.categoryName = categoryName
-    this.dashboardId = dashboardId
-    this.templateId = templateId
     this.elementId = elementId
     this.contentId = contentId
   }
@@ -48,5 +40,12 @@ export class FlexContent {
   data!: Record<string, any>
 
   @Column()
-  config!: Record<string, any>
+  config?: Record<string, any>
+
+  constructor(anchor: Anchor, date: string, data: Record<string, any>, config?: Record<string, any>) {
+    this.anchor = anchor
+    this.date = date
+    this.data = data
+    this.config = config
+  }
 }
