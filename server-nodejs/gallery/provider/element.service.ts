@@ -177,7 +177,7 @@ export class ElementService {
       const res = await this.getQueryDataByStorageType(content) as Record<string, any>
       // console.log(content, res)
       //update content's data with newly fetched data
-      ct = {...content, data: res}
+      ct = {...content, data: res.data}
     }
     return ct
   }
