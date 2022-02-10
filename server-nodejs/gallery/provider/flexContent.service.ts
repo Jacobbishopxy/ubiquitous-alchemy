@@ -5,7 +5,7 @@
 import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common"
 import {InjectRepository} from "@nestjs/typeorm"
 import {FlexContent} from "../entity"
-import {DeleteResult, MongoRepository, UpdateResult} from "typeorm"
+import {DeleteResult, MongoRepository} from "typeorm"
 import {ObjectId} from "mongodb"
 
 import * as common from "../common"
