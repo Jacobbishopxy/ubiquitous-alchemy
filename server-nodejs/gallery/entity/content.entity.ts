@@ -27,7 +27,7 @@ export class Content {
   id!: string
 
   /**
-   * if an element is deleted, its' content would not be destroyed but unbind from element
+   * if an element is deleted, its' content would not be destroyed but unbinding from element
    */
   @ManyToOne(() => Element, e => e.contents, {nullable: true, onDelete: "SET NULL"})
   element!: Element

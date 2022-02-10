@@ -4,7 +4,7 @@
 
 import {Module} from "@nestjs/common"
 import {TypeOrmModule} from "@nestjs/typeorm"
-import {db} from "./common"
+import {db, dbExt} from "./common"
 
 import {
   Author,
@@ -17,6 +17,7 @@ import {
   Tag,
   Template,
   Record,
+  FlexContent,
 } from "./entity"
 import {
   AuthService,
@@ -31,6 +32,7 @@ import {
   TemplateService,
   MongoService,
   RecordService,
+  FlexContentService,
 } from "./provider"
 import {StorageSubscriber} from "./subscriber"
 import {
@@ -43,8 +45,8 @@ import {
   StorageController,
   TagController,
   TemplateController,
-  ContentMongoController,
   RecordController,
+  FlexContentController,
 } from "./controller"
 
 
@@ -61,7 +63,10 @@ import {
       Tag,
       Template,
       Record,
-    ], db)
+    ], db),
+    TypeOrmModule.forFeature([
+      FlexContent,
+    ], dbExt)
   ],
   providers: [
     AuthService,
@@ -77,6 +82,7 @@ import {
     StorageSubscriber,
     MongoService,
     RecordService,
+    FlexContentService,
   ],
   controllers: [
     AuthorController,
@@ -88,8 +94,8 @@ import {
     StorageController,
     TagController,
     TemplateController,
-    ContentMongoController,
     RecordController,
+    FlexContentController,
   ],
 
 })

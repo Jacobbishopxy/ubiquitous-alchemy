@@ -29,7 +29,7 @@ export class Template {
   @OneToMany(() => Element, e => e.template, {cascade: true, nullable: true})
   elements!: Element[]
 
-  @OneToMany(() => Record, r => r.template, {nullable: true})
+  @OneToMany(() => Record, r => r.template, {nullable: true, cascade: true})
   records!: Record[]
 
   @Column("int", {nullable: true})

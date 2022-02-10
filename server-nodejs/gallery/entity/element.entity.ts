@@ -31,7 +31,7 @@ export class Element {
   @OneToMany(() => Content, ct => ct.element, {cascade: true, nullable: true})
   contents!: Content[]
 
-  @OneToMany(() => GRecord, r => r.element, {nullable: true})
+  @OneToMany(() => GRecord, r => r.element, {nullable: true, cascade: true})
   records!: GRecord[]
 
   @Column("varchar", {nullable: false})

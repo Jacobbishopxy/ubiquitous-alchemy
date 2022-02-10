@@ -30,10 +30,10 @@ export class Dashboard {
   @OneToMany(() => Template, t => t.dashboard, {nullable: true})
   templates!: Template[]
 
-  @ManyToMany(() => Author, c => c.dashboards, {onDelete: "CASCADE", nullable: true})
+  @ManyToMany(() => Author, c => c.dashboards, {nullable: true, onDelete: "CASCADE"})
   authors!: Author[]
 
-  @OneToMany(() => Record, r => r.dashboard, {nullable: true})
+  @OneToMany(() => Record, r => r.dashboard, {nullable: true, cascade: true})
   records!: Record[]
 
   @Column("varchar")

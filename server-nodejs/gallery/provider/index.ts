@@ -14,6 +14,7 @@ import {StorageService} from "./storage.service"
 import {TagService} from "./tag.service"
 import {TemplateService} from "./template.service"
 import {RecordService} from "./record.service"
+import {FlexContentService} from "./flexContent.service"
 
 export {
   AuthService,
@@ -28,5 +29,6 @@ export {
   TagService,
   TemplateService,
   RecordService,
+  FlexContentService,
 }
 

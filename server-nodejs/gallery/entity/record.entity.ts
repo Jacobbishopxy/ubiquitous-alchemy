@@ -23,16 +23,16 @@ export class Record {
   @PrimaryGeneratedColumn("uuid")
   id!: string
 
-  @ManyToOne(() => Author, a => a.records, {nullable: false})
+  @ManyToOne(() => Author, a => a.records, {nullable: false, onDelete: 'CASCADE'})
   author!: Author
 
-  @ManyToOne(() => Dashboard, d => d.records, {nullable: false})
+  @ManyToOne(() => Dashboard, d => d.records, {nullable: false, onDelete: 'CASCADE'})
   dashboard!: Dashboard
 
-  @ManyToOne(() => Template, t => t.records, {nullable: false})
+  @ManyToOne(() => Template, t => t.records, {nullable: false, onDelete: 'CASCADE'})
   template!: Template
 
-  @ManyToOne(() => Element, e => e.records, {nullable: false})
+  @ManyToOne(() => Element, e => e.records, {nullable: false, onDelete: 'CASCADE'})
   element!: Element
 
   @Column("text", {nullable: true})

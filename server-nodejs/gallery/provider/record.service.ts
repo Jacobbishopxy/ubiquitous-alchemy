@@ -14,6 +14,7 @@ const recordRelations = {
   relations: [
     common.author,
     common.dashboard,
+    common.dashboardCategory,
     common.template,
     common.element,
   ]

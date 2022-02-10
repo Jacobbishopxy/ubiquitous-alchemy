@@ -174,10 +174,10 @@ export class ElementService {
       && common.shouldQueryAfterReceivingContent(elementType, content)
       && common.ContentValidationByType(elementType, content.data)
     ) {
-      const res = await this.getQueryDataByStorageType(content)
+      const res = await this.getQueryDataByStorageType(content) as Record<string, any>
       // console.log(content, res)
       //update content's data with newly fetched data
-      ct = {...content, data: {...content.data, ...res}}
+      ct = {...content, data: res.data}
     }
     return ct
   }

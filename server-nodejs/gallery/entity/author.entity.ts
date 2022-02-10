@@ -25,7 +25,7 @@ export class Author {
   @JoinTable()
   dashboards!: Dashboard[]
 
-  @OneToMany(() => Record, r => r.author, {nullable: true})
+  @OneToMany(() => Record, r => r.author, {nullable: true, cascade: true})
   records!: Record[]
 
   @Column("varchar")

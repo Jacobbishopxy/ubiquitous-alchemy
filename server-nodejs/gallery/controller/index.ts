@@ -11,8 +11,8 @@ import {MarkController} from "./mark.controller"
 import {StorageController} from "./storage.controller"
 import {TagController} from "./tag.controller"
 import {TemplateController} from "./template.controller"
-import {ContentMongoController} from "./contentMongo.controller"
 import {RecordController} from "./record.controller"
+import {FlexContentController} from "./flexContent.controller"
 
 export {
   AuthorController,
@@ -24,7 +24,7 @@ export {
   StorageController,
   TagController,
   TemplateController,
-  ContentMongoController,
   RecordController,
+  FlexContentController,
 }
 
