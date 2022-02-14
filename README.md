@@ -10,9 +10,9 @@ This project serves as a collection of [Cyberbrick](https://github.com/Jacobbish
 
 1. [ubiquitous-api-gateway](./ubiquitous-api-gateway/README.md): API gateway
 
-1. [abiquitous-auth-server](./abiquitous-auth-server/README.md): authentication
+1. [ubiquitous-asset-management](./ubiquitous-asset-management/README.md): asset management
 
-1. [ubiquitous-biz-server](./ubiquitous-biz-server/README.md): business logic implementation
+1. [ubiquitous-auth-server](./ubiquitous-auth-server/README.md): authentication
 
 1. [ubiquitous-data-server](./ubiquitous-data-server/README.md) data layer, data engine and data cache based on deps below:
 
@@ -39,6 +39,10 @@ This project serves as a collection of [Cyberbrick](https://github.com/Jacobbish
 1. Golang
 
    current version: 1.17
+
+1. Java
+
+   current version: 17.0.1
 
 1. Typescript
 
