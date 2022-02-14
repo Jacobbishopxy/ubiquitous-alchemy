@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
+# author: Jacob Bishop
 
-source ../../resources/secret.env
-source ../../resources/go.env
+source ../../resources/nodejs.env
 
-export APP_IMAGE_NAME=${APP_IMAGE_NAME}
-export APP_IMAGE_VERSION=${APP_IMAGE_VERSION}
-export CONTAINER_NAME=${CONTAINER_NAME}
-export CONTAINER_PORT=${CONTAINER_PORT}
+export API_APP_V1_NAME=${API_APP_V1_NAME}
+export API_APP_V1_VERSION=${API_APP_V1_VERSION}
+export API_CONTAINER_NAME=${API_CONTAINER_NAME}
+export API_CONTAINER_PORT=${API_CONTAINER_PORT}
 export VOLUME_CONF_EXT=${VOLUME_CONF_EXT}
 export VOLUME_CONF_INN=${VOLUME_CONF_INN}
-export DB_URI=${DB_URI}
-export DB_NAME=${DB_NAME}
-export DB_COLLECTION_NAME=${DB_COLLECTION_NAME}
+export VOLUME_PUBLIC_EXT=${VOLUME_PUBLIC_EXT}
+export VOLUME_PUBLIC_INN=${VOLUME_PUBLIC_INN}
+export VOLUME_FILE_EXT=${VOLUME_FILE_EXT}
+export VOLUME_FILE_INN=${VOLUME_FILE_INN}
+export VOLUME_INN_DB_EXT=${VOLUME_INN_DB_EXT}
+export VOLUME_INN_DB_INN=${VOLUME_INN_DB_INN}
 
-# echo `ls $VOLUME_CONF_EXT`
 docker-compose down
-docker-compose up -d
+docker-compose -p "${PROJECT_NAME_API}" up -d

@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-# author: Celia Xiao
+# author: Jacob Bishop
+#
+# api_v1 image. prod
 
-source ../../resources/go.env
+source ../../resources/nodejs.env
 docker build \
-    -t "${APP_IMAGE_NAME}":"${APP_IMAGE_VERSION}" \
-    --build-arg BASE_IMAGE_NAME="${BASE_IMAGE_NAME}" \
-    --build-arg BASE_IMAGE_VERSION="${BASE_IMAGE_VERSION}" \
+    -t "${API_APP_V1_NAME}":"${API_APP_V1_VERSION}" \
+    --build-arg API_BASE_V1_NAME="${API_BASE_V1_NAME}" \
+    --build-arg API_BASE_V1_VERSION="${API_BASE_V1_VERSION}" \
     -f ./Dockerfile ../..

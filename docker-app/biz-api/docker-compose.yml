@@ -1,20 +1,20 @@
 version: "3.6"
 
 services:
-  go-mongo-api:
+  cyberbrick:
     restart: always
-    container_name: ${CONTAINER_NAME}
-    image: ${APP_IMAGE_NAME}:${APP_IMAGE_VERSION}
+    image: ${API_APP_V1_NAME}:${API_APP_V1_VERSION}
+    container_name: ${API_CONTAINER_NAME}
     ports:
-      - ${CONTAINER_PORT}:8040
+      - ${API_CONTAINER_PORT}:${API_CONTAINER_PORT}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${VOLUME_CONF_EXT}:${VOLUME_CONF_INN}:ro
-    environment:
-      DB_URI: ${DB_URI}
-      DB_NAME: ${DB_NAME}
-      DB_COLLECTION_NAME: ${DB_COLLECTION_NAME}
-    command: ./server-go prod
+      - ${VOLUME_PUBLIC_EXT}:${VOLUME_PUBLIC_INN}:ro
+      - ${VOLUME_FILE_EXT}:${VOLUME_FILE_INN}:ro
+      - ${VOLUME_INN_DB_EXT}:${VOLUME_INN_DB_INN}:ro
+    command: yarn start
+    # tty: true
 
 networks:
   default:

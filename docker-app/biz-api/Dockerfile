@@ -1,13 +1,17 @@
 # Author: Jacob Bishop
 
-ARG     BASE_IMAGE_NAME
-ARG     BASE_IMAGE_VERSION
+ARG     API_BASE_V1_NAME
+ARG     API_BASE_V1_VERSION
 
-FROM    $BASE_IMAGE_NAME:$BASE_IMAGE_VERSION
+# base
+FROM    $API_BASE_V1_NAME:$API_BASE_V1_VERSION
 
+# copy source code to workdir
+COPY    ./server-nodejs /app
+
+# change the active directory
 WORKDIR /app
 
-COPY    ./server-go /app
+# build app
+RUN     yarn build
 
-RUN     go mod tidy
-RUN     go build
