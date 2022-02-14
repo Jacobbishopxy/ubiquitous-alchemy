@@ -28,5 +28,6 @@
 	"files.watcherExclude": {
 		"**/target": true
 	},
-	"python.formatting.provider": "black"
+	"python.formatting.provider": "black",
+	"java.configuration.updateBuildConfiguration": "automatic"
 }
