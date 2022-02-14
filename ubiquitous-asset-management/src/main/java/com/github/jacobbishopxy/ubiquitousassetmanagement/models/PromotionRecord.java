@@ -44,11 +44,9 @@ public class PromotionRecord {
   private Float score;
 
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(nullable = false)
   private Date createdAt;
 
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(nullable = false)
   private Date updatedAt;
 
   public PromotionRecord() {
