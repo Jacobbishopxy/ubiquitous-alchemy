@@ -1,3 +1,7 @@
+/**
+ * Created by Jacob Xie on 2/14/2022.
+ */
+
 package com.github.jacobbishopxy.ubiquitousassetmanagement.controllers;
 
 import java.util.List;
@@ -7,7 +11,9 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.Promotion
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("v1")
@@ -27,7 +33,8 @@ public class PromotionRecordController {
   PromotionRecord getPromotionRecord(@PathVariable Integer id) {
     return repo
         .findById(id)
-        .orElseThrow(() -> new RuntimeException(String.format("PromotionRecord %s not found", id)));
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, String.format("PromotionRecord %s not found", id)));
   }
 
   @PostMapping("/promotion_record")
@@ -54,7 +61,8 @@ public class PromotionRecordController {
               record.setScore(promotionRecord.getScore());
               return repo.save(record);
             })
-        .orElseThrow(() -> new RuntimeException(String.format("PromotionRecord %s not found", id)));
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, String.format("PromotionRecord %s not found", id)));
   }
 
   @DeleteMapping("/promotion_record/{id}")

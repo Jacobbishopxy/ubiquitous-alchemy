@@ -26,8 +26,13 @@ public class PromotionRecord {
 
   private String industry;
 
+  public static enum Direction {
+    BUY, SELL
+  }
+
+  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private String direction;
+  private Direction direction;
 
   @Column(nullable = false)
   private Date openTime;
@@ -55,7 +60,7 @@ public class PromotionRecord {
   public PromotionRecord(
       String promoter,
       String symbol,
-      String direction,
+      Direction direction,
       Date openTime,
       Float openPrice) {
     super();
@@ -102,11 +107,11 @@ public class PromotionRecord {
     this.industry = industry;
   }
 
-  public String getDirection() {
+  public Direction getDirection() {
     return direction;
   }
 
-  public void setDirection(String direction) {
+  public void setDirection(Direction direction) {
     this.direction = direction;
   }
 
