@@ -6,7 +6,14 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.repositories;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.*;
 
-public interface PromotionRecordRepo extends JpaRepository<PromotionRecord, Integer> {
+public interface PromotionRecordRepo
+    extends JpaRepository<PromotionRecord, Integer>, JpaSpecificationExecutor<PromotionRecord> {
+
+  // delete all records where score is zero
+  @Modifying
+  @Query("delete promotion_record p where p.score = 0")
+  int deleteZeroScores();
+
 }

@@ -4,6 +4,6 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.dtos;
 
-public record PriceRange(Float start, Float end) {
+public record FloatRange(Float start, Float end) {
 
 }
