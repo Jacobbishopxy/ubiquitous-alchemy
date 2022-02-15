@@ -44,7 +44,7 @@ public class PromotionRecord {
 
   private Float closePrice;
 
-  private String earningsYield;
+  private Float earningsYield;
 
   private Float score;
 
@@ -147,11 +147,11 @@ public class PromotionRecord {
     this.closePrice = closePrice;
   }
 
-  public String getEarningsYield() {
+  public Float getEarningsYield() {
     return earningsYield;
   }
 
-  public void setEarningsYield(String earningsYield) {
+  public void setEarningsYield(Float earningsYield) {
     this.earningsYield = earningsYield;
   }
 
