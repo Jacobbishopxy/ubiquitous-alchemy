@@ -12,8 +12,8 @@ public interface PromotionRecordRepo
     extends JpaRepository<PromotionRecord, Integer>, JpaSpecificationExecutor<PromotionRecord> {
 
   // delete all records where score is zero
-  @Modifying
-  @Query("delete promotion_record p where p.score = 0")
-  int deleteZeroScores();
+  // @Modifying
+  // @Query("delete promotion_record p where p.score = 0")
+  // int deleteZeroScores();
 
 }

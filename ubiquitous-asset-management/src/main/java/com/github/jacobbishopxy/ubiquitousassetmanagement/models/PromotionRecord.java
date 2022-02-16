@@ -26,10 +26,6 @@ public class PromotionRecord {
 
   private String industry;
 
-  public static enum Direction {
-    BUY, SELL
-  }
-
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private Direction direction;
@@ -53,6 +49,10 @@ public class PromotionRecord {
 
   @Temporal(TemporalType.TIMESTAMP)
   private Date updatedAt;
+
+  public static enum Direction {
+    BUY, SELL
+  }
 
   public PromotionRecord() {
   }

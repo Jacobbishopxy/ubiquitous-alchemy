@@ -3,6 +3,8 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.repositories;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.IntegerRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearchDto;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 
@@ -15,6 +17,10 @@ public class PromotionRecordSpecification implements Specification<PromotionReco
 
   private PromotionRecordSearchDto searchDto;
 
+  public PromotionRecordSpecification(PromotionRecordSearchDto searchDto) {
+    this.searchDto = searchDto;
+  }
+
   @Override
   public Predicate toPredicate(
       Root<PromotionRecord> root,
@@ -23,65 +29,78 @@ public class PromotionRecordSpecification implements Specification<PromotionReco
 
     List<Predicate> predicates = new ArrayList<>();
 
-    searchDto.promoters().ifPresent(p -> {
-      In<String> inPromoters = criteriaBuilder.in(root.get("promoters"));
-      for (String promoter : p) {
+    List<String> promoters = searchDto.promoters();
+    if (promoters != null) {
+      In<String> inPromoters = criteriaBuilder.in(root.get("promoter"));
+      for (String promoter : promoters) {
         inPromoters.value(promoter);
       }
       predicates.add(inPromoters);
-    });
+    }
 
-    searchDto.symbols().ifPresent(s -> {
-      In<String> inSymbols = criteriaBuilder.in(root.get("symbols"));
-      for (String symbol : s) {
+    List<String> symbols = searchDto.symbols();
+    if (symbols != null) {
+      In<String> inSymbols = criteriaBuilder.in(root.get("symbol"));
+      for (String symbol : symbols) {
         inSymbols.value(symbol);
       }
       predicates.add(inSymbols);
-    });
+    }
 
-    searchDto.abbreviations().ifPresent(a -> {
-      In<String> inAbbreviations = criteriaBuilder.in(root.get("abbreviations"));
-      for (String abbreviation : a) {
+    List<String> abbreviations = searchDto.abbreviations();
+    if (abbreviations != null) {
+      In<String> inAbbreviations = criteriaBuilder.in(root.get("abbreviation"));
+      for (String abbreviation : abbreviations) {
         inAbbreviations.value(abbreviation);
       }
       predicates.add(inAbbreviations);
-    });
+    }
 
-    searchDto.direction().ifPresent(d -> {
-      predicates.add(criteriaBuilder.equal(root.get("direction"), d));
-    });
+    PromotionRecord.Direction direction = searchDto.direction();
+    if (direction != null) {
+      predicates.add(criteriaBuilder.equal(root.get("direction"), direction));
+    }
 
-    searchDto.openTimeRange().ifPresent(r -> {
-      predicates.add(criteriaBuilder.between(root.get("openTimeRange"), r.start(), r.end()));
-    });
+    DateRange openTimeRange = searchDto.openTimeRange();
+    if (openTimeRange != null) {
+      predicates.add(criteriaBuilder.between(root.get("openTime"), openTimeRange.start(), openTimeRange.end()));
+    }
 
-    searchDto.openPriceRange().ifPresent(r -> {
-      predicates.add(criteriaBuilder.between(root.get("openPriceRange"), r.start(), r.end()));
-    });
+    IntegerRange openPriceRange = searchDto.openPriceRange();
+    if (openPriceRange != null) {
+      predicates.add(criteriaBuilder.between(root.get("openPrice"), openPriceRange.start(), openPriceRange.end()));
+    }
 
-    searchDto.closeTimeRange().ifPresent(r -> {
-      predicates.add(criteriaBuilder.between(root.get("closeTimeRange"), r.start(), r.end()));
-    });
+    DateRange closeTimeRange = searchDto.closeTimeRange();
+    if (closeTimeRange != null) {
+      predicates.add(criteriaBuilder.between(root.get("closeTime"), closeTimeRange.start(), closeTimeRange.end()));
+    }
 
-    searchDto.closePriceRange().ifPresent(r -> {
-      predicates.add(criteriaBuilder.between(root.get("closePriceRange"), r.start(), r.end()));
-    });
+    IntegerRange closePriceRange = searchDto.closePriceRange();
+    if (closePriceRange != null) {
+      predicates.add(criteriaBuilder.between(root.get("closePrice"), closePriceRange.start(), closePriceRange.end()));
+    }
 
-    searchDto.earningsYieldRange().ifPresent(r -> {
-      predicates.add(criteriaBuilder.between(root.get("earningsYieldRange"), r.start(), r.end()));
-    });
+    IntegerRange earningsYieldRange = searchDto.earningsYieldRange();
+    if (earningsYieldRange != null) {
+      predicates.add(
+          criteriaBuilder.between(root.get("earningsYield"), earningsYieldRange.start(), earningsYieldRange.end()));
+    }
 
-    searchDto.scoreRange().ifPresent(r -> {
-      predicates.add(criteriaBuilder.between(root.get("scoreRange"), r.start(), r.end()));
-    });
+    IntegerRange scoreRange = searchDto.scoreRange();
+    if (scoreRange != null) {
+      predicates.add(criteriaBuilder.between(root.get("score"), scoreRange.start(), scoreRange.end()));
+    }
 
-    searchDto.createdAtRange().ifPresent(r -> {
-      predicates.add(criteriaBuilder.between(root.get("createdAtRange"), r.start(), r.end()));
-    });
+    DateRange createdAtRange = searchDto.createdAtRange();
+    if (createdAtRange != null) {
+      predicates.add(criteriaBuilder.between(root.get("createdAt"), createdAtRange.start(), createdAtRange.end()));
+    }
 
-    searchDto.updatedAtRange().ifPresent(r -> {
-      predicates.add(criteriaBuilder.between(root.get("updatedAtRange"), r.start(), r.end()));
-    });
+    DateRange updatedAtRange = searchDto.updatedAtRange();
+    if (updatedAtRange != null) {
+      predicates.add(criteriaBuilder.between(root.get("updatedAt"), updatedAtRange.start(), updatedAtRange.end()));
+    }
 
     if (predicates.isEmpty()) {
       return null;

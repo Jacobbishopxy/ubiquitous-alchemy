@@ -4,25 +4,37 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.dtos;
 
-import java.util.Optional;
 import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 
-// TODO: provide a search function
-// https://spring.io/blog/2011/04/26/advanced-spring-data-jpa-specifications-and-querydsl/
-// https://www.baeldung.com/rest-api-search-language-spring-data-specifications
 public record PromotionRecordSearchDto(
-    Optional<List<String>> promoters,
-    Optional<List<String>> symbols,
-    Optional<List<String>> abbreviations,
-    Optional<PromotionRecord.Direction> direction,
-    Optional<DateRange> openTimeRange,
-    Optional<FloatRange> openPriceRange,
-    Optional<DateRange> closeTimeRange,
-    Optional<FloatRange> closePriceRange,
-    Optional<FloatRange> earningsYieldRange,
-    Optional<FloatRange> scoreRange,
-    Optional<DateRange> createdAtRange,
-    Optional<DateRange> updatedAtRange) {
+        List<String> promoters,
+        List<String> symbols,
+        List<String> abbreviations,
+        List<String> industries,
+        PromotionRecord.Direction direction,
+        DateRange openTimeRange,
+        IntegerRange openPriceRange,
+        DateRange closeTimeRange,
+        IntegerRange closePriceRange,
+        IntegerRange earningsYieldRange,
+        IntegerRange scoreRange,
+        DateRange createdAtRange,
+        DateRange updatedAtRange) {
+
+    public boolean isEmpty() {
+        return promoters == null
+                && symbols == null
+                && abbreviations == null
+                && direction == null
+                && openTimeRange == null
+                && openPriceRange == null
+                && closeTimeRange == null
+                && closePriceRange == null
+                && earningsYieldRange == null
+                && scoreRange == null
+                && createdAtRange == null
+                && updatedAtRange == null;
+    }
 }
