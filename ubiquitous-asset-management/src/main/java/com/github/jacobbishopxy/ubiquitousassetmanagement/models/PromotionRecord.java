@@ -50,10 +50,6 @@ public class PromotionRecord {
   @Temporal(TemporalType.TIMESTAMP)
   private Date updatedAt;
 
-  public static enum Direction {
-    BUY, SELL
-  }
-
   public PromotionRecord() {
   }
 

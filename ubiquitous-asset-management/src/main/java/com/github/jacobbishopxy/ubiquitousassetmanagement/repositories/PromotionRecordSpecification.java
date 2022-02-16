@@ -5,7 +5,8 @@ import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.IntegerRange;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearchDto;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Direction;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -15,9 +16,9 @@ import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 public class PromotionRecordSpecification implements Specification<PromotionRecord> {
 
-  private PromotionRecordSearchDto searchDto;
+  private PromotionRecordSearch searchDto;
 
-  public PromotionRecordSpecification(PromotionRecordSearchDto searchDto) {
+  public PromotionRecordSpecification(PromotionRecordSearch searchDto) {
     this.searchDto = searchDto;
   }
 
@@ -56,7 +57,7 @@ public class PromotionRecordSpecification implements Specification<PromotionReco
       predicates.add(inAbbreviations);
     }
 
-    PromotionRecord.Direction direction = searchDto.direction();
+    Direction direction = searchDto.direction();
     if (direction != null) {
       predicates.add(criteriaBuilder.equal(root.get("direction"), direction));
     }

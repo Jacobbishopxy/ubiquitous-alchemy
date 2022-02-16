@@ -7,7 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearchDto;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromotionRecordRepo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromotionRecordSpecification;
@@ -31,7 +31,7 @@ public class PromotionRecordService {
     return repo.findAll(PageRequest.of(page, size)).getContent();
   }
 
-  public List<PromotionRecord> getPromotionRecords(int page, int size, PromotionRecordSearchDto searchDto) {
+  public List<PromotionRecord> getPromotionRecords(int page, int size, PromotionRecordSearch searchDto) {
     return repo.findAll(new PromotionRecordSpecification(searchDto), PageRequest.of(page, size)).getContent();
   }
 

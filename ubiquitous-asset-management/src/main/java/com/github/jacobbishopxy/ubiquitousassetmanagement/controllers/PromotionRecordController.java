@@ -9,7 +9,8 @@ import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.IntegerRange;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearchDto;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Direction;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.services.PromotionRecordService;
 
@@ -33,7 +34,7 @@ public class PromotionRecordController {
       @RequestParam(value = "symbols", required = false) List<String> symbols,
       @RequestParam(value = "abbreviations", required = false) List<String> abbreviations,
       @RequestParam(value = "industries", required = false) List<String> industries,
-      @RequestParam(value = "direction", required = false) PromotionRecord.Direction direction,
+      @RequestParam(value = "direction", required = false) Direction direction,
       @RequestParam(value = "openTimeRange", required = false) String openTimeRange,
       @RequestParam(value = "openPriceRange", required = false) String openPriceRange,
       @RequestParam(value = "closeTimeRange", required = false) String closeTimeRange,
@@ -52,7 +53,7 @@ public class PromotionRecordController {
     DateRange carDto = createdAtRange != null ? DateRange.fromString(createdAtRange) : null;
     DateRange uarDto = updatedAtRange != null ? DateRange.fromString(updatedAtRange) : null;
 
-    PromotionRecordSearchDto searchDto = new PromotionRecordSearchDto(
+    PromotionRecordSearch searchDto = new PromotionRecordSearch(
         promoters,
         symbols,
         abbreviations,

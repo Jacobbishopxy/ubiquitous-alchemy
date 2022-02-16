@@ -6,14 +6,19 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.dtos;
 
 import java.util.List;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Direction;
 
-public record PromotionRecordSearchDto(
+/**
+ * PromotionRecordSearchDto
+ * 
+ * 
+ */
+public record PromotionRecordSearch(
         List<String> promoters,
         List<String> symbols,
         List<String> abbreviations,
         List<String> industries,
-        PromotionRecord.Direction direction,
+        Direction direction,
         DateRange openTimeRange,
         IntegerRange openPriceRange,
         DateRange closeTimeRange,
