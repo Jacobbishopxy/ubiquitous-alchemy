@@ -1,0 +1,21 @@
+version: "3.6"
+
+services:
+  asset-management:
+    restart: always
+    build: ./Dockerfile
+    image: ${API_NAME}:${API_VERSION}
+    container_name: ${API_CONTAINER_NAME}
+    ports:
+      - ${API_CONTAINER_PORT}:${API_CONTAINER_PORT}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${VOLUME_CONF_EXT}:${VOLUME_CONF_INN}:ro
+      - ${VOLUME_LOG_EXT}:${VOLUME_LOG_INN}:ro
+    command: java -cp ${VOLUME_CONF_INN}/app.jar
+    # tty: true
+
+networks:
+  default:
+    external:
+      name: prod

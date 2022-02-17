@@ -30,14 +30,15 @@ public class PromotionRecordSpecification implements Specification<PromotionReco
 
     List<Predicate> predicates = new ArrayList<>();
 
-    List<String> promoters = searchDto.promoters();
-    if (promoters != null) {
-      In<String> inPromoters = criteriaBuilder.in(root.get("promoter"));
-      for (String promoter : promoters) {
-        inPromoters.value(promoter);
-      }
-      predicates.add(inPromoters);
-    }
+    // TODO: nested structure needs to be fixed
+    // List<String> promoters = searchDto.promoters();
+    // if (promoters != null) {
+    // In<String> inPromoters = criteriaBuilder.in(root.get("promoter"));
+    // for (String promoter : promoters) {
+    // inPromoters.value(promoter);
+    // }
+    // predicates.add(inPromoters);
+    // }
 
     List<String> symbols = searchDto.symbols();
     if (symbols != null) {
