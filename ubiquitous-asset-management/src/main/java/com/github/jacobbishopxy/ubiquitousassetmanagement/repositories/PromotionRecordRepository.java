@@ -8,7 +8,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord
 
 import org.springframework.data.jpa.repository.*;
 
-public interface PromotionRecordRepo
+public interface PromotionRecordRepository
     extends JpaRepository<PromotionRecord, Integer>, JpaSpecificationExecutor<PromotionRecord> {
 
   // delete all records where score is zero

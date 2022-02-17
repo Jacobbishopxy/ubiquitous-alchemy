@@ -6,18 +6,23 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.models;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "promotion_record")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PromotionRecord {
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
-  @Column(nullable = false)
-  private String promoter;
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "promoter_email")
+  private Promoter promoter;
 
   @Column(nullable = false)
   private String symbol;
@@ -54,7 +59,7 @@ public class PromotionRecord {
   }
 
   public PromotionRecord(
-      String promoter,
+      Promoter promoter,
       String symbol,
       Direction direction,
       Date openTime,
@@ -71,11 +76,11 @@ public class PromotionRecord {
     return id;
   }
 
-  public String getPromoter() {
+  public Promoter getPromoter() {
     return promoter;
   }
 
-  public void setPromoter(String promoter) {
+  public void setPromoter(Promoter promoter) {
     this.promoter = promoter;
   }
 

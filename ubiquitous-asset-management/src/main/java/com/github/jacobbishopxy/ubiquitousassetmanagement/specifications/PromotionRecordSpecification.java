@@ -1,4 +1,4 @@
-package com.github.jacobbishopxy.ubiquitousassetmanagement.repositories;
+package com.github.jacobbishopxy.ubiquitousassetmanagement.specifications;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,8 +9,8 @@ import java.util.Optional;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromotionRecordRepo;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromotionRecordSpecification;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromotionRecordRepository;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.specifications.PromotionRecordSpecification;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class PromotionRecordService {
 
   @Autowired
-  private PromotionRecordRepo repo;
+  private PromotionRecordRepository repo;
 
   public List<PromotionRecord> getPromotionRecords(int page, int size) {
     return repo.findAll(PageRequest.of(page, size)).getContent();

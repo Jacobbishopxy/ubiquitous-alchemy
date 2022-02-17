@@ -4,15 +4,28 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.models;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import jakarta.persistence.*;
 
+/**
+ * Promoter
+ *
+ * A promoter is a person who promotes an asset.
+ * This table has been already created by other program (server-nodejs).
+ */
 @Entity
 @Table(name = "author")
 @TypeDef(name = "author_role_enum", typeClass = RolePostgresEnumType.class)
-public class Author {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "email")
+public class Promoter {
   @Id
   @Column(nullable = false)
   private String email;
@@ -27,12 +40,17 @@ public class Author {
   @Type(type = "author_role_enum")
   private Role role;
 
+  @Column(columnDefinition = "TEXT")
   private String description;
 
-  public Author() {
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "promoter")
+  @JsonIgnore
+  private List<PromotionRecord> promotionRecords;
+
+  public Promoter() {
   }
 
-  public Author(String email, String nickname, String color, Role role, String description) {
+  public Promoter(String email, String nickname, String color, Role role, String description) {
     this.email = email;
     this.nickname = nickname;
     this.color = color;
@@ -79,4 +97,13 @@ public class Author {
   public void setDescription(String description) {
     this.description = description;
   }
+
+  public List<PromotionRecord> getPromotionRecords() {
+    return promotionRecords;
+  }
+
+  public void setPromotionRecords(List<PromotionRecord> promotionRecords) {
+    this.promotionRecords = promotionRecords;
+  }
+
 }
