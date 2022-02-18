@@ -7,6 +7,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.IntegerRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Direction;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Promoter;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -30,16 +31,19 @@ public class PromotionRecordSpecification implements Specification<PromotionReco
 
     List<Predicate> predicates = new ArrayList<>();
 
-    // TODO: nested structure needs to be fixed
-    // List<String> promoters = searchDto.promoters();
-    // if (promoters != null) {
-    // In<String> inPromoters = criteriaBuilder.in(root.get("promoter"));
-    // for (String promoter : promoters) {
-    // inPromoters.value(promoter);
-    // }
-    // predicates.add(inPromoters);
-    // }
+    // search by promoters' email
+    List<String> promoters = searchDto.promoters();
+    if (promoters != null) {
+      In<Promoter> inPromoters = criteriaBuilder.in(root.get("promoter"));
+      for (String promoter : promoters) {
+        Promoter p = new Promoter();
+        p.setEmail(promoter);
+        inPromoters.value(p);
+      }
+      predicates.add(inPromoters);
+    }
 
+    // search by symbols
     List<String> symbols = searchDto.symbols();
     if (symbols != null) {
       In<String> inSymbols = criteriaBuilder.in(root.get("symbol"));
@@ -49,6 +53,7 @@ public class PromotionRecordSpecification implements Specification<PromotionReco
       predicates.add(inSymbols);
     }
 
+    // search by abbreviations
     List<String> abbreviations = searchDto.abbreviations();
     if (abbreviations != null) {
       In<String> inAbbreviations = criteriaBuilder.in(root.get("abbreviation"));
@@ -58,6 +63,17 @@ public class PromotionRecordSpecification implements Specification<PromotionReco
       predicates.add(inAbbreviations);
     }
 
+    // search by industries
+    List<String> industries = searchDto.industries();
+    if (industries != null) {
+      In<String> inIndustries = criteriaBuilder.in(root.get("industry"));
+      for (String industry : industries) {
+        inIndustries.value(industry);
+      }
+      predicates.add(inIndustries);
+    }
+
+    // search by direction
     Direction direction = searchDto.direction();
     if (direction != null) {
       predicates.add(criteriaBuilder.equal(root.get("direction"), direction));
