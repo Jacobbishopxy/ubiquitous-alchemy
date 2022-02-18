@@ -34,3 +34,6 @@ build/
 
 logs/*
 !logs/.gitkeep
+
+# temporary added
+src/main/resources/persistence.properties

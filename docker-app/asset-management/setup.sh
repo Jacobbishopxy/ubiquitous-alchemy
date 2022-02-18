@@ -4,7 +4,6 @@
 source ../../resources/java.env
 docker build \
 		-t "${AM_BASE_NAME}":"${AM_BASE_VERSION}" \
-    --build-arg AM_BASE_NAME="${AM_BASE_NAME}" \
-    --build-arg AM_BASE_VERSION="${AM_BASE_VERSION}" \
-    --build-arg JAR_FILE="${JAR_FILE}" \
+    --build-arg JAVA_BASE_NAME="${JAVA_BASE_NAME}" \
+    --build-arg JAVA_BASE_VERSION="${JAVA_BASE_VERSION}" \
     -f ./Dockerfile ../..

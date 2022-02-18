@@ -1,17 +1,18 @@
 # Author: Jacob Bishop
 
-ARG     AM_BASE_NAME
-ARG     AM_BASE_VERSION
-ARG     JAR_FILE
+ARG     JAVA_BASE_NAME
+ARG     JAVA_BASE_VERSION
 
-FROM    $AM_BASE_NAME:$AM_BASE_VERSION
+FROM    $JAVA_BASE_NAME:$JAVA_BASE_VERSION
 
-# TODO: build the jar file outside of the container
+# copy source code
 COPY    ./ubiquitous-asset-management /app
 
 # set working directory
 WORKDIR /app
 
 # build the jar
-RUN     ./mvnw clean package
+RUN     ./mvnw package -Dmaven.test.skip
 
+# copy jar file to `/app`
+RUN     cp target/*.jar app.jar
