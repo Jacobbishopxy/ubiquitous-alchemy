@@ -1,37 +1,47 @@
 # Ubiquitous Alchemy Resources
 
-All configurations under this `resources` directory only works for Docker deployment.
+```txt
+    .
+    ├── asset-management
+    │   ├── application.properties
+    │   ├── log4j2.properties
+    │   ├── persistence.properties
+    │   └── persistence.template.properties
+    ├── gateway.env
+    ├── go.env
+    ├── java.env
+    ├── lura.env
+    ├── nodejs.env
+    ├── py.env
+    ├── rust.env
+    ├── secret.env
+    ├── secret.template.env
+    └── web.env
+```
 
-- auth.env
+- `/asset-management`: resources for Java project **ubiquitous-asset-management**
 
-- go.env
+  - `application.properties`
+  - `log4j2.properties`: ignored by git since it is production-specific config.
+  - `persistence.properties`: ignored by git since it is production-specific config.
+  - `persistence.template.properties`: template for `persistence.properties`
 
-- lura.env
+- `gateway.env`: environment variables for the API gateway project **ubiquitous-api-gateway**.
 
-**Extra (from Cyberbrick)!**
+- `go.env`: environment variables for general Golang projects.
 
-All files under this folder are used for normal configuration such as database connection info, or docker configuration such as version number, volume and etc.
+- `java.env`: environment variables for general Java projects.
 
-- config.json
+- `lura.env`: environment variables for **ubiquitous-api-gateway**.
 
-- py.env
+- `nodejs.env`: environment variables for general NodeJS projects.
 
-- nodejs.env
+- `py.env`: environment variables for general Python projects.
 
-- web.env
+- `rust.env`: environment variables for general Rust projects.
 
-- go.env
+- `secret.env`: ignored by git since it is production-specific config (details see `secret.template.env`).
 
-- lura.env
+- `secret.template.env`: template for `secret.env`
 
-- mongo.connection.env
-
-- ua.auth.env
-
-- ua.gateway.env
-
-**CAUTION!!!**
-
-1. Please make sure all the template env file (xxx.template.env) has been copied as regular env file (xxx.env).
-
-1. In `ua.auth.env`, make sure `DATABASE_URL` is your database connection string. If the database is also running in docker and shares the same network with auth-server container, rename the hostname to the database's container name. Make sure `INVITATION_PAGE` is the link of cyberbrick frontend link (hostname is localhost in dev mode and the IP-address of server in production mode).
+- `web.env`: environment variables for the web application **server-web**.

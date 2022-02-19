@@ -10,7 +10,6 @@ dev/
 docker/
 docker-app/
 docker-base/
-resources/
 
 
 cache

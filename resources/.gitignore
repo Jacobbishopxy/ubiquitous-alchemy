@@ -1,3 +1,5 @@
 
+DIR.md
+
 secret.env
-am-conf/persistence.properties
+asset-management/persistence.properties
