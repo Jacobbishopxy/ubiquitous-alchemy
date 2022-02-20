@@ -2,4 +2,4 @@
 # author: Jacob Xie
 
 source ../../resources/java.env
-docker pull "${JAVA_IMAGE_NAME}":"${JAVA_IMAGE_VERSION}"
+docker pull "${MAVEN_IMAGE_NAME}":"${MAVEN_IMAGE_VERSION}"
