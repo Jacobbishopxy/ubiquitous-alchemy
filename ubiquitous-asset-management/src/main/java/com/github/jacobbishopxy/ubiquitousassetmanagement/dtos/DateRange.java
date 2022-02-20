@@ -15,6 +15,10 @@ public record DateRange(Date start, Date end) {
   private static Pattern pattern = Pattern.compile("^(\\d{4}-\\d{2}-\\d{2}):(\\d{4}-\\d{2}-\\d{2})$");
 
   public static DateRange fromString(String s) throws ParseException {
+    if (s == null) {
+      return null;
+    }
+
     SimpleDateFormat sdf = new SimpleDateFormat(format);
     Matcher matcher = pattern.matcher(s);
 

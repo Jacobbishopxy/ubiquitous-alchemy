@@ -14,6 +14,8 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.specifications.Promoti
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 /**
@@ -32,7 +34,12 @@ public class PromotionRecordService {
   }
 
   public List<PromotionRecord> getPromotionRecords(int page, int size, PromotionRecordSearch searchDto) {
-    return repo.findAll(new PromotionRecordSpecification(searchDto), PageRequest.of(page, size)).getContent();
+    PromotionRecordSpecification prs = new PromotionRecordSpecification(searchDto);
+
+    List<Order> orders = searchDto.getOrders();
+    PageRequest pr = orders.isEmpty() ? PageRequest.of(page, size) : PageRequest.of(page, size, Sort.by(orders));
+
+    return repo.findAll(prs, pr).getContent();
   }
 
   public Optional<PromotionRecord> getPromotionRecord(int id) {

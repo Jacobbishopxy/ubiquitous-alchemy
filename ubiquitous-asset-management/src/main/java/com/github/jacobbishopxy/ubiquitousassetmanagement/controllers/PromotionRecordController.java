@@ -10,6 +10,7 @@ import java.util.List;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.IntegerRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.SortDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Direction;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.services.PromotionRecordService;
@@ -42,16 +43,38 @@ public class PromotionRecordController {
       @RequestParam(value = "earningsYieldRange", required = false) String earningsYieldRange,
       @RequestParam(value = "scoreRange", required = false) String scoreRange,
       @RequestParam(value = "createdAtRange", required = false) String createdAtRange,
-      @RequestParam(value = "updatedAtRange", required = false) String updatedAtRange) throws ParseException {
+      @RequestParam(value = "updatedAtRange", required = false) String updatedAtRange,
+      @RequestParam(value = "promoterSort", required = false) String promoterSort,
+      @RequestParam(value = "symbolSort", required = false) String symbolSort,
+      @RequestParam(value = "industrySort", required = false) String industrySort,
+      @RequestParam(value = "directionSort", required = false) String directionSort,
+      @RequestParam(value = "openTimeSort", required = false) String openTimeSort,
+      @RequestParam(value = "closeTimeSort", required = false) String closeTimeSort,
+      @RequestParam(value = "earningsYieldSort", required = false) String earningsYieldSort,
+      @RequestParam(value = "scoreSort", required = false) String scoreSort,
+      @RequestParam(value = "createdAtSort", required = false) String createdAtSort,
+      @RequestParam(value = "updatedAtSort", required = false) String updatedAtSort)
+      throws ParseException {
 
-    DateRange otrDto = openTimeRange != null ? DateRange.fromString(openTimeRange) : null;
-    IntegerRange oprDto = openPriceRange != null ? IntegerRange.fromString(openPriceRange) : null;
-    DateRange ctrDto = closePriceRange != null ? DateRange.fromString(closeTimeRange) : null;
-    IntegerRange cprDto = closePriceRange != null ? IntegerRange.fromString(closePriceRange) : null;
-    IntegerRange eyrDto = earningsYieldRange != null ? IntegerRange.fromString(earningsYieldRange) : null;
-    IntegerRange srDto = scoreRange != null ? IntegerRange.fromString(scoreRange) : null;
-    DateRange carDto = createdAtRange != null ? DateRange.fromString(createdAtRange) : null;
-    DateRange uarDto = updatedAtRange != null ? DateRange.fromString(updatedAtRange) : null;
+    DateRange otrDto = DateRange.fromString(openTimeRange);
+    IntegerRange oprDto = IntegerRange.fromString(openPriceRange);
+    DateRange ctrDto = DateRange.fromString(closeTimeRange);
+    IntegerRange cprDto = IntegerRange.fromString(closePriceRange);
+    IntegerRange eyrDto = IntegerRange.fromString(earningsYieldRange);
+    IntegerRange srDto = IntegerRange.fromString(scoreRange);
+    DateRange carDto = DateRange.fromString(createdAtRange);
+    DateRange uarDto = DateRange.fromString(updatedAtRange);
+
+    SortDirection promoterS = SortDirection.fromString(promoterSort);
+    SortDirection symbolS = SortDirection.fromString(symbolSort);
+    SortDirection industryS = SortDirection.fromString(industrySort);
+    SortDirection directionS = SortDirection.fromString(directionSort);
+    SortDirection openTimeS = SortDirection.fromString(openTimeSort);
+    SortDirection closeTimeS = SortDirection.fromString(closeTimeSort);
+    SortDirection earningsYieldS = SortDirection.fromString(earningsYieldSort);
+    SortDirection scoreS = SortDirection.fromString(scoreSort);
+    SortDirection createdAtS = SortDirection.fromString(createdAtSort);
+    SortDirection updatedAtS = SortDirection.fromString(updatedAtSort);
 
     PromotionRecordSearch searchDto = new PromotionRecordSearch(
         promoters,
@@ -66,7 +89,17 @@ public class PromotionRecordController {
         eyrDto,
         srDto,
         carDto,
-        uarDto);
+        uarDto,
+        promoterS,
+        symbolS,
+        industryS,
+        directionS,
+        openTimeS,
+        closeTimeS,
+        earningsYieldS,
+        scoreS,
+        createdAtS,
+        updatedAtS);
 
     if (searchDto.isEmpty()) {
       return service.getPromotionRecords(page, size);
