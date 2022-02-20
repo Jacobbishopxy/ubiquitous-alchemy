@@ -4,9 +4,17 @@ This project serves as a collection of [Cyberbrick](https://github.com/Jacobbish
 
 1. [dev](./dev/README.md): development toolkit/ scripts
 
-1. [docker](./docker/README.md): docker files
+1. [docker-app](./docker-app/README.md): docker files for applications
+
+1. [docker-base](./docker-base/README.md): docker files for base images
 
 1. [resources](./resources/README.md): configuration files and etc.
+
+1. [server-nodejs](./server-nodejs/README.md): nodejs server
+
+1. [server-python](./server-python/README.md): python server
+
+1. [server-web](./server-web/README.md): web server
 
 1. [ubiquitous-api-gateway](./ubiquitous-api-gateway/README.md): API gateway
 

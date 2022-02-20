@@ -11,7 +11,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       # temporary not needed
       # - ${VOLUME_CONF_EXT}:${VOLUME_CONF_INN}:ro
-      - ${VOLUME_LOG_EXT}:${VOLUME_LOG_INN}:ro
+      - ${VOLUME_LOG_EXT}:${VOLUME_LOG_INN}
     command: java -jar app.jar
     # tty: true
 
