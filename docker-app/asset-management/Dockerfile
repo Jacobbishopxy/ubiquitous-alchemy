@@ -27,7 +27,7 @@ COPY    ./ubiquitous-asset-management/src/main/java /app/src/main/java
 COPY    ./resources/asset-management /app/src/main/resources
 
 # build the jar
-RUN     mvn package -Dmaven.test.skip
+RUN     mvn package && cp target/*.jar app.jar
 
 
 # ==============================================================================
@@ -35,5 +35,7 @@ RUN     mvn package -Dmaven.test.skip
 # ==============================================================================
 FROM    ${JAVA_BASE_NAME}:${JAVA_BASE_VERSION}
 
-# copy jar file from builder image's `/app/target` to new Java image
-COPY    --from=builder /app/target/*.jar app.jar
+WORKDIR /app
+
+# copy jar file from builder image
+COPY    --from=builder /app/app.jar ./app.jar

@@ -9,10 +9,8 @@ services:
       - ${AM_API_CONTAINER_PORT}:${AM_API_CONTAINER_PORT}
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      # temporary not needed
-      # - ${VOLUME_CONF_EXT}:${VOLUME_CONF_INN}:ro
       - ${VOLUME_LOG_EXT}:${VOLUME_LOG_INN}
-    command: java -jar app.jar
+    command: java -jar /app/app.jar
     # tty: true
 
 networks:
