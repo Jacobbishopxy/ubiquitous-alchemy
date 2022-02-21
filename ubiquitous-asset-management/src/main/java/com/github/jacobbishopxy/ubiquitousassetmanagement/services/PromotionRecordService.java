@@ -73,4 +73,8 @@ public class PromotionRecordService {
     repo.deleteById(id);
   }
 
+  public long countPromotionRecords() {
+    return repo.count();
+  }
+
 }

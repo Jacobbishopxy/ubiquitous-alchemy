@@ -158,4 +158,9 @@ public class PromotionRecordController {
   void deletePromotionRecord(@PathVariable Integer id) {
     promotionRecordService.deletePromotionRecord(id);
   }
+
+  @GetMapping("/count_promotion_record")
+  long countPromotionRecords() {
+    return promotionRecordService.countPromotionRecords();
+  }
 }
