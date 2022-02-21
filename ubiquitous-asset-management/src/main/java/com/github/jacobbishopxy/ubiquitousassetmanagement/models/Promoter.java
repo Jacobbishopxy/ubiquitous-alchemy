@@ -6,13 +6,9 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.models;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-
 import jakarta.persistence.*;
 
 /**
@@ -24,7 +20,6 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "author")
 @TypeDef(name = "author_role_enum", typeClass = RolePostgresEnumType.class)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "email")
 public class Promoter {
   @Id
   @Column(nullable = false)
