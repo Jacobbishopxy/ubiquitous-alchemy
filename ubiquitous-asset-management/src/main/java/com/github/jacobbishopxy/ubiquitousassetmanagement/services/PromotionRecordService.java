@@ -29,11 +29,12 @@ public class PromotionRecordService {
   @Autowired
   private PromotionRecordRepository repo;
 
-  public List<PromotionRecord> getPromotionRecords(int page, int size) {
-    return repo.findAll(PageRequest.of(page, size)).getContent();
-  }
-
   public List<PromotionRecord> getPromotionRecords(int page, int size, PromotionRecordSearch searchDto) {
+
+    if (searchDto == null) {
+      return repo.findAll(PageRequest.of(page, size)).getContent();
+    }
+
     PromotionRecordSpecification prs = new PromotionRecordSpecification(searchDto);
 
     List<Order> orders = searchDto.getOrders();

@@ -9,10 +9,12 @@ import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.IntegerRange;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordDto;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.SortDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Direction;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.services.PromoterService;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.services.PromotionRecordService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +27,13 @@ import org.springframework.web.server.ResponseStatusException;
 public class PromotionRecordController {
 
   @Autowired
-  private PromotionRecordService service;
+  private PromotionRecordService promotionRecordService;
+
+  @Autowired
+  private PromoterService promoterService;
 
   @GetMapping("/promotion_record")
-  List<PromotionRecord> getPromotionRecords(
+  List<PromotionRecordDto> getPromotionRecords(
       @RequestParam("page") int page,
       @RequestParam("size") int size,
       @RequestParam(value = "promoters", required = false) List<String> promoters,
@@ -101,36 +106,56 @@ public class PromotionRecordController {
         createdAtS,
         updatedAtS);
 
-    if (searchDto.isEmpty()) {
-      return service.getPromotionRecords(page, size);
-    }
+    searchDto = searchDto.isEmpty() ? null : searchDto;
 
-    return service.getPromotionRecords(page, size, searchDto);
+    return promotionRecordService
+        .getPromotionRecords(page, size, searchDto)
+        .stream()
+        .map(pr -> PromotionRecordDto.fromPromotionRecord(pr))
+        .toList();
   }
 
   @GetMapping("/promotion_record/{id}")
   PromotionRecord getPromotionRecord(@PathVariable Integer id) {
-    return service
+    return promotionRecordService
         .getPromotionRecord(id)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PromotionRecord %s not found", id)));
   }
 
   @PostMapping("/promotion_record")
-  PromotionRecord createPromotionRecord(@RequestBody PromotionRecord promotionRecord) {
-    return service.createPromotionRecord(promotionRecord);
+  PromotionRecordDto createPromotionRecord(@RequestBody PromotionRecordDto dto) {
+    String email = promoterService.getEmailByNickname(dto.promoter());
+    if (email == null) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, String.format("Promoter %s not found", dto.promoter()));
+    }
+    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email);
+
+    pr = promotionRecordService.createPromotionRecord(pr);
+
+    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoter());
   }
 
   @PutMapping("/promotion_record/{id}")
-  PromotionRecord updatePromotionRecord(@PathVariable Integer id, @RequestBody PromotionRecord promotionRecord) {
-    return service
-        .updatePromotionRecord(id, promotionRecord)
+  PromotionRecordDto updatePromotionRecord(@PathVariable Integer id, @RequestBody PromotionRecordDto dto) {
+    String email = promoterService.getEmailByNickname(dto.promoter());
+    if (email == null) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, String.format("Promoter %s not found", dto.promoter()));
+    }
+    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email);
+
+    pr = promotionRecordService
+        .updatePromotionRecord(id, pr)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PromotionRecord %s not found", id)));
+
+    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoter());
   }
 
   @DeleteMapping("/promotion_record/{id}")
   void deletePromotionRecord(@PathVariable Integer id) {
-    service.deletePromotionRecord(id);
+    promotionRecordService.deletePromotionRecord(id);
   }
 }

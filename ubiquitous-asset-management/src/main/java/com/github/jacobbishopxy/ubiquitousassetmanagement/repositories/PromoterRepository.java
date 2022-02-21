@@ -10,4 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PromoterRepository extends JpaRepository<Promoter, String> {
 
+  public Promoter findByNickname(String nickname);
+
 }

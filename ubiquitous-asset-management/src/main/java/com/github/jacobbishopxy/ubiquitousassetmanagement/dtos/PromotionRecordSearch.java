@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort.Order;
 
 /**
  * PromotionRecordSearchDto
- * 
+ *
  * promoters
  * symbols
  * abbreviations

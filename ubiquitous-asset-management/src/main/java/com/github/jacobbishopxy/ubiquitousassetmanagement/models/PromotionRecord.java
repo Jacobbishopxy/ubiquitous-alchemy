@@ -6,6 +6,10 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.models;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordDto;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -32,11 +36,13 @@ public class PromotionRecord {
   private Direction direction;
 
   @Column(nullable = false)
+  @JsonFormat(pattern = Constants.DATE_FORMAT)
   private Date openTime;
 
   @Column(nullable = false)
   private Float openPrice;
 
+  @JsonFormat(pattern = Constants.DATE_FORMAT)
   private Date closeTime;
 
   private Float closePrice;
@@ -46,9 +52,11 @@ public class PromotionRecord {
   private Float score;
 
   @Temporal(TemporalType.TIMESTAMP)
+  @JsonFormat(pattern = Constants.DATE_FORMAT)
   private Date createdAt;
 
   @Temporal(TemporalType.TIMESTAMP)
+  @JsonFormat(pattern = Constants.DATE_FORMAT)
   private Date updatedAt;
 
   public PromotionRecord() {
@@ -70,6 +78,10 @@ public class PromotionRecord {
 
   public Integer getId() {
     return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   public Promoter getPromoter() {
@@ -176,6 +188,26 @@ public class PromotionRecord {
   @PreUpdate
   protected void onUpdate() {
     updatedAt = new Date();
+  }
+
+  public static PromotionRecord fromPromotionRecordDtoAndEmail(PromotionRecordDto dto, String email) {
+    Promoter promoter = new Promoter();
+    promoter.setEmail(email);
+
+    PromotionRecord record = new PromotionRecord();
+    record.setId(dto.id());
+    record.setPromoter(promoter);
+    record.setSymbol(dto.symbol());
+    record.setAbbreviation(dto.abbreviation());
+    record.setIndustry(dto.industry());
+    record.setDirection(dto.direction());
+    record.setOpenTime(dto.openTime());
+    record.setOpenPrice(dto.openPrice());
+    record.setCloseTime(dto.closeTime());
+    record.setClosePrice(dto.closePrice());
+    record.setEarningsYield(dto.earningsYield());
+    record.setScore(dto.score());
+    return record;
   }
 
 }

@@ -7,7 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.controllers;
 import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Promoter;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromoterRepository;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.services.PromoterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.*;
 public class PromoterController {
 
   @Autowired
-  private PromoterRepository repo;
+  private PromoterService service;
 
   @GetMapping("/promoters")
   List<Promoter> getPromoters() {
-    return repo.findAll();
+    return service.getPromoters();
   }
 }
