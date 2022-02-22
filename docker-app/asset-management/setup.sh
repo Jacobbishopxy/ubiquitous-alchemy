@@ -6,7 +6,7 @@ source ../../resources/java.env
 # name builder image
 docker build \
 		--target builder \
-    -t "${AM_CACHE_NAME}":"${AM_CACHE_VERSION}" \
+    -t "${AM_CACHE_NAME}":"${AM_BASE_VERSION}" \
     --build-arg MAVEN_IMAGE_NAME="${MAVEN_IMAGE_NAME}" \
     --build-arg MAVEN_IMAGE_VERSION="${MAVEN_IMAGE_VERSION}" \
     --build-arg JAVA_BASE_NAME="${JAVA_BASE_NAME}" \

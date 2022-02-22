@@ -51,6 +51,8 @@ public class PromotionRecord {
 
   private Float score;
 
+  // TODO: OneToOne PromotionPact
+
   @Temporal(TemporalType.TIMESTAMP)
   @JsonFormat(pattern = Constants.DATE_FORMAT)
   private Date createdAt;

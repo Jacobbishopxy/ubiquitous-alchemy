@@ -1,3 +1,7 @@
+/**
+ * Created by Jacob Xie on 2/16/2022.
+ */
+
 package com.github.jacobbishopxy.ubiquitousassetmanagement.specifications;
 
 import java.util.ArrayList;

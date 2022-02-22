@@ -1,3 +1,7 @@
+/**
+ * Created by Jacob Xie on 2/21/2022.
+ */
+
 package com.github.jacobbishopxy.ubiquitousassetmanagement;
 
 public class Constants {
