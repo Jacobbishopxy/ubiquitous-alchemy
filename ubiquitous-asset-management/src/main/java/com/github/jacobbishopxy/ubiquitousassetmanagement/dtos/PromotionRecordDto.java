@@ -13,7 +13,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord
 
 public record PromotionRecordDto(
 		Integer id,
-		String promoter,
+		String promoterName,
 		String symbol,
 		String abbreviation,
 		String industry,
@@ -24,6 +24,8 @@ public record PromotionRecordDto(
 		Float closePrice,
 		Float earningsYield,
 		Float score,
+		Boolean isArchived,
+		Integer promotionPactId,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) Date createdAt,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) Date updatedAt) {
 
@@ -41,11 +43,14 @@ public record PromotionRecordDto(
 				promotionRecord.getClosePrice(),
 				promotionRecord.getEarningsYield(),
 				promotionRecord.getScore(),
+				promotionRecord.getIsArchived(),
+				promotionRecord.getPromotionPact().getId(),
 				promotionRecord.getCreatedAt(),
 				promotionRecord.getUpdatedAt());
 	}
 
-	public static PromotionRecordDto fromPromotionRecord(PromotionRecord promotionRecord, String name) {
+	public static PromotionRecordDto fromPromotionRecord(PromotionRecord promotionRecord, String name,
+			Integer promotionPactId) {
 		return new PromotionRecordDto(
 				promotionRecord.getId(),
 				name,
@@ -59,6 +64,8 @@ public record PromotionRecordDto(
 				promotionRecord.getClosePrice(),
 				promotionRecord.getEarningsYield(),
 				promotionRecord.getScore(),
+				promotionRecord.getIsArchived(),
+				promotionPactId,
 				promotionRecord.getCreatedAt(),
 				promotionRecord.getUpdatedAt());
 	}

@@ -45,7 +45,13 @@ public class Promoter {
   public Promoter() {
   }
 
+  public Promoter(String email) {
+    super();
+    this.email = email;
+  }
+
   public Promoter(String email, String nickname, String color, Role role, String description) {
+    super();
     this.email = email;
     this.nickname = nickname;
     this.color = color;

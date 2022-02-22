@@ -51,7 +51,11 @@ public class PromotionRecord {
 
   private Float score;
 
-  // TODO: OneToOne PromotionPact
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "promotion_pact_id")
+  private PromotionPact promotionPact;
+
+  private Boolean isArchived;
 
   @Temporal(TemporalType.TIMESTAMP)
   @JsonFormat(pattern = Constants.DATE_FORMAT)
@@ -67,15 +71,51 @@ public class PromotionRecord {
   public PromotionRecord(
       Promoter promoter,
       String symbol,
+      String abbreviation,
+      String industry,
       Direction direction,
       Date openTime,
-      Float openPrice) {
+      Float openPrice,
+      Date closeTime,
+      Float closePrice,
+      Float earningsYield,
+      Float score,
+      PromotionPact promotionPact,
+      Boolean isArchived) {
     super();
     this.promoter = promoter;
     this.symbol = symbol;
+    this.abbreviation = abbreviation;
+    this.industry = industry;
     this.direction = direction;
     this.openTime = openTime;
     this.openPrice = openPrice;
+    this.closeTime = closeTime;
+    this.closePrice = closePrice;
+    this.earningsYield = earningsYield;
+    this.score = score;
+    this.promotionPact = promotionPact;
+    this.isArchived = isArchived;
+  }
+
+  public static PromotionRecord fromPromotionRecordDtoAndEmail(
+      PromotionRecordDto dto,
+      String email,
+      Integer promotionPactId) {
+    return new PromotionRecord(
+        new Promoter(email),
+        dto.symbol(),
+        dto.abbreviation(),
+        dto.industry(),
+        dto.direction(),
+        dto.openTime(),
+        dto.openPrice(),
+        dto.closeTime(),
+        dto.closePrice(),
+        dto.earningsYield(),
+        dto.score(),
+        new PromotionPact(promotionPactId),
+        dto.isArchived());
   }
 
   public Integer getId() {
@@ -174,6 +214,22 @@ public class PromotionRecord {
     this.score = score;
   }
 
+  public PromotionPact getPromotionPact() {
+    return promotionPact;
+  }
+
+  public void setPromotionPact(PromotionPact promotionPact) {
+    this.promotionPact = promotionPact;
+  }
+
+  public boolean getIsArchived() {
+    return isArchived;
+  }
+
+  public void setIsArchived(boolean archived) {
+    this.isArchived = archived;
+  }
+
   public Date getCreatedAt() {
     return createdAt;
   }
@@ -190,26 +246,6 @@ public class PromotionRecord {
   @PreUpdate
   protected void onUpdate() {
     updatedAt = new Date();
-  }
-
-  public static PromotionRecord fromPromotionRecordDtoAndEmail(PromotionRecordDto dto, String email) {
-    Promoter promoter = new Promoter();
-    promoter.setEmail(email);
-
-    PromotionRecord record = new PromotionRecord();
-    record.setId(dto.id());
-    record.setPromoter(promoter);
-    record.setSymbol(dto.symbol());
-    record.setAbbreviation(dto.abbreviation());
-    record.setIndustry(dto.industry());
-    record.setDirection(dto.direction());
-    record.setOpenTime(dto.openTime());
-    record.setOpenPrice(dto.openPrice());
-    record.setCloseTime(dto.closeTime());
-    record.setClosePrice(dto.closePrice());
-    record.setEarningsYield(dto.earningsYield());
-    record.setScore(dto.score());
-    return record;
   }
 
 }

@@ -125,33 +125,34 @@ public class PromotionRecordController {
 
   @PostMapping("/promotion_record")
   PromotionRecordDto createPromotionRecord(@RequestBody PromotionRecordDto dto) {
-    String email = promoterService.getEmailByNickname(dto.promoter());
+    String email = promoterService.getEmailByNickname(dto.promoterName());
     if (email == null) {
       throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, String.format("Promoter %s not found", dto.promoter()));
+          HttpStatus.BAD_REQUEST, String.format("Promoter %s not found", dto.promoterName()));
     }
-    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email);
+    // TODO: promotionPactId
+    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email, 0);
 
     pr = promotionRecordService.createPromotionRecord(pr);
 
-    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoter());
+    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoterName(), 0);
   }
 
   @PutMapping("/promotion_record/{id}")
   PromotionRecordDto updatePromotionRecord(@PathVariable Integer id, @RequestBody PromotionRecordDto dto) {
-    String email = promoterService.getEmailByNickname(dto.promoter());
+    String email = promoterService.getEmailByNickname(dto.promoterName());
     if (email == null) {
       throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, String.format("Promoter %s not found", dto.promoter()));
+          HttpStatus.BAD_REQUEST, String.format("Promoter %s not found", dto.promoterName()));
     }
-    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email);
+    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email, 0);
 
     pr = promotionRecordService
         .updatePromotionRecord(id, pr)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PromotionRecord %s not found", id)));
 
-    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoter());
+    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoterName(), 0);
   }
 
   @DeleteMapping("/promotion_record/{id}")
