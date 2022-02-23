@@ -7,10 +7,11 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.models;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "promotion_statistic")
 public class PromotionStatistic {
   @Id
   @Column(columnDefinition = "serial")
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
   @ManyToOne(fetch = FetchType.EAGER)
@@ -39,7 +40,7 @@ public class PromotionStatistic {
   private Float successRate;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "promotion_pact_id")
+  @JoinColumn(name = "promotion_pact_name")
   private PromotionPact promotionPact;
 
   public PromotionStatistic() {

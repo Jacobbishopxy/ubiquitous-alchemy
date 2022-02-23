@@ -15,11 +15,11 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "promotion_pact")
 public class PromotionPact {
+
   @Id
-  @Column(columnDefinition = "serial")
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Integer id;
+  private String name;
 
   @Temporal(TemporalType.TIMESTAMP)
   @JsonFormat(pattern = Constants.DATE_FORMAT)
@@ -33,37 +33,37 @@ public class PromotionPact {
 
   private String description;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "promotion_record")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "promotionPact")
   @JsonIgnore
   private List<PromotionRecord> promotionRecords;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "promotion_statistic")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "promotionPact")
   @JsonIgnore
   private List<PromotionStatistic> promotionStatistics;
 
   public PromotionPact() {
   }
 
-  public PromotionPact(Integer id) {
+  public PromotionPact(String name) {
     super();
-    this.id = id;
+    this.name = name;
   }
 
-  public PromotionPact(DateRange dateRange, String description) {
-    super();
-    this.startDate = dateRange.start();
-    this.endDate = dateRange.end();
-    this.description = description;
+  public void validate() {
+    if (startDate.after(endDate)) {
+      throw new IllegalArgumentException("Start date cannot be after end date");
+    }
   }
 
-  public Integer getId() {
-    return id;
+  public String getName() {
+    return name;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  public void setName(String name) {
+    this.name = name;
   }
 
+  @JsonIgnore
   public DateRange getDateRange() {
     return new DateRange(startDate, endDate);
   }

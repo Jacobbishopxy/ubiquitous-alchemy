@@ -12,9 +12,10 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.IntegerRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordDto;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.SortDirection;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Direction;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.TradeDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.services.PromoterService;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.services.PromotionPactService;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.services.PromotionRecordService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,13 @@ import org.springframework.web.server.ResponseStatusException;
 public class PromotionRecordController {
 
   @Autowired
-  private PromotionRecordService promotionRecordService;
+  private PromoterService promoterService;
 
   @Autowired
-  private PromoterService promoterService;
+  private PromotionPactService promotionPactService;
+
+  @Autowired
+  private PromotionRecordService promotionRecordService;
 
   @GetMapping("/promotion_record")
   List<PromotionRecordDto> getPromotionRecords(
@@ -40,7 +44,7 @@ public class PromotionRecordController {
       @RequestParam(value = "symbols", required = false) List<String> symbols,
       @RequestParam(value = "abbreviations", required = false) List<String> abbreviations,
       @RequestParam(value = "industries", required = false) List<String> industries,
-      @RequestParam(value = "direction", required = false) Direction direction,
+      @RequestParam(value = "direction", required = false) TradeDirection direction,
       @RequestParam(value = "openTimeRange", required = false) String openTimeRange,
       @RequestParam(value = "openPriceRange", required = false) String openPriceRange,
       @RequestParam(value = "closeTimeRange", required = false) String closeTimeRange,
@@ -125,34 +129,44 @@ public class PromotionRecordController {
 
   @PostMapping("/promotion_record")
   PromotionRecordDto createPromotionRecord(@RequestBody PromotionRecordDto dto) {
-    String email = promoterService.getEmailByNickname(dto.promoterName());
-    if (email == null) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, String.format("Promoter %s not found", dto.promoterName()));
-    }
-    // TODO: promotionPactId
-    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email, 0);
+    String email = promoterService
+        .getEmailByNickname(dto.promoter())
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.BAD_REQUEST, String.format("Promoter %s not found", dto.promoter())));
+
+    String pactName = promotionPactService
+        .getPromotionPact(dto.promotionPactName())
+        .map(pact -> pact.getName())
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.BAD_REQUEST, String.format("PromotionPact %s not found", dto.promotionPactName())));
+
+    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email, pactName);
 
     pr = promotionRecordService.createPromotionRecord(pr);
 
-    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoterName(), 0);
+    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoter(), pactName);
   }
 
   @PutMapping("/promotion_record/{id}")
   PromotionRecordDto updatePromotionRecord(@PathVariable Integer id, @RequestBody PromotionRecordDto dto) {
-    String email = promoterService.getEmailByNickname(dto.promoterName());
-    if (email == null) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, String.format("Promoter %s not found", dto.promoterName()));
-    }
-    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email, 0);
+    String email = promoterService.getEmailByNickname(dto.promoter())
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.BAD_REQUEST, String.format("Promoter %s not found", dto.promoter())));
+
+    String pactName = promotionPactService
+        .getPromotionPact(dto.promotionPactName())
+        .map(pact -> pact.getName())
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.BAD_REQUEST, String.format("PromotionPact %s not found", dto.promotionPactName())));
+
+    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email, pactName);
 
     pr = promotionRecordService
         .updatePromotionRecord(id, pr)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PromotionRecord %s not found", id)));
 
-    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoterName(), 0);
+    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoter(), pactName);
   }
 
   @DeleteMapping("/promotion_record/{id}")

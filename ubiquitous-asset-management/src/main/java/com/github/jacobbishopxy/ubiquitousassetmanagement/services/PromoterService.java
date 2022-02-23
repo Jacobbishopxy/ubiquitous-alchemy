@@ -5,6 +5,7 @@
 package com.github.jacobbishopxy.ubiquitousassetmanagement.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Promoter;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromoterRepository;
@@ -22,8 +23,10 @@ public class PromoterService {
     return repo.findAll();
   }
 
-  public String getEmailByNickname(String nickname) {
-    return repo.findByNickname(nickname).getEmail();
+  public Optional<String> getEmailByNickname(String nickname) {
+    return repo
+        .findByNickname(nickname)
+        .map(Promoter::getEmail);
   }
 
 }

@@ -17,7 +17,7 @@ import jakarta.persistence.*;
 public class PromotionRecord {
   @Id
   @Column(columnDefinition = "serial")
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
   @ManyToOne(fetch = FetchType.EAGER)
@@ -33,16 +33,16 @@ public class PromotionRecord {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Direction direction;
+  private TradeDirection direction;
 
   @Column(nullable = false)
-  @JsonFormat(pattern = Constants.DATE_FORMAT)
+  @JsonFormat(pattern = Constants.TIME_FORMAT)
   private Date openTime;
 
   @Column(nullable = false)
   private Float openPrice;
 
-  @JsonFormat(pattern = Constants.DATE_FORMAT)
+  @JsonFormat(pattern = Constants.TIME_FORMAT)
   private Date closeTime;
 
   private Float closePrice;
@@ -52,17 +52,17 @@ public class PromotionRecord {
   private Float score;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "promotion_pact_id")
+  @JoinColumn(name = "promotion_pact_name")
   private PromotionPact promotionPact;
 
   private Boolean isArchived;
 
   @Temporal(TemporalType.TIMESTAMP)
-  @JsonFormat(pattern = Constants.DATE_FORMAT)
+  @JsonFormat(pattern = Constants.TIME_FORMAT)
   private Date createdAt;
 
   @Temporal(TemporalType.TIMESTAMP)
-  @JsonFormat(pattern = Constants.DATE_FORMAT)
+  @JsonFormat(pattern = Constants.TIME_FORMAT)
   private Date updatedAt;
 
   public PromotionRecord() {
@@ -73,7 +73,7 @@ public class PromotionRecord {
       String symbol,
       String abbreviation,
       String industry,
-      Direction direction,
+      TradeDirection direction,
       Date openTime,
       Float openPrice,
       Date closeTime,
@@ -101,7 +101,7 @@ public class PromotionRecord {
   public static PromotionRecord fromPromotionRecordDtoAndEmail(
       PromotionRecordDto dto,
       String email,
-      Integer promotionPactId) {
+      String promotionPactName) {
     return new PromotionRecord(
         new Promoter(email),
         dto.symbol(),
@@ -114,7 +114,7 @@ public class PromotionRecord {
         dto.closePrice(),
         dto.earningsYield(),
         dto.score(),
-        new PromotionPact(promotionPactId),
+        new PromotionPact(promotionPactName),
         dto.isArchived());
   }
 
@@ -158,11 +158,11 @@ public class PromotionRecord {
     this.industry = industry;
   }
 
-  public Direction getDirection() {
+  public TradeDirection getDirection() {
     return direction;
   }
 
-  public void setDirection(Direction direction) {
+  public void setDirection(TradeDirection direction) {
     this.direction = direction;
   }
 

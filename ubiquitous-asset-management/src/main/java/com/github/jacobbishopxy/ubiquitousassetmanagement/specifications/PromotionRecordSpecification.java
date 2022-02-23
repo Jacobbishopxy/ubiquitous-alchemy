@@ -10,7 +10,7 @@ import java.util.List;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.IntegerRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Direction;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.TradeDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Promoter;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 
@@ -78,7 +78,7 @@ public class PromotionRecordSpecification implements Specification<PromotionReco
     }
 
     // search by direction
-    Direction direction = searchDto.direction();
+    TradeDirection direction = searchDto.direction();
     if (direction != null) {
       predicates.add(criteriaBuilder.equal(root.get("direction"), direction));
     }

@@ -4,6 +4,6 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.models;
 
-public enum Direction {
+public enum TradeDirection {
   BUY, SELL
 }

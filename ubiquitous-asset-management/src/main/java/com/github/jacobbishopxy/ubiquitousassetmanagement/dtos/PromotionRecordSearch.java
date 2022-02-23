@@ -7,7 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.dtos;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Direction;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.TradeDirection;
 
 import org.springframework.data.domain.Sort.Order;
 
@@ -43,7 +43,7 @@ public record PromotionRecordSearch(
         List<String> symbols,
         List<String> abbreviations,
         List<String> industries,
-        Direction direction,
+        TradeDirection direction,
         DateRange openTimeRange,
         IntegerRange openPriceRange,
         DateRange closeTimeRange,
