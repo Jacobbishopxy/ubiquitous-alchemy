@@ -50,6 +50,8 @@ public record PromotionRecordSearch(
         IntegerRange closePriceRange,
         IntegerRange earningsYieldRange,
         IntegerRange scoreRange,
+        List<String> promotionPactNames,
+        Boolean isArchived,
         DateRange createdAtRange,
         DateRange updatedAtRange,
         SortDirection promoterSort,
@@ -74,6 +76,8 @@ public record PromotionRecordSearch(
                 && closePriceRange == null
                 && earningsYieldRange == null
                 && scoreRange == null
+                && promotionPactNames == null
+                && isArchived == null
                 && createdAtRange == null
                 && updatedAtRange == null
                 && promoterSort == null
@@ -123,5 +127,42 @@ public record PromotionRecordSearch(
         }
 
         return orders;
+    }
+
+    public static PromotionRecordSearch fromPromotionRecordsByPactNameAndPromoterEmail(
+            String promotionPactName,
+            String promoterEmail) {
+        List<String> promotionPactNames = new ArrayList<>();
+        promotionPactNames.add(promotionPactName);
+
+        List<String> promoters = new ArrayList<>();
+        promoters.add(promoterEmail);
+
+        return new PromotionRecordSearch(
+                promoters,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                promotionPactNames,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
     }
 }

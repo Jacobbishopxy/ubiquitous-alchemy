@@ -40,7 +40,9 @@ public class PromotionPactController {
   }
 
   @PutMapping("/promotion_pact/{name}")
-  PromotionPact updatePromotionPact(@PathVariable("name") String name, @RequestBody PromotionPact promotionPact) {
+  PromotionPact updatePromotionPact(
+      @PathVariable("name") String name,
+      @RequestBody PromotionPact promotionPact) {
     promotionPact.validate();
     return service
         .updatePromotionPact(name, promotionPact)

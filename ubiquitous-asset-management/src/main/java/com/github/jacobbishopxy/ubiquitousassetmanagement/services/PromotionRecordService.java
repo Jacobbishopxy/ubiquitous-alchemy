@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * PromotionRecordService
@@ -47,11 +48,39 @@ public class PromotionRecordService {
     return repo.findById(id);
   }
 
+  public List<PromotionRecord> getPromotionRecordsByPactNameAndPromoterEmail(
+      String promotionPactName,
+      String promoterEmail) {
+
+    PromotionRecordSearch searchDto = PromotionRecordSearch
+        .fromPromotionRecordsByPactNameAndPromoterEmail(
+            promotionPactName,
+            promoterEmail);
+    PromotionRecordSpecification prs = new PromotionRecordSpecification(searchDto);
+
+    return repo.findAll(prs);
+  }
+
+  @Transactional
   public PromotionRecord createPromotionRecord(PromotionRecord promotionRecord) {
+    // TODO:
+    // https://www.baeldung.com/spring-vs-jta-transactional
+    // 1. fetch all promotion records by promotion pact name and promoter email
+    // 2. calculation
+    // 3. save to promotion statistic
+    // 4. create promotion record
+
+    // List<PromotionRecord> relativePromotionRecord = this
+    // .getPromotionRecordsByPactNameAndPromoterEmail(
+    // promotionRecord.getPromotionPact().getName(),
+    // promotionRecord.getPromoter().getEmail());
+
     return repo.save(promotionRecord);
   }
 
+  @Transactional
   public Optional<PromotionRecord> updatePromotionRecord(int id, PromotionRecord promotionRecord) {
+    // TODO:
     return repo.findById(id).map(
         record -> {
           record.setPromoter(promotionRecord.getPromoter());
@@ -65,6 +94,8 @@ public class PromotionRecordService {
           record.setClosePrice(promotionRecord.getClosePrice());
           record.setEarningsYield(promotionRecord.getEarningsYield());
           record.setScore(promotionRecord.getScore());
+          record.setPromotionPact(promotionRecord.getPromotionPact());
+          record.setIsArchived(promotionRecord.getIsArchived());
           return repo.save(record);
         });
   }

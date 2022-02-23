@@ -4,4 +4,5 @@
 
 - PromotionPact
 - PromotionRecord
+- PromotionRecordHistory
 - PromotionStatistic

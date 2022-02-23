@@ -120,6 +120,20 @@ public class PromotionRecordSpecification implements Specification<PromotionReco
       predicates.add(criteriaBuilder.between(root.get("score"), scoreRange.start(), scoreRange.end()));
     }
 
+    List<String> promotionPactNames = searchDto.promotionPactNames();
+    if (promotionPactNames != null) {
+      In<String> inPromotionPactNames = criteriaBuilder.in(root.get("promotionPactName"));
+      for (String promotionPactName : promotionPactNames) {
+        inPromotionPactNames.value(promotionPactName);
+      }
+      predicates.add(inPromotionPactNames);
+    }
+
+    Boolean isArchived = searchDto.isArchived();
+    if (isArchived != null) {
+      predicates.add(criteriaBuilder.equal(root.get("isArchived"), isArchived));
+    }
+
     // search by createdAt range
     DateRange createdAtRange = searchDto.createdAtRange();
     if (createdAtRange != null) {

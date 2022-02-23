@@ -16,4 +16,6 @@ public interface PromotionStatisticRepository extends JpaRepository<PromotionSta
   Integer countByPromotionPactName(String promotionPactName);
 
   Optional<List<PromotionStatistic>> findByPromotionPactName(String promotionPactName);
+
+  Optional<List<PromotionStatistic>> findByPromoterEmail(String promoterEmail);
 }
