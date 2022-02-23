@@ -8,8 +8,8 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.models.TradeDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDirection;
 
 public record PromotionRecordDto(
 		Integer id,

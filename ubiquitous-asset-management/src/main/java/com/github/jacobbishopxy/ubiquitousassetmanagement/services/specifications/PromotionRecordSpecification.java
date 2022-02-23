@@ -2,7 +2,7 @@
  * Created by Jacob Xie on 2/16/2022.
  */
 
-package com.github.jacobbishopxy.ubiquitousassetmanagement.specifications;
+package com.github.jacobbishopxy.ubiquitousassetmanagement.services.specifications;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.List;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.IntegerRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.models.TradeDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.Promoter;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDirection;
 
 import org.springframework.data.jpa.domain.Specification;
 
@@ -83,42 +83,50 @@ public class PromotionRecordSpecification implements Specification<PromotionReco
       predicates.add(criteriaBuilder.equal(root.get("direction"), direction));
     }
 
+    // search by open time range
     DateRange openTimeRange = searchDto.openTimeRange();
     if (openTimeRange != null) {
       predicates.add(criteriaBuilder.between(root.get("openTime"), openTimeRange.start(), openTimeRange.end()));
     }
 
+    // search by open price range
     IntegerRange openPriceRange = searchDto.openPriceRange();
     if (openPriceRange != null) {
       predicates.add(criteriaBuilder.between(root.get("openPrice"), openPriceRange.start(), openPriceRange.end()));
     }
 
+    // search by close time range
     DateRange closeTimeRange = searchDto.closeTimeRange();
     if (closeTimeRange != null) {
       predicates.add(criteriaBuilder.between(root.get("closeTime"), closeTimeRange.start(), closeTimeRange.end()));
     }
 
+    // search by close price range
     IntegerRange closePriceRange = searchDto.closePriceRange();
     if (closePriceRange != null) {
       predicates.add(criteriaBuilder.between(root.get("closePrice"), closePriceRange.start(), closePriceRange.end()));
     }
 
+    // search by earnings yield range
     IntegerRange earningsYieldRange = searchDto.earningsYieldRange();
     if (earningsYieldRange != null) {
       predicates.add(
           criteriaBuilder.between(root.get("earningsYield"), earningsYieldRange.start(), earningsYieldRange.end()));
     }
 
+    // search by score range
     IntegerRange scoreRange = searchDto.scoreRange();
     if (scoreRange != null) {
       predicates.add(criteriaBuilder.between(root.get("score"), scoreRange.start(), scoreRange.end()));
     }
 
+    // search by createdAt range
     DateRange createdAtRange = searchDto.createdAtRange();
     if (createdAtRange != null) {
       predicates.add(criteriaBuilder.between(root.get("createdAt"), createdAtRange.start(), createdAtRange.end()));
     }
 
+    // search by updatedAt range
     DateRange updatedAtRange = searchDto.updatedAtRange();
     if (updatedAtRange != null) {
       predicates.add(criteriaBuilder.between(root.get("updatedAt"), updatedAtRange.start(), updatedAtRange.end()));

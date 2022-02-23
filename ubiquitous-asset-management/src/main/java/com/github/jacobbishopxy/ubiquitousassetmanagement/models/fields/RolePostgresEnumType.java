@@ -2,7 +2,7 @@
  * Created by Jacob Xie on 2/16/2022.
  */
 
-package com.github.jacobbishopxy.ubiquitousassetmanagement.models;
+package com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

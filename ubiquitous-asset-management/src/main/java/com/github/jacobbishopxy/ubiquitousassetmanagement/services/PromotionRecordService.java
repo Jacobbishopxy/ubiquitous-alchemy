@@ -10,7 +10,7 @@ import java.util.Optional;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromotionRecordRepository;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.specifications.PromotionRecordSpecification;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.services.specifications.PromotionRecordSpecification;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

@@ -9,6 +9,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordDto;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDirection;
 
 import jakarta.persistence.*;
 

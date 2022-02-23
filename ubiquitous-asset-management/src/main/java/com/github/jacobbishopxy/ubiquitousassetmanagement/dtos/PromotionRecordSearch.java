@@ -7,7 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.dtos;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.models.TradeDirection;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDirection;
 
 import org.springframework.data.domain.Sort.Order;
 
