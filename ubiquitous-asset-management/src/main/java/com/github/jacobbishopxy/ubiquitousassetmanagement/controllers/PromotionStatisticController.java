@@ -10,7 +10,9 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionStatis
 import com.github.jacobbishopxy.ubiquitousassetmanagement.services.PromotionStatisticService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("v1")
@@ -27,6 +29,15 @@ public class PromotionStatisticController {
   @GetMapping("/promotion_statistic")
   List<PromotionStatistic> getPromotionStatistics() {
     return service.getAllPromotionStatistic();
+  }
+
+  @GetMapping("/promotion_statistic/{id}")
+  PromotionStatistic getPromotionStatisticById(@PathVariable Integer id) {
+    return service
+        .getPromotionStatistic(id)
+        .orElseThrow(
+            () -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, String.format("PromotionStatistic %d not found", id)));
   }
 
 }

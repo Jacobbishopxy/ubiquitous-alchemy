@@ -31,4 +31,8 @@ public class PromotionStatisticService {
     return repo.findById(id);
   }
 
+  public Optional<List<PromotionStatistic>> getPromotionStatisticByPromotionPactName(String promotionPactName) {
+    return repo.findByPromotionPactName(promotionPactName);
+  }
+
 }
