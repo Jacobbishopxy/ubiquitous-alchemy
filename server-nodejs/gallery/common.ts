@@ -36,7 +36,6 @@ export const marks = "marks"
 export const tags = "tags"
 export const dashboards = "dashboards"
 export const type = "type"
-export const tabId = "tabId"
 
 // relations column & misc
 export const ids = "ids"

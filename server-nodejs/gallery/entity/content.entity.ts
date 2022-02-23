@@ -20,7 +20,7 @@ import {Tag} from "./tag.entity"
 import {Mark} from "./mark.entity"
 
 @Entity({name: common.content})
-@Unique([common.category, common.element, common.date, common.tabId])
+@Unique([common.category, common.element, common.date])
 export class Content {
 
   @PrimaryGeneratedColumn("uuid")
@@ -55,9 +55,6 @@ export class Content {
 
   @Column("varchar", {nullable: true})
   storageType?: string
-
-  @Column("varchar", {nullable: true})
-  tabId?: string
 
   @CreateDateColumn({nullable: true})
   createdAt!: string
