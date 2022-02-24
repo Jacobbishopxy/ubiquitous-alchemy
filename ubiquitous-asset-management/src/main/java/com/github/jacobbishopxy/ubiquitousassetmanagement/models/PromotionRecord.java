@@ -8,8 +8,9 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordDto;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordInput;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDirection;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.services.helper.PromotionCalculationHelper;
 
 import jakarta.persistence.*;
 
@@ -48,9 +49,11 @@ public class PromotionRecord {
 
   private Float closePrice;
 
+  private Float adjustFactor;
+
   private Float earningsYield;
 
-  private Float score;
+  private Integer performanceScore;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "promotion_pact_name")
@@ -80,7 +83,7 @@ public class PromotionRecord {
       Date closeTime,
       Float closePrice,
       Float earningsYield,
-      Float score,
+      Integer performanceScore,
       PromotionPact promotionPact,
       Boolean isArchived) {
     super();
@@ -94,17 +97,31 @@ public class PromotionRecord {
     this.closeTime = closeTime;
     this.closePrice = closePrice;
     this.earningsYield = earningsYield;
-    this.score = score;
+    this.performanceScore = performanceScore;
     this.promotionPact = promotionPact;
     this.isArchived = isArchived;
   }
 
-  public static PromotionRecord fromPromotionRecordDtoAndEmail(
-      PromotionRecordDto dto,
-      String email,
+  public static PromotionRecord fromPromotionRecordDto(
+      PromotionRecordInput dto,
+      String promoterEmail,
       String promotionPactName) {
+
+    Float earningsYield = PromotionCalculationHelper.calculateEarningsYield(
+        dto.direction(),
+        dto.openPrice(),
+        dto.closePrice(),
+        dto.adjustFactor());
+
+    boolean isArchived = PromotionCalculationHelper.calculateIsArchived(
+        dto.closeTime());
+
+    int performanceScore = PromotionCalculationHelper.calculatePerformanceScore(
+        isArchived,
+        earningsYield).score();
+
     return new PromotionRecord(
-        new Promoter(email),
+        new Promoter(promoterEmail),
         dto.symbol(),
         dto.abbreviation(),
         dto.industry(),
@@ -113,10 +130,10 @@ public class PromotionRecord {
         dto.openPrice(),
         dto.closeTime(),
         dto.closePrice(),
-        dto.earningsYield(),
-        dto.score(),
+        earningsYield,
+        performanceScore,
         new PromotionPact(promotionPactName),
-        dto.isArchived());
+        isArchived);
   }
 
   public Integer getId() {
@@ -199,20 +216,32 @@ public class PromotionRecord {
     this.closePrice = closePrice;
   }
 
+  public Float getAdjustFactor() {
+    return adjustFactor;
+  }
+
+  public void setAdjustFactor(Float adjustFactor) {
+    this.adjustFactor = adjustFactor;
+  }
+
   public Float getEarningsYield() {
     return earningsYield;
   }
 
-  public void setEarningsYield(Float earningsYield) {
-    this.earningsYield = earningsYield;
+  public void setEarningsYield() {
+    this.earningsYield = PromotionCalculationHelper.calculateEarningsYield(
+        direction,
+        openPrice,
+        closePrice,
+        adjustFactor);
   }
 
-  public Float getScore() {
-    return score;
+  public Integer getPerformanceScore() {
+    return performanceScore;
   }
 
-  public void setScore(Float score) {
-    this.score = score;
+  public void setPerformanceScore(Integer performanceScore) {
+    this.performanceScore = performanceScore;
   }
 
   public PromotionPact getPromotionPact() {

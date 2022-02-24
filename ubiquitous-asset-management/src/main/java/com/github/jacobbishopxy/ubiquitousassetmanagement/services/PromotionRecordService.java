@@ -92,10 +92,11 @@ public class PromotionRecordService {
           record.setOpenPrice(promotionRecord.getOpenPrice());
           record.setCloseTime(promotionRecord.getCloseTime());
           record.setClosePrice(promotionRecord.getClosePrice());
-          record.setEarningsYield(promotionRecord.getEarningsYield());
-          record.setScore(promotionRecord.getScore());
+          record.setPerformanceScore(promotionRecord.getPerformanceScore());
           record.setPromotionPact(promotionRecord.getPromotionPact());
           record.setIsArchived(promotionRecord.getIsArchived());
+          // calculate earnings yield
+          record.setEarningsYield();
           return repo.save(record);
         });
   }

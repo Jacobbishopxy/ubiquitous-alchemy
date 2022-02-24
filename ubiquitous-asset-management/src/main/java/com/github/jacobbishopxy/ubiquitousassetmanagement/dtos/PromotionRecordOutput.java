@@ -11,7 +11,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDirection;
 
-public record PromotionRecordDto(
+public record PromotionRecordOutput(
 		Integer id,
 		String promoter,
 		String symbol,
@@ -22,16 +22,17 @@ public record PromotionRecordDto(
 		Float openPrice,
 		@JsonFormat(pattern = Constants.TIME_FORMAT) Date closeTime,
 		Float closePrice,
+		Float adjustFactor,
 		Float earningsYield,
-		Float score,
+		Integer performanceScore,
 		Boolean isArchived,
 		String promotionPactName,
 		@JsonFormat(pattern = Constants.TIME_FORMAT) Date createdAt,
 		@JsonFormat(pattern = Constants.TIME_FORMAT) Date updatedAt) {
 
-	public static PromotionRecordDto fromPromotionRecord(
+	public static PromotionRecordOutput fromPromotionRecord(
 			PromotionRecord promotionRecord) {
-		return new PromotionRecordDto(
+		return new PromotionRecordOutput(
 				promotionRecord.getId(),
 				promotionRecord.getPromoter().getNickname(),
 				promotionRecord.getSymbol(),
@@ -42,21 +43,22 @@ public record PromotionRecordDto(
 				promotionRecord.getOpenPrice(),
 				promotionRecord.getCloseTime(),
 				promotionRecord.getClosePrice(),
+				promotionRecord.getAdjustFactor(),
 				promotionRecord.getEarningsYield(),
-				promotionRecord.getScore(),
+				promotionRecord.getPerformanceScore(),
 				promotionRecord.getIsArchived(),
 				promotionRecord.getPromotionPact().getName(),
 				promotionRecord.getCreatedAt(),
 				promotionRecord.getUpdatedAt());
 	}
 
-	public static PromotionRecordDto fromPromotionRecord(
+	public static PromotionRecordOutput fromPromotionRecord(
 			PromotionRecord promotionRecord,
-			String name,
+			String promoterName,
 			String promotionPactName) {
-		return new PromotionRecordDto(
+		return new PromotionRecordOutput(
 				promotionRecord.getId(),
-				name,
+				promoterName,
 				promotionRecord.getSymbol(),
 				promotionRecord.getAbbreviation(),
 				promotionRecord.getIndustry(),
@@ -65,8 +67,9 @@ public record PromotionRecordDto(
 				promotionRecord.getOpenPrice(),
 				promotionRecord.getCloseTime(),
 				promotionRecord.getClosePrice(),
+				promotionRecord.getAdjustFactor(),
 				promotionRecord.getEarningsYield(),
-				promotionRecord.getScore(),
+				promotionRecord.getPerformanceScore(),
 				promotionRecord.getIsArchived(),
 				promotionPactName,
 				promotionRecord.getCreatedAt(),

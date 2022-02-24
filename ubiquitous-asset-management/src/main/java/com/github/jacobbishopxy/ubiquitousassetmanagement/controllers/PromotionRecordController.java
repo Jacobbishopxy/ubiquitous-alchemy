@@ -9,7 +9,8 @@ import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.IntegerRange;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordDto;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordInput;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordOutput;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.SortDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
@@ -37,7 +38,7 @@ public class PromotionRecordController {
   private PromotionRecordService promotionRecordService;
 
   @GetMapping("/promotion_record")
-  List<PromotionRecordDto> getPromotionRecords(
+  List<PromotionRecordOutput> getPromotionRecords(
       @RequestParam("page") int page,
       @RequestParam("size") int size,
       @RequestParam(value = "promoters", required = false) List<String> promoters,
@@ -119,7 +120,7 @@ public class PromotionRecordController {
     return promotionRecordService
         .getPromotionRecords(page, size, searchDto)
         .stream()
-        .map(pr -> PromotionRecordDto.fromPromotionRecord(pr))
+        .map(pr -> PromotionRecordOutput.fromPromotionRecord(pr))
         .toList();
   }
 
@@ -132,7 +133,7 @@ public class PromotionRecordController {
   }
 
   @PostMapping("/promotion_record")
-  PromotionRecordDto createPromotionRecord(@RequestBody PromotionRecordDto dto) {
+  PromotionRecordOutput createPromotionRecord(@RequestBody PromotionRecordInput dto) {
     String email = promoterService
         .getEmailByNickname(dto.promoter())
         .orElseThrow(() -> new ResponseStatusException(
@@ -144,15 +145,15 @@ public class PromotionRecordController {
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.BAD_REQUEST, String.format("PromotionPact %s not found", dto.promotionPactName())));
 
-    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email, pactName);
+    PromotionRecord pr = PromotionRecord.fromPromotionRecordDto(dto, email, pactName);
 
     pr = promotionRecordService.createPromotionRecord(pr);
 
-    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoter(), pactName);
+    return PromotionRecordOutput.fromPromotionRecord(pr, dto.promoter(), pactName);
   }
 
   @PutMapping("/promotion_record/{id}")
-  PromotionRecordDto updatePromotionRecord(@PathVariable Integer id, @RequestBody PromotionRecordDto dto) {
+  PromotionRecordOutput updatePromotionRecord(@PathVariable Integer id, @RequestBody PromotionRecordInput dto) {
     String email = promoterService.getEmailByNickname(dto.promoter())
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.BAD_REQUEST, String.format("Promoter %s not found", dto.promoter())));
@@ -163,14 +164,14 @@ public class PromotionRecordController {
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.BAD_REQUEST, String.format("PromotionPact %s not found", dto.promotionPactName())));
 
-    PromotionRecord pr = PromotionRecord.fromPromotionRecordDtoAndEmail(dto, email, pactName);
+    PromotionRecord pr = PromotionRecord.fromPromotionRecordDto(dto, email, pactName);
 
     pr = promotionRecordService
         .updatePromotionRecord(id, pr)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PromotionRecord %s not found", id)));
 
-    return PromotionRecordDto.fromPromotionRecord(pr, dto.promoter(), pactName);
+    return PromotionRecordOutput.fromPromotionRecord(pr, dto.promoter(), pactName);
   }
 
   @DeleteMapping("/promotion_record/{id}")
