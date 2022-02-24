@@ -35,11 +35,7 @@ public class PromotionStatisticController {
       @RequestParam(name = "pactName", required = false) String pactName,
       @RequestParam(name = "promoterName", required = false) String promoterName) {
     if (pactName != null && promoterName == null) {
-      return promotionStatisticService
-          .getPromotionStatisticByPromotionPactName(pactName)
-          .orElseThrow(
-              () -> new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, String.format("PromotionPact %s not found", pactName)));
+      return promotionStatisticService.getPromotionStatisticByPromotionPactName(pactName);
     }
     if (pactName == null && promoterName != null) {
       String email = promoterService
@@ -47,11 +43,7 @@ public class PromotionStatisticController {
           .orElseThrow(
               () -> new ResponseStatusException(
                   HttpStatus.NOT_FOUND, String.format("Promoter %s not found", promoterName)));
-      return promotionStatisticService
-          .getPromotionStatisticByPromoterEmail(email)
-          .orElseThrow(
-              () -> new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, String.format("Promoter %s not found", promoterName)));
+      return promotionStatisticService.getPromotionStatisticByPromoterEmail(email);
     }
     return promotionStatisticService.getAllPromotionStatistic();
   }

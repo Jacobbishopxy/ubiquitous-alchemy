@@ -31,11 +31,11 @@ public class PromotionStatisticService {
     return repo.findById(id);
   }
 
-  public Optional<List<PromotionStatistic>> getPromotionStatisticByPromotionPactName(String promotionPactName) {
+  public List<PromotionStatistic> getPromotionStatisticByPromotionPactName(String promotionPactName) {
     return repo.findByPromotionPactName(promotionPactName);
   }
 
-  public Optional<List<PromotionStatistic>> getPromotionStatisticByPromoterEmail(String promoterEmail) {
+  public List<PromotionStatistic> getPromotionStatisticByPromoterEmail(String promoterEmail) {
     return repo.findByPromoterEmail(promoterEmail);
   }
 }

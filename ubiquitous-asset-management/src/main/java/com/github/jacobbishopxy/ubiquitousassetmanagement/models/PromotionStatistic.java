@@ -28,7 +28,7 @@ public class PromotionStatistic {
   private Float baseScore;
 
   @Column(nullable = false)
-  private Float performScore;
+  private Float performanceScore;
 
   @Column(nullable = false)
   private Integer promotionSuccessCount;
@@ -51,7 +51,7 @@ public class PromotionStatistic {
       Float totalScore,
       Integer promotionCount,
       Float baseScore,
-      Float performScore,
+      Float performanceScore,
       Integer promotionSuccessCount,
       Integer promotionFailureCount,
       Float successRate,
@@ -61,7 +61,7 @@ public class PromotionStatistic {
     this.totalScore = totalScore;
     this.promotionCount = promotionCount;
     this.baseScore = baseScore;
-    this.performScore = performScore;
+    this.performanceScore = performanceScore;
     this.promotionSuccessCount = promotionSuccessCount;
     this.promotionFailureCount = promotionFailureCount;
     this.successRate = successRate;
@@ -108,12 +108,12 @@ public class PromotionStatistic {
     this.baseScore = baseScore;
   }
 
-  public Float getPerformScore() {
-    return performScore;
+  public Float getPerformanceScore() {
+    return performanceScore;
   }
 
-  public void setPerformScore(Float performScore) {
-    this.performScore = performScore;
+  public void setPerformanceScore(Float performanceScore) {
+    this.performanceScore = performanceScore;
   }
 
   public Integer getPromotionSuccessCount() {
