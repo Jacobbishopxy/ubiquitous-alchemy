@@ -18,10 +18,15 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDir
  * - calculateEarningsYield
  * - calculateIsArchived
  * - calculatePerformanceScore
+ * - affectPromotionStatistic
  */
 public class PromotionCalculationHelper {
 
   static Float baseScoreFactor = 2.5f;
+
+  public enum AffectPromotionStatisticType {
+    CREATE, UPDATE, DELETE
+  }
 
   public static Float calculateEarningsYield(
       TradeDirection direction,
@@ -49,8 +54,6 @@ public class PromotionCalculationHelper {
     }
   }
 
-  // TODO:
-  // these methods can be combined into one
   private static PromotionStatistic affectPromotionStatistic(
       PromotionRecord promotionRecord,
       PromotionStatistic promotionStatistic,
@@ -61,17 +64,19 @@ public class PromotionCalculationHelper {
     // set promoter
     promotionStatistic.setPromoter(promotionRecord.getPromoter());
     // set promotionCount
-    Integer promotionCount = relativePromotionRecordSize;
-    promotionStatistic.setPromotionCount(promotionCount);
+    promotionStatistic.setPromotionCount(relativePromotionRecordSize);
     // set baseScore
     Float baseScore = relativePromotionRecordSize * PromotionCalculationHelper.baseScoreFactor;
     promotionStatistic.setBaseScore(baseScore);
     // set performanceScore
-    Integer performanceScore = relativePromotionRecord
-        .stream()
-        .filter(item -> item.getPerformanceScore() != null)
-        .mapToInt(item -> item.getPerformanceScore())
-        .sum();
+    Integer performanceScore = 0;
+    if (relativePromotionRecordSize != 0) {
+      performanceScore = relativePromotionRecord
+          .stream()
+          .filter(item -> item.getPerformanceScore() != null)
+          .mapToInt(item -> item.getPerformanceScore())
+          .sum();
+    }
     promotionStatistic.setPerformanceScore(performanceScore.floatValue());
     // set totalScore
     promotionStatistic.setTotalScore(baseScore + performanceScore);
@@ -88,47 +93,41 @@ public class PromotionCalculationHelper {
     promotionStatistic.setPromotionSuccessCount(promotionSuccessCount);
     promotionStatistic.setPromotionFailureCount(promotionFailureCount);
     // set successRate
-    Float successRate = (float) promotionSuccessCount / promotionCount;
+    Float successRate = 0f;
+    if (relativePromotionRecordSize != 0) {
+      successRate = (float) promotionSuccessCount / successRate;
+    }
     promotionStatistic.setSuccessRate(successRate);
     return promotionStatistic;
   }
 
-  public static PromotionStatistic affectPromotionStatisticByCreate(
+  public static PromotionStatistic affectPromotionStatistic(
+      PromotionCalculationHelper.AffectPromotionStatisticType type,
       PromotionRecord promotionRecord,
       PromotionStatistic promotionStatistic,
       List<PromotionRecord> relativePromotionRecord) {
 
-    // append to relativePromotionRecord
-    relativePromotionRecord.add(promotionRecord);
+    switch (type) {
+      case CREATE:
+        // append to relativePromotionRecord
+        relativePromotionRecord.add(promotionRecord);
+      case UPDATE:
+        // replace promotionRecord
+        Integer replacedId = promotionRecord.getId();
+        relativePromotionRecord = relativePromotionRecord.stream().map(rpr -> {
+          return rpr.getId() == replacedId ? promotionRecord : rpr;
+        }).toList();
+      case DELETE:
+        // remove promotionRecord
+        Integer removedId = promotionRecord.getId();
+        relativePromotionRecord = relativePromotionRecord.stream().filter(rpr -> {
+          return rpr.getId() != removedId;
+        }).toList();
+    }
 
-    return affectPromotionStatistic(promotionRecord, promotionStatistic, relativePromotionRecord);
-  }
-
-  public static PromotionStatistic affectPromotionStatisticByUpdate(
-      PromotionRecord promotionRecord,
-      PromotionStatistic promotionStatistic,
-      List<PromotionRecord> relativePromotionRecord) {
-
-    // replace promotionRecord
-    Integer prId = promotionRecord.getId();
-    relativePromotionRecord = relativePromotionRecord.stream().map(rpr -> {
-      return rpr.getId() == prId ? promotionRecord : rpr;
-    }).toList();
-
-    return affectPromotionStatistic(promotionRecord, promotionStatistic, relativePromotionRecord);
-  }
-
-  public static PromotionStatistic affectPromotionStatisticByDelete(
-      PromotionRecord promotionRecord,
-      PromotionStatistic promotionStatistic,
-      List<PromotionRecord> relativePromotionRecord) {
-
-    // remove promotionRecord
-    Integer prId = promotionRecord.getId();
-    relativePromotionRecord = relativePromotionRecord.stream().filter(rpr -> {
-      return rpr.getId() != prId;
-    }).toList();
-
-    return affectPromotionStatistic(promotionRecord, promotionStatistic, relativePromotionRecord);
+    return affectPromotionStatistic(
+        promotionRecord,
+        promotionStatistic,
+        relativePromotionRecord);
   }
 }

@@ -10,11 +10,15 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.regex.*;
 
+/**
+ * Date range
+ */
 public record DateRange(Date start, Date end) {
 
   private static String format = "yyyy-MM-dd";
   private static Pattern pattern = Pattern.compile("^(\\d{4}-\\d{2}-\\d{2}):(\\d{4}-\\d{2}-\\d{2})$");
 
+  // validation
   public DateRange {
     Objects.requireNonNull(start, "start date cannot be null");
     Objects.requireNonNull(end, "end date cannot be null");

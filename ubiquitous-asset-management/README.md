@@ -2,7 +2,7 @@
 
 ## Promotion
 
+- Promoter
 - PromotionPact
 - PromotionRecord
-- PromotionRecordHistory
 - PromotionStatistic

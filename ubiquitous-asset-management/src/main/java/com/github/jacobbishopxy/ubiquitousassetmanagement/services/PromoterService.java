@@ -13,6 +13,11 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromoterR
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * PromoterService
+ * 
+ * PromoterService is used to manage promoters.
+ */
 @Service
 public class PromoterService {
 

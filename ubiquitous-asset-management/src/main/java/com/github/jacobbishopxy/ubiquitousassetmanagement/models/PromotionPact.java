@@ -14,10 +14,15 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 
 import jakarta.persistence.*;
 
+/**
+ * PromotionPact
+ * 
+ * A promotion pact is a contract defining within a period of time, and with
+ * a certain promoters' promotion records and promotion statistics.
+ */
 @Entity
 @Table(name = "promotion_pact")
 public class PromotionPact {
-
   @Id
   private String name;
 

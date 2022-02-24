@@ -24,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * PromotionRecordService
  *
- * Business logic for PromotionRecord
+ * Business logic for PromotionRecord. Each time a create/update/delete
+ * operation is performed, the corresponding PromotionStatistic will be updated
+ * as well.
  */
 @Service
 public class PromotionRecordService {
@@ -53,36 +55,29 @@ public class PromotionRecordService {
     return prRepo.findById(id);
   }
 
-  @Transactional
-  public List<PromotionRecord> getPromotionRecordsByPactNameAndPromoterEmail(
-      String promotionPactName,
-      String promoterEmail) {
-
-    return prRepo.findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail);
-  }
-
   @Transactional(rollbackFor = Exception.class)
   public PromotionRecord createPromotionRecord(PromotionRecord promotionRecord) {
     String promotionPactName = promotionRecord.getPromotionPact().getName();
     String promoterEmail = promotionRecord.getPromoter().getEmail();
 
     // 0. fetch promotion statistic, create one if not exist
-    PromotionStatistic ps = this.psRepo
+    PromotionStatistic promotionStatistic = this.psRepo
         .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail)
         .orElse(new PromotionStatistic());
 
     // 1. fetch all promotion records by promotion pact name and promoter email
-    List<PromotionRecord> relativePromotionRecord = this
-        .getPromotionRecordsByPactNameAndPromoterEmail(promotionPactName, promoterEmail);
+    List<PromotionRecord> relativePromotionRecord = this.prRepo
+        .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail);
 
     // 2. calculation
-    ps = PromotionCalculationHelper.affectPromotionStatisticByCreate(
+    promotionStatistic = PromotionCalculationHelper.affectPromotionStatistic(
+        PromotionCalculationHelper.AffectPromotionStatisticType.CREATE,
         promotionRecord,
-        ps,
+        promotionStatistic,
         relativePromotionRecord);
 
     // 3. save to promotion statistic
-    this.psRepo.save(ps);
+    this.psRepo.save(promotionStatistic);
 
     // 4. create promotion record
     return prRepo.save(promotionRecord);
@@ -95,22 +90,23 @@ public class PromotionRecordService {
     String promoterEmail = promotionRecord.getPromoter().getEmail();
 
     // 0. fetch promotion statistic, create one if not exist
-    PromotionStatistic ps = this.psRepo
+    PromotionStatistic promotionStatistic = this.psRepo
         .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail)
         .orElse(new PromotionStatistic());
 
     // 1. fetch all promotion records by promotion pact name and promoter email
-    List<PromotionRecord> relativePromotionRecord = this
-        .getPromotionRecordsByPactNameAndPromoterEmail(promotionPactName, promoterEmail);
+    List<PromotionRecord> relativePromotionRecord = this.prRepo
+        .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail);
 
     // 2. calculation
-    ps = PromotionCalculationHelper.affectPromotionStatisticByUpdate(
+    promotionStatistic = PromotionCalculationHelper.affectPromotionStatistic(
+        PromotionCalculationHelper.AffectPromotionStatisticType.UPDATE,
         promotionRecord,
-        ps,
+        promotionStatistic,
         relativePromotionRecord);
 
     // 3. save to promotion statistic
-    this.psRepo.save(ps);
+    this.psRepo.save(promotionStatistic);
 
     // 4. update promotion record
     return prRepo.findById(id).map(
@@ -144,22 +140,23 @@ public class PromotionRecordService {
     String promoterEmail = promotionRecord.getPromoter().getEmail();
 
     // 0. fetch promotion statistic, create one if not exist
-    PromotionStatistic ps = this.psRepo
+    PromotionStatistic promotionStatistic = this.psRepo
         .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail)
         .orElse(new PromotionStatistic());
 
     // 1. fetch all promotion records by promotion pact name and promoter email
-    List<PromotionRecord> relativePromotionRecord = this
-        .getPromotionRecordsByPactNameAndPromoterEmail(promotionPactName, promoterEmail);
+    List<PromotionRecord> relativePromotionRecord = this.prRepo
+        .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail);
 
     // 2. calculation
-    ps = PromotionCalculationHelper.affectPromotionStatisticByDelete(
+    promotionStatistic = PromotionCalculationHelper.affectPromotionStatistic(
+        PromotionCalculationHelper.AffectPromotionStatisticType.DELETE,
         promotionRecord,
-        ps,
+        promotionStatistic,
         relativePromotionRecord);
 
     // 3. save to promotion statistic
-    this.psRepo.save(ps);
+    this.psRepo.save(promotionStatistic);
 
     // 4. delete promotion record
     prRepo.deleteById(id);

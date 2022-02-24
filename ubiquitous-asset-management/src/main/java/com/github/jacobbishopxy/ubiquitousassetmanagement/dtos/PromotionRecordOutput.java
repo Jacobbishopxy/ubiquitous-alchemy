@@ -11,6 +11,9 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDirection;
 
+/**
+ * PromotionRecordOutput
+ */
 public record PromotionRecordOutput(
 		Integer id,
 		String promoter,

@@ -6,6 +6,12 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.models;
 
 import jakarta.persistence.*;
 
+/**
+ * PromotionStatistic
+ * 
+ * A promotion statistic is a summation of each promoter's performance during a
+ * period of time.
+ */
 @Entity
 @Table(name = "promotion_statistic")
 public class PromotionStatistic {

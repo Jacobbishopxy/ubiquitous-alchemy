@@ -10,6 +10,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDirection;
 
+/**
+ * PromotionRecordInput
+ * 
+ * Used for creating or updating a promotion record
+ * Notice:
+ * - closeTime & closePrice is nullable
+ * - abbreviation & industry should be auto-generated in the future
+ */
 public record PromotionRecordInput(
 		String promoter,
 		String symbol,

@@ -13,6 +13,11 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.Promotion
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * PromotionStatisticService
+ * 
+ * PromotionStatisticService is used to manage promotion statistics.
+ */
 @Service
 public class PromotionStatisticService {
 

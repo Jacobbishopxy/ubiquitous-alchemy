@@ -19,6 +19,11 @@ import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.*;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 
+/**
+ * PromotionRecordSpecification
+ * 
+ * Used to filter PromotionRecord.
+ */
 public class PromotionRecordSpecification implements Specification<PromotionRecord> {
 
   private PromotionRecordSearch searchDto;

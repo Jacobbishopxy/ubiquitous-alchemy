@@ -14,6 +14,11 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.services.helper.Promot
 
 import jakarta.persistence.*;
 
+/**
+ * PromotionRecord
+ * 
+ * A promotion record is a record from a promoter's perspective.
+ */
 @Entity
 @Table(name = "promotion_record")
 public class PromotionRecord {

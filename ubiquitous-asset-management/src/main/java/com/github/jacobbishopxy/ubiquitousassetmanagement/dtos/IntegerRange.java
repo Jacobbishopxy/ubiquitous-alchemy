@@ -6,6 +6,9 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.dtos;
 
 import java.util.regex.*;
 
+/**
+ * Integer Range
+ */
 public record IntegerRange(Float start, Float end) {
 
   private static Pattern pattern = Pattern.compile("^(\\d+):(\\d+)$");

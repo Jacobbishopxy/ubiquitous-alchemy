@@ -13,6 +13,11 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.Promotion
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * PromotionPactService
+ * 
+ * PromotionPactService is used to manage promotion pacts.
+ */
 @Service
 public class PromotionPactService {
 

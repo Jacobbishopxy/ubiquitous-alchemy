@@ -25,6 +25,8 @@ import org.springframework.data.domain.Sort.Order;
  * closePriceRange
  * earningsYieldRange
  * scoreRange
+ * promotionPactNames
+ * isArchived
  * createdAtRange
  * updatedAtRange
  * promoterSort
