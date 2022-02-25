@@ -67,6 +67,8 @@ public class PromotionCalculationHelper {
       PromotionStatistic promotionStatistic,
       List<PromotionRecord> relativePromotionRecord) {
 
+    // System.out.println(promotionRecord.getPromo);
+
     DateRange promotionPactDateRange = promotionRecord.getPromotionPact().getDateRange();
 
     // length of relativePromotionRecord

@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordSearch;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionPact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionStatistic;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromotionPactRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromotionRecordRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.repositories.PromotionStatisticRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.services.helper.PromotionCalculationHelper;
@@ -37,6 +39,9 @@ public class PromotionRecordService {
   @Autowired
   private PromotionStatisticRepository psRepo;
 
+  @Autowired
+  private PromotionPactRepository ppRepo;
+
   public List<PromotionRecord> getPromotionRecords(int page, int size, PromotionRecordSearch searchDto) {
 
     if (searchDto == null) {
@@ -58,6 +63,10 @@ public class PromotionRecordService {
   @Transactional(rollbackFor = Exception.class)
   public PromotionRecord createPromotionRecord(PromotionRecord promotionRecord) {
     String promotionPactName = promotionRecord.getPromotionPact().getName();
+    PromotionPact promotionPact = this.ppRepo.findByName(promotionPactName)
+        .orElseThrow(() -> new IllegalArgumentException(
+            String.format("PromotionPact %s does not exist", promotionPactName)));
+    promotionRecord.setPromotionPact(promotionPact);
     String promoterEmail = promotionRecord.getPromoter().getEmail();
 
     // 0. fetch promotion statistic, create one if not exist
@@ -87,6 +96,10 @@ public class PromotionRecordService {
   public Optional<PromotionRecord> updatePromotionRecord(int id, PromotionRecord promotionRecord) {
 
     String promotionPactName = promotionRecord.getPromotionPact().getName();
+    PromotionPact promotionPact = this.ppRepo.findByName(promotionPactName)
+        .orElseThrow(() -> new IllegalArgumentException(
+            String.format("PromotionPact %s does not exist", promotionPactName)));
+    promotionRecord.setPromotionPact(promotionPact);
     String promoterEmail = promotionRecord.getPromoter().getEmail();
 
     // 0. fetch promotion statistic, create one if not exist
@@ -138,6 +151,10 @@ public class PromotionRecordService {
             String.format("PromotionRecord %d not found", id)));
 
     String promotionPactName = promotionRecord.getPromotionPact().getName();
+    PromotionPact promotionPact = this.ppRepo.findByName(promotionPactName)
+        .orElseThrow(() -> new IllegalArgumentException(
+            String.format("PromotionPact %s does not exist", promotionPactName)));
+    promotionRecord.setPromotionPact(promotionPact);
     String promoterEmail = promotionRecord.getPromoter().getEmail();
 
     // 0. fetch promotion statistic, create one if not exist
