@@ -39,6 +39,9 @@ export class Dashboard {
   @Column("varchar")
   name!: string
 
+  @Column("varchar", {nullable: true})
+  symbol!: string
+
   @Column("text", {nullable: true})
   description?: string
 

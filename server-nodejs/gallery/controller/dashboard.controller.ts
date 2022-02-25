@@ -96,5 +96,10 @@ export class DashboardController {
   searchDashboards(@Query("keyword") keyword: string) {
     return this.service.searchDashboards(keyword)
   }
+
+  @Get("getAllDashboardsSimple")
+  getAllDashboardsSimple() {
+    return this.service.getAllDashboardsSimple()
+  }
 }
 

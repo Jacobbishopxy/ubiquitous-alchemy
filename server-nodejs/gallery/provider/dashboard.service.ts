@@ -198,5 +198,9 @@ export class DashboardService {
       ...utils.whereNameLike(keyword)
     })
   }
+
+  getAllDashboardsSimple() {
+    return this.repoDashboard.find()
+  }
 }
 
