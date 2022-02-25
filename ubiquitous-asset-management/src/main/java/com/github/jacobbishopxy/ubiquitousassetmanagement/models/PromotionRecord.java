@@ -9,6 +9,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.PromotionRecordInput;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.PerformanceScore;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.services.helper.PromotionCalculationHelper;
 
@@ -87,6 +88,7 @@ public class PromotionRecord {
       Float openPrice,
       Date closeTime,
       Float closePrice,
+      Float adjustFactor,
       Float earningsYield,
       Integer performanceScore,
       PromotionPact promotionPact,
@@ -101,6 +103,7 @@ public class PromotionRecord {
     this.openPrice = openPrice;
     this.closeTime = closeTime;
     this.closePrice = closePrice;
+    this.adjustFactor = adjustFactor;
     this.earningsYield = earningsYield;
     this.performanceScore = performanceScore;
     this.promotionPact = promotionPact;
@@ -121,9 +124,10 @@ public class PromotionRecord {
     boolean isArchived = PromotionCalculationHelper.calculateIsArchived(
         dto.closeTime());
 
-    int performanceScore = PromotionCalculationHelper.calculatePerformanceScore(
+    PerformanceScore performanceScore = PromotionCalculationHelper.calculatePerformanceScore(
         isArchived,
-        earningsYield).score();
+        earningsYield);
+    Integer pScore = performanceScore == null ? null : performanceScore.score();
 
     return new PromotionRecord(
         new Promoter(promoterEmail),
@@ -135,8 +139,9 @@ public class PromotionRecord {
         dto.openPrice(),
         dto.closeTime(),
         dto.closePrice(),
+        dto.adjustFactor(),
         earningsYield,
-        performanceScore,
+        pScore,
         new PromotionPact(promotionPactName),
         isArchived);
   }

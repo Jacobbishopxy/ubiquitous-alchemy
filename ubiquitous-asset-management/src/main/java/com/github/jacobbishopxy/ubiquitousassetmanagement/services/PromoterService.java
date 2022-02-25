@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * PromoterService
- * 
+ *
  * PromoterService is used to manage promoters.
  */
 @Service

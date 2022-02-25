@@ -120,6 +120,7 @@ public class PromotionRecordService {
           record.setOpenPrice(promotionRecord.getOpenPrice());
           record.setCloseTime(promotionRecord.getCloseTime());
           record.setClosePrice(promotionRecord.getClosePrice());
+          record.setAdjustFactor(promotionRecord.getAdjustFactor());
           record.setPerformanceScore(promotionRecord.getPerformanceScore());
           record.setPromotionPact(promotionRecord.getPromotionPact());
           record.setIsArchived(promotionRecord.getIsArchived());

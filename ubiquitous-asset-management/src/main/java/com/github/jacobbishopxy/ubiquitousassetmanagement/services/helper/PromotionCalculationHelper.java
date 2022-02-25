@@ -33,6 +33,10 @@ public class PromotionCalculationHelper {
       Float openPrice,
       Float closePrice,
       Float adjustFactor) {
+    // make sure none of the parameters are null
+    if (openPrice == null || closePrice == null || adjustFactor == null) {
+      return null;
+    }
     if (direction == TradeDirection.BUY) {
       return (closePrice - openPrice) / openPrice * adjustFactor;
     } else {
@@ -41,12 +45,15 @@ public class PromotionCalculationHelper {
   }
 
   public static boolean calculateIsArchived(Date closeTime) {
-    return closeTime == null;
+    return closeTime != null;
   }
 
   public static PerformanceScore calculatePerformanceScore(
-      Boolean isArchived,
+      boolean isArchived,
       Float earningsYield) {
+    if (earningsYield == null) {
+      return null;
+    }
     if (isArchived) {
       return PerformanceScore.fromEarningsYield(earningsYield);
     } else {
@@ -63,6 +70,8 @@ public class PromotionCalculationHelper {
     int relativePromotionRecordSize = relativePromotionRecord.size();
     // set promoter
     promotionStatistic.setPromoter(promotionRecord.getPromoter());
+    // set promotionPact
+    promotionStatistic.setPromotionPact(promotionRecord.getPromotionPact());
     // set promotionCount
     promotionStatistic.setPromotionCount(relativePromotionRecordSize);
     // set baseScore
@@ -71,11 +80,14 @@ public class PromotionCalculationHelper {
     // set performanceScore
     Integer performanceScore = 0;
     if (relativePromotionRecordSize != 0) {
-      performanceScore = relativePromotionRecord
+      Integer pScore = relativePromotionRecord
           .stream()
           .filter(item -> item.getPerformanceScore() != null)
           .mapToInt(item -> item.getPerformanceScore())
           .sum();
+      if (pScore != null) {
+        performanceScore = pScore;
+      }
     }
     promotionStatistic.setPerformanceScore(performanceScore.floatValue());
     // set totalScore
@@ -84,10 +96,12 @@ public class PromotionCalculationHelper {
     Integer promotionSuccessCount = 0;
     Integer promotionFailureCount = 0;
     for (PromotionRecord pr : relativePromotionRecord) {
-      if (pr.getPerformanceScore() > 0) {
-        promotionSuccessCount++;
-      } else if (pr.getPerformanceScore() < 0) {
-        promotionFailureCount++;
+      if (pr.getPerformanceScore() != null) {
+        if (pr.getPerformanceScore() >= 0) {
+          promotionSuccessCount++;
+        } else {
+          promotionFailureCount++;
+        }
       }
     }
     promotionStatistic.setPromotionSuccessCount(promotionSuccessCount);

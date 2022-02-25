@@ -12,7 +12,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDir
 
 /**
  * PromotionRecordInput
- * 
+ *
  * Used for creating or updating a promotion record
  * Notice:
  * - closeTime & closePrice is nullable
