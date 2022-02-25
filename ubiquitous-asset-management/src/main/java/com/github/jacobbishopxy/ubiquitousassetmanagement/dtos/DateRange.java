@@ -41,4 +41,8 @@ public record DateRange(Date start, Date end) {
       throw new IllegalArgumentException("Invalid date range format: " + s);
     }
   }
+
+  public boolean inBetween(Date date) {
+    return date.after(start) && date.before(end);
+  }
 }

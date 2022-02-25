@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.services.helper;
 import java.util.Date;
 import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.PromotionStatistic;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.PerformanceScore;
@@ -66,8 +67,17 @@ public class PromotionCalculationHelper {
       PromotionStatistic promotionStatistic,
       List<PromotionRecord> relativePromotionRecord) {
 
+    DateRange promotionPactDateRange = promotionRecord.getPromotionPact().getDateRange();
+
     // length of relativePromotionRecord
-    int relativePromotionRecordSize = relativePromotionRecord.size();
+    // if openTime is not in promotionPactDateRange, then omit it
+    int relativePromotionRecordSize = 0;
+    for (PromotionRecord pr : relativePromotionRecord) {
+      if (promotionPactDateRange.inBetween(pr.getOpenTime())) {
+        relativePromotionRecordSize++;
+      }
+    }
+
     // set promoter
     promotionStatistic.setPromoter(promotionRecord.getPromoter());
     // set promotionPact
