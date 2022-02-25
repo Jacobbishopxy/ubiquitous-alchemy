@@ -137,18 +137,21 @@ public class PromotionCalculationHelper {
       case CREATE:
         // append to relativePromotionRecord
         relativePromotionRecord.add(promotionRecord);
+        break;
       case UPDATE:
         // replace promotionRecord
         Integer replacedId = promotionRecord.getId();
         relativePromotionRecord = relativePromotionRecord.stream().map(rpr -> {
           return rpr.getId() == replacedId ? promotionRecord : rpr;
         }).toList();
+        break;
       case DELETE:
         // remove promotionRecord
         Integer removedId = promotionRecord.getId();
         relativePromotionRecord = relativePromotionRecord.stream().filter(rpr -> {
           return rpr.getId() != removedId;
         }).toList();
+        break;
     }
 
     return affectPromotionStatistic(
