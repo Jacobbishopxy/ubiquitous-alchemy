@@ -16,8 +16,11 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDir
 
 import org.springframework.data.jpa.domain.Specification;
 
-import jakarta.persistence.criteria.*;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
+// import jakarta.persistence.criteria.*;
+// import jakarta.persistence.criteria.CriteriaBuilder.In;
+
+import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 /**
  * PromotionRecordSpecification

@@ -13,7 +13,8 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.Performa
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.services.helper.PromotionCalculationHelper;
 
-import jakarta.persistence.*;
+// import jakarta.persistence.*;
+import javax.persistence.*;
 
 /**
  * PromotionRecord

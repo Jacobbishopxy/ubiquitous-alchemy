@@ -63,65 +63,68 @@ public class PromotionRecordService {
   @Transactional(rollbackFor = Exception.class)
   public PromotionRecord createPromotionRecord(PromotionRecord promotionRecord) {
     String promotionPactName = promotionRecord.getPromotionPact().getName();
+    String promoterEmail = promotionRecord.getPromoter().getEmail();
+
+    // 0. set promotionRecord's promotionPact since it is null by default
     PromotionPact promotionPact = this.ppRepo.findByName(promotionPactName)
         .orElseThrow(() -> new IllegalArgumentException(
             String.format("PromotionPact %s does not exist", promotionPactName)));
     promotionRecord.setPromotionPact(promotionPact);
-    String promoterEmail = promotionRecord.getPromoter().getEmail();
 
-    // 0. fetch promotion statistic, create one if not exist
+    // 1. fetch promotion statistic, create one if not exist
     PromotionStatistic promotionStatistic = this.psRepo
         .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail)
         .orElse(new PromotionStatistic());
 
-    // 1. fetch all promotion records by promotion pact name and promoter email
+    // 2. fetch all promotion records by promotion pact name and promoter email
     List<PromotionRecord> relativePromotionRecord = this.prRepo
         .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail);
 
-    // 2. calculation
+    // 3. calculation
     promotionStatistic = PromotionCalculationHelper.affectPromotionStatistic(
         PromotionCalculationHelper.AffectPromotionStatisticType.CREATE,
         promotionRecord,
         promotionStatistic,
         relativePromotionRecord);
 
-    // 3. save to promotion statistic
+    // 4. save to promotion statistic
     this.psRepo.save(promotionStatistic);
 
-    // 4. create promotion record
+    // 5. create promotion record
     return prRepo.save(promotionRecord);
   }
 
   @Transactional(rollbackFor = Exception.class)
   public Optional<PromotionRecord> updatePromotionRecord(int id, PromotionRecord promotionRecord) {
-
     String promotionPactName = promotionRecord.getPromotionPact().getName();
+    String promoterEmail = promotionRecord.getPromoter().getEmail();
+
+    // 0. set promotionRecord's promotionPact since it is null by default
     PromotionPact promotionPact = this.ppRepo.findByName(promotionPactName)
         .orElseThrow(() -> new IllegalArgumentException(
             String.format("PromotionPact %s does not exist", promotionPactName)));
     promotionRecord.setPromotionPact(promotionPact);
-    String promoterEmail = promotionRecord.getPromoter().getEmail();
 
-    // 0. fetch promotion statistic, create one if not exist
+    // 1. fetch promotion statistic, create one if not exist
     PromotionStatistic promotionStatistic = this.psRepo
         .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail)
         .orElse(new PromotionStatistic());
 
-    // 1. fetch all promotion records by promotion pact name and promoter email
+    // 2. fetch all promotion records by promotion pact name and promoter email
     List<PromotionRecord> relativePromotionRecord = this.prRepo
         .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail);
 
-    // 2. calculation
+    // 3. calculation
     promotionStatistic = PromotionCalculationHelper.affectPromotionStatistic(
         PromotionCalculationHelper.AffectPromotionStatisticType.UPDATE,
         promotionRecord,
         promotionStatistic,
         relativePromotionRecord);
 
-    // 3. save to promotion statistic
+    // 4. save to promotion statistic
     this.psRepo.save(promotionStatistic);
 
-    // 4. update promotion record
+    // 5. update promotion record
     return prRepo.findById(id).map(
         record -> {
           record.setPromoter(promotionRecord.getPromoter());
@@ -151,32 +154,34 @@ public class PromotionRecordService {
             String.format("PromotionRecord %d not found", id)));
 
     String promotionPactName = promotionRecord.getPromotionPact().getName();
+    String promoterEmail = promotionRecord.getPromoter().getEmail();
+
+    // 0. set promotionRecord's promotionPact since it is null by default
     PromotionPact promotionPact = this.ppRepo.findByName(promotionPactName)
         .orElseThrow(() -> new IllegalArgumentException(
             String.format("PromotionPact %s does not exist", promotionPactName)));
     promotionRecord.setPromotionPact(promotionPact);
-    String promoterEmail = promotionRecord.getPromoter().getEmail();
 
-    // 0. fetch promotion statistic, create one if not exist
+    // 1. fetch promotion statistic, create one if not exist
     PromotionStatistic promotionStatistic = this.psRepo
         .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail)
         .orElse(new PromotionStatistic());
 
-    // 1. fetch all promotion records by promotion pact name and promoter email
+    // 2. fetch all promotion records by promotion pact name and promoter email
     List<PromotionRecord> relativePromotionRecord = this.prRepo
         .findByPromotionPactNameAndPromoterEmail(promotionPactName, promoterEmail);
 
-    // 2. calculation
+    // 3. calculation
     promotionStatistic = PromotionCalculationHelper.affectPromotionStatistic(
         PromotionCalculationHelper.AffectPromotionStatisticType.DELETE,
         promotionRecord,
         promotionStatistic,
         relativePromotionRecord);
 
-    // 3. save to promotion statistic
+    // 4. save to promotion statistic
     this.psRepo.save(promotionStatistic);
 
-    // 4. delete promotion record
+    // 5. delete promotion record
     prRepo.deleteById(id);
   }
 

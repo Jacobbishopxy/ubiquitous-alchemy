@@ -12,7 +12,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 
-import jakarta.persistence.*;
+// import jakarta.persistence.*;
+import javax.persistence.*;
 
 /**
  * PromotionPact

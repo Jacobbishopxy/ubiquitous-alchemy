@@ -12,7 +12,8 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.RolePost
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import jakarta.persistence.*;
+// import jakarta.persistence.*;
+import javax.persistence.*;
 
 /**
  * Promoter
