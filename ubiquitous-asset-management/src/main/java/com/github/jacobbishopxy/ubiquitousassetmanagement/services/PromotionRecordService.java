@@ -189,4 +189,7 @@ public class PromotionRecordService {
     return prRepo.count();
   }
 
+  public long countPromotionRecordsByPromotionPactName(String promotionPactName) {
+    return prRepo.countByPromotionPactName(promotionPactName);
+  }
 }

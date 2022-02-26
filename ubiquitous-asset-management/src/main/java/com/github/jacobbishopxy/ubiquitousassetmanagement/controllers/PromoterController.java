@@ -12,6 +12,9 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.services.PromoterServi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * PromoterController
  *
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
  * simple
  * GET method to get all promoters.
  */
+@Tag(name = "Promoter", description = "Promoter related operations")
 @RestController
 @RequestMapping("v1")
 public class PromoterController {
@@ -26,6 +30,7 @@ public class PromoterController {
   @Autowired
   private PromoterService service;
 
+  @Operation(description = "Get all promoters.")
   @GetMapping("/promoters")
   List<Promoter> getPromoters() {
     return service.getPromoters();

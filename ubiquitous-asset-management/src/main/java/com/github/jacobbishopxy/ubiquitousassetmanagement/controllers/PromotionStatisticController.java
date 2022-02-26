@@ -15,6 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "PromotionStatistic", description = "PromotionStatistic related operations. Notice that PromotionStatistic is automatically modified by PromotionRecord, hence only GET methods are supported.")
 @RestController
 @RequestMapping("v1")
 public class PromotionStatisticController {
@@ -25,19 +29,21 @@ public class PromotionStatisticController {
   @Autowired
   private PromoterService promoterService;
 
-  @GetMapping("/count_promotion_statistic_by_name")
-  Integer countPromotionStatistics(@RequestParam("name") String name) {
-    return promotionStatisticService.countByPromotionPactName(name);
+  @Operation(description = "Count promotion statistics by promotion pact name.")
+  @GetMapping("/count_promotion_statistic")
+  Integer countPromotionStatistics(@RequestParam String promotionPactName) {
+    return promotionStatisticService.countByPromotionPactName(promotionPactName);
   }
 
+  @Operation(description = "Get promotion statistics. `promotionPactName` and `promoterName` are optional, but they cannot exist at the same time.")
   @GetMapping("/promotion_statistic")
   List<PromotionStatistic> getPromotionStatistics(
-      @RequestParam(name = "pactName", required = false) String pactName,
-      @RequestParam(name = "promoterName", required = false) String promoterName) {
-    if (pactName != null && promoterName == null) {
-      return promotionStatisticService.getPromotionStatisticByPromotionPactName(pactName);
+      @RequestParam(required = false) String promotionPactName,
+      @RequestParam(required = false) String promoterName) {
+    if (promotionPactName != null && promoterName == null) {
+      return promotionStatisticService.getPromotionStatisticByPromotionPactName(promotionPactName);
     }
-    if (pactName == null && promoterName != null) {
+    if (promotionPactName == null && promoterName != null) {
       String email = promoterService
           .getEmailByNickname(promoterName)
           .orElseThrow(
@@ -48,6 +54,7 @@ public class PromotionStatisticController {
     return promotionStatisticService.getAllPromotionStatistic();
   }
 
+  @Operation(description = "Get promotion statistics by id.")
   @GetMapping("/promotion_statistic/{id}")
   PromotionStatistic getPromotionStatisticById(@PathVariable Integer id) {
     return promotionStatisticService

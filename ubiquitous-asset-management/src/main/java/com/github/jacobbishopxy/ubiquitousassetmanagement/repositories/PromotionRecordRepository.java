@@ -25,4 +25,5 @@ public interface PromotionRecordRepository
   List<PromotionRecord> findByPromotionPactNameAndPromoterEmail(
       String promotionPactName, String promoterEmail);
 
+  long countByPromotionPactName(String promotionPactName);
 }

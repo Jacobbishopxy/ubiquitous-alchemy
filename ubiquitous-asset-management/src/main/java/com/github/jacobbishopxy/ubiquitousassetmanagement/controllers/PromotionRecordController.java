@@ -24,6 +24,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "PromotionRecord", description = "PromotionRecord related operations")
 @RestController
 @RequestMapping("v1")
 public class PromotionRecordController {
@@ -37,6 +41,14 @@ public class PromotionRecordController {
   @Autowired
   private PromotionRecordService promotionRecordService;
 
+  @Operation(description = "Count promotion records by promotion pact name.")
+  @GetMapping("/count_promotion_record")
+  long countPromotionRecords(@RequestParam String promotionPactName) {
+    return promotionRecordService
+        .countPromotionRecordsByPromotionPactName(promotionPactName);
+  }
+
+  @Operation(description = "Get promotion records by page and size. Searching parameters are optional.")
   @GetMapping("/promotion_record")
   List<PromotionRecordOutput> getPromotionRecords(
       @RequestParam("page") int page,
@@ -124,6 +136,7 @@ public class PromotionRecordController {
         .toList();
   }
 
+  @Operation(description = "Get promotion record by id.")
   @GetMapping("/promotion_record/{id}")
   PromotionRecord getPromotionRecord(@PathVariable Integer id) {
     return promotionRecordService
@@ -132,6 +145,7 @@ public class PromotionRecordController {
             HttpStatus.NOT_FOUND, String.format("PromotionRecord %s not found", id)));
   }
 
+  @Operation(description = "Create promotion record. Noticed that this method will also effect the promotion statistic automatically.")
   @PostMapping("/promotion_record")
   PromotionRecordOutput createPromotionRecord(@RequestBody PromotionRecordInput dto) {
     String email = promoterService
@@ -152,6 +166,7 @@ public class PromotionRecordController {
     return PromotionRecordOutput.fromPromotionRecord(pr, dto.promoter(), pactName);
   }
 
+  @Operation(description = "Update promotion record. Noticed that this method will also effect the promotion statistic automatically.")
   @PutMapping("/promotion_record/{id}")
   PromotionRecordOutput updatePromotionRecord(@PathVariable Integer id, @RequestBody PromotionRecordInput dto) {
     String email = promoterService.getEmailByNickname(dto.promoter())
@@ -174,13 +189,10 @@ public class PromotionRecordController {
     return PromotionRecordOutput.fromPromotionRecord(pr, dto.promoter(), pactName);
   }
 
+  @Operation(description = "Delete promotion record. Noticed that this method will also effect the promotion statistic automatically.")
   @DeleteMapping("/promotion_record/{id}")
   void deletePromotionRecord(@PathVariable Integer id) {
     promotionRecordService.deletePromotionRecord(id);
   }
 
-  @GetMapping("/count_promotion_record")
-  long countPromotionRecords() {
-    return promotionRecordService.countPromotionRecords();
-  }
 }
