@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.DateRange;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
