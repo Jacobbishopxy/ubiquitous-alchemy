@@ -4,8 +4,10 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.models;
 
-// import jakarta.persistence.*;
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * PromotionStatistic
@@ -23,32 +25,43 @@ public class PromotionStatistic {
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "promoter_email")
+  @NotEmpty
+  @Schema(description = "The promoter who is promoting the asset. Nested object.")
   private Promoter promoter;
-
-  @Column(nullable = false)
-  private Float totalScore;
-
-  @Column(nullable = false)
-  private Integer promotionCount;
-
-  @Column(nullable = false)
-  private Float baseScore;
-
-  @Column(nullable = false)
-  private Float performanceScore;
-
-  @Column(nullable = false)
-  private Integer promotionSuccessCount;
-
-  @Column(nullable = false)
-  private Integer promotionFailureCount;
-
-  @Column(nullable = false)
-  private Float successRate;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "promotion_pact_name")
+  @NotEmpty
+  @Schema(description = "The promotion pact which the promoter is promoting. Nested object.")
   private PromotionPact promotionPact;
+
+  @Column(nullable = false)
+  @Schema(description = "The total score of the promoter's performance during the period of time.", required = true)
+  private Float totalScore;
+
+  @Column(nullable = false)
+  @Schema(description = "The total number of promotion count of the promoter's performance during the period of time.", required = true)
+  private Integer promotionCount;
+
+  @Column(nullable = false)
+  @Schema(description = "The base score.", required = true)
+  private Float baseScore;
+
+  @Column(nullable = false)
+  @Schema(description = "The performance score.", required = true)
+  private Float performanceScore;
+
+  @Column(nullable = false)
+  @Schema(description = "The successful promotion.", required = true)
+  private Integer promotionSuccessCount;
+
+  @Column(nullable = false)
+  @Schema(description = "The failed promotion count.", required = true)
+  private Integer promotionFailureCount;
+
+  @Column(nullable = false)
+  @Schema(description = "The successful promotion rate.", required = true)
+  private Float successRate;
 
   public PromotionStatistic() {
   }

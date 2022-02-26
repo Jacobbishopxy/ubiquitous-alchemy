@@ -12,8 +12,12 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.RolePost
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-// import jakarta.persistence.*;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * Promoter
@@ -27,9 +31,13 @@ import javax.persistence.*;
 public class Promoter {
   @Id
   @Column(nullable = false)
+  @Email
+  @NotEmpty
+  @Schema(description = "The email of the promoter.", example = "jacob@example.com", required = true)
   private String email;
 
   @Column(nullable = false)
+  @NotEmpty
   private String nickname;
 
   private String color;
@@ -37,6 +45,9 @@ public class Promoter {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   @Type(type = "author_role_enum")
+  @NotEmpty
+  @Schema(description = "The role of the promoter.", allowableValues = { "visitor", "editor", "admin",
+      "supervisor" }, required = true)
   private Role role;
 
   @Column(columnDefinition = "TEXT")

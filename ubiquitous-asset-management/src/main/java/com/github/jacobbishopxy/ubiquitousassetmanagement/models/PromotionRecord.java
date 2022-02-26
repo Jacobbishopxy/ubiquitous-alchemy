@@ -13,8 +13,10 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.Performa
 import com.github.jacobbishopxy.ubiquitousassetmanagement.models.fields.TradeDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.services.helper.PromotionCalculationHelper;
 
-// import jakarta.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * PromotionRecord
@@ -31,7 +33,15 @@ public class PromotionRecord {
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "promoter_email")
+  @NotEmpty
+  @Schema(description = "The promoter who is promoting the asset. Nested object.")
   private Promoter promoter;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "promotion_pact_name")
+  @NotEmpty
+  @Schema(description = "The promotion pact which the promoter is promoting. Nested object.")
+  private PromotionPact promotionPact;
 
   @Column(nullable = false)
   private String symbol;
@@ -42,16 +52,21 @@ public class PromotionRecord {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
+  @Schema(description = "The direction of the trade.", allowableValues = { "BUY", "SELL" }, required = true)
   private TradeDirection direction;
 
   @Column(nullable = false)
   @JsonFormat(pattern = Constants.TIME_FORMAT)
+  @NotEmpty
+  @Schema(description = "The time when the promotion record is created.", example = "2020-02-22 09:45:00", required = true)
   private Date openTime;
 
   @Column(nullable = false)
+  @NotEmpty
   private Float openPrice;
 
   @JsonFormat(pattern = Constants.TIME_FORMAT)
+  @Schema(description = "The time when the promotion record is closed.", example = "2020-02-23 10:05:00")
   private Date closeTime;
 
   private Float closePrice;
@@ -61,10 +76,6 @@ public class PromotionRecord {
   private Float earningsYield;
 
   private Integer performanceScore;
-
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "promotion_pact_name")
-  private PromotionPact promotionPact;
 
   private Boolean isArchived;
 

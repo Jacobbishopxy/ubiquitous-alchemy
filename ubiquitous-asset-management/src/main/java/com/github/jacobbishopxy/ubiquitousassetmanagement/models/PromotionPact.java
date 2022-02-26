@@ -12,8 +12,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.dtos.DateRange;
 
-// import jakarta.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * PromotionPact
@@ -30,11 +32,15 @@ public class PromotionPact {
   @Temporal(TemporalType.TIMESTAMP)
   @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Column(nullable = false)
+  @NotEmpty
+  @Schema(example = "2020-01-01", required = true)
   private Date startDate;
 
   @Temporal(TemporalType.TIMESTAMP)
   @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Column(nullable = false)
+  @NotEmpty
+  @Schema(example = "2020-12-31", required = true)
   private Date endDate;
 
   private String description;
