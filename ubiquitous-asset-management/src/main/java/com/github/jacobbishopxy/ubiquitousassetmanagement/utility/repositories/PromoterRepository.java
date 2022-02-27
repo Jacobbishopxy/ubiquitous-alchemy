@@ -2,11 +2,11 @@
  * Created by Jacob Xie on 2/17/2022.
  */
 
-package com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.repositories;
+package com.github.jacobbishopxy.ubiquitousassetmanagement.utility.repositories;
 
 import java.util.Optional;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.Promoter;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

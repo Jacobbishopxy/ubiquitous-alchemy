@@ -10,9 +10,9 @@ import java.util.List;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.IntegerRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.PromotionRecordSearch;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.Promoter;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.fields.TradeDirection;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
 
 import org.springframework.data.jpa.domain.Specification;
 

@@ -7,8 +7,8 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.controllers
 import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.PromotionStatistic;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.PromoterService;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.PromotionStatisticService;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.services.PromoterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

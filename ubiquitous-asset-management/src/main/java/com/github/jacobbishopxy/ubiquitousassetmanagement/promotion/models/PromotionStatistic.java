@@ -7,6 +7,8 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**

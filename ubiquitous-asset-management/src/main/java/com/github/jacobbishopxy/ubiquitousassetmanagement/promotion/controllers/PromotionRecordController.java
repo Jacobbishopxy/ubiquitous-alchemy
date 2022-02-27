@@ -15,9 +15,9 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.Promoti
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.SortDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.fields.TradeDirection;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.PromoterService;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.PromotionPactService;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.PromotionRecordService;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.services.PromoterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.he
 import java.util.Date;
 import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.PromotionConstants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.PromotionStatistic;
@@ -22,8 +23,6 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.field
  * - affectPromotionStatistic
  */
 public class PromotionCalculationHelper {
-
-  static Float baseScoreFactor = 2.5f;
 
   public enum AffectPromotionStatisticType {
     CREATE, UPDATE, DELETE
@@ -79,6 +78,12 @@ public class PromotionCalculationHelper {
         relativePromotionRecordSize++;
       }
     }
+    // MAX_PROMOTION_PER_PROMOTER constraint
+    if (relativePromotionRecordSize > PromotionConstants.MAX_PROMOTION_PER_PROMOTER) {
+      throw new RuntimeException(
+          String.format("MAX_PROMOTION_PER_PROMOTER %d constraint violated",
+              PromotionConstants.MAX_PROMOTION_PER_PROMOTER));
+    }
 
     // set promoter
     promotionStatistic.setPromoter(promotionRecord.getPromoter());
@@ -87,7 +92,7 @@ public class PromotionCalculationHelper {
     // set promotionCount
     promotionStatistic.setPromotionCount(relativePromotionRecordSize);
     // set baseScore
-    Float baseScore = relativePromotionRecordSize * PromotionCalculationHelper.baseScoreFactor;
+    Float baseScore = relativePromotionRecordSize * PromotionConstants.BASE_SCORE_FACTOR;
     promotionStatistic.setBaseScore(baseScore);
     // set performanceScore
     Integer performanceScore = 0;

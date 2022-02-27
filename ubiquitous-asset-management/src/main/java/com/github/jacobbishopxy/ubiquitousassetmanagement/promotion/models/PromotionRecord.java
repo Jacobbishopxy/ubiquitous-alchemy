@@ -12,11 +12,11 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.Promoti
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.fields.PerformanceScore;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.fields.TradeDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.helper.PromotionCalculationHelper;
-
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * PromotionRecord

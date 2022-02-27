@@ -2,12 +2,12 @@
  * Created by Jacob Xie on 2/17/2022.
  */
 
-package com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.controllers;
+package com.github.jacobbishopxy.ubiquitousassetmanagement.utility.controllers;
 
 import java.util.List;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.Promoter;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.PromoterService;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.services.PromoterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

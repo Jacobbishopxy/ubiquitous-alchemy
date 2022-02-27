@@ -148,7 +148,6 @@ public class PromotionRecordService {
 
   @Transactional(rollbackFor = Exception.class)
   public void deletePromotionRecord(int id) {
-
     PromotionRecord promotionRecord = prRepo.findById(id)
         .orElseThrow(() -> new IllegalArgumentException(
             String.format("PromotionRecord %d not found", id)));
