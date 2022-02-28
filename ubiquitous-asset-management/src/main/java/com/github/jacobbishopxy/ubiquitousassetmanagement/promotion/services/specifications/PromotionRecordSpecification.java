@@ -10,6 +10,7 @@ import java.util.List;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.IntegerRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.PromotionRecordSearch;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.PromotionPact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.fields.TradeDirection;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
@@ -21,7 +22,7 @@ import javax.persistence.criteria.CriteriaBuilder.In;
 
 /**
  * PromotionRecordSpecification
- * 
+ *
  * Used to filter PromotionRecord.
  */
 public class PromotionRecordSpecification implements Specification<PromotionRecord> {
@@ -127,9 +128,11 @@ public class PromotionRecordSpecification implements Specification<PromotionReco
 
     List<String> promotionPactNames = searchDto.promotionPactNames();
     if (promotionPactNames != null) {
-      In<String> inPromotionPactNames = criteriaBuilder.in(root.get("promotionPactName"));
+      In<PromotionPact> inPromotionPactNames = criteriaBuilder.in(root.get("promotionPact"));
       for (String promotionPactName : promotionPactNames) {
-        inPromotionPactNames.value(promotionPactName);
+        PromotionPact p = new PromotionPact();
+        p.setName(promotionPactName);
+        inPromotionPactNames.value(p);
       }
       predicates.add(inPromotionPactNames);
     }

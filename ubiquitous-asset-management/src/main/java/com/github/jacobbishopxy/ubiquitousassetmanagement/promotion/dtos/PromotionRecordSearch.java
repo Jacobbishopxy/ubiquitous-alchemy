@@ -131,40 +131,36 @@ public record PromotionRecordSearch(
         return orders;
     }
 
-    public static PromotionRecordSearch fromPromotionRecordsByPactNameAndPromoterEmail(
-            String promotionPactName,
-            String promoterEmail) {
-        List<String> promotionPactNames = new ArrayList<>();
-        promotionPactNames.add(promotionPactName);
-
-        List<String> promoters = new ArrayList<>();
-        promoters.add(promoterEmail);
+    public static PromotionRecordSearch replacePromoterNamesByPromoterEmails(
+            PromotionRecordSearch promotionRecordSearch,
+            List<String> promoterEmails) {
 
         return new PromotionRecordSearch(
-                promoters,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                promotionPactNames,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
+                promoterEmails,
+                promotionRecordSearch.symbols,
+                promotionRecordSearch.abbreviations,
+                promotionRecordSearch.industries,
+                promotionRecordSearch.direction,
+                promotionRecordSearch.openTimeRange,
+                promotionRecordSearch.openPriceRange,
+                promotionRecordSearch.closeTimeRange,
+                promotionRecordSearch.closePriceRange,
+                promotionRecordSearch.earningsYieldRange,
+                promotionRecordSearch.scoreRange,
+                promotionRecordSearch.promotionPactNames,
+                promotionRecordSearch.isArchived,
+                promotionRecordSearch.createdAtRange,
+                promotionRecordSearch.updatedAtRange,
+                promotionRecordSearch.promoterSort,
+                promotionRecordSearch.symbolSort,
+                promotionRecordSearch.industrySort,
+                promotionRecordSearch.directionSort,
+                promotionRecordSearch.openTimeSort,
+                promotionRecordSearch.closeTimeSort,
+                promotionRecordSearch.earningsYieldSort,
+                promotionRecordSearch.scoreSort,
+                promotionRecordSearch.createdAtSort,
+                promotionRecordSearch.updateAtSort);
     }
+
 }

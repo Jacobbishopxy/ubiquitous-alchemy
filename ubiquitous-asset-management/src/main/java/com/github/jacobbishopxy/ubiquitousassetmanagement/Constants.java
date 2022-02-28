@@ -6,7 +6,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement;
 
 /**
  * Constants
- * 
+ *
  * Used for Promotion business logic.
  */
 public class Constants {

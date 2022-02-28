@@ -4,12 +4,8 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models;
 
-import java.util.List;
-
-import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.PromotionRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.fields.Role;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.fields.RolePostgresEnumType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -42,8 +38,8 @@ public class Promoter {
 
   private String color;
 
-  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
   @Type(type = "author_role_enum")
   @NotEmpty
   @Schema(description = "The role of the promoter.", allowableValues = { "visitor", "editor", "admin",
@@ -52,10 +48,6 @@ public class Promoter {
 
   @Column(columnDefinition = "TEXT")
   private String description;
-
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "promoter")
-  @JsonIgnore
-  private List<PromotionRecord> promotionRecords;
 
   public Promoter() {
   }
@@ -112,14 +104,6 @@ public class Promoter {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public List<PromotionRecord> getPromotionRecords() {
-    return promotionRecords;
-  }
-
-  public void setPromotionRecords(List<PromotionRecord> promotionRecords) {
-    this.promotionRecords = promotionRecords;
   }
 
 }

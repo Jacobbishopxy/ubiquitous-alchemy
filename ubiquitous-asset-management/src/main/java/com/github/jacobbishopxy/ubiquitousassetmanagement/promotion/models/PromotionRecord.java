@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * PromotionRecord
- * 
+ *
  * A promotion record is a record from a promoter's perspective.
  */
 @Entity
@@ -44,6 +44,8 @@ public class PromotionRecord {
   private PromotionPact promotionPact;
 
   @Column(nullable = false)
+  @NotEmpty
+  @Schema(description = "The symbol of the asset.", required = true)
   private String symbol;
 
   private String abbreviation;
@@ -70,6 +72,11 @@ public class PromotionRecord {
   private Date closeTime;
 
   private Float closePrice;
+
+  @Column(nullable = false)
+  @NotEmpty
+  @Schema(description = "Trading currency.", required = true)
+  private String currency;
 
   private Float adjustFactor;
 
@@ -100,6 +107,7 @@ public class PromotionRecord {
       Float openPrice,
       Date closeTime,
       Float closePrice,
+      String currency,
       Float adjustFactor,
       Float earningsYield,
       Integer performanceScore,
@@ -115,6 +123,7 @@ public class PromotionRecord {
     this.openPrice = openPrice;
     this.closeTime = closeTime;
     this.closePrice = closePrice;
+    this.currency = currency;
     this.adjustFactor = adjustFactor;
     this.earningsYield = earningsYield;
     this.performanceScore = performanceScore;
@@ -151,6 +160,7 @@ public class PromotionRecord {
         dto.openPrice(),
         dto.closeTime(),
         dto.closePrice(),
+        dto.currency(),
         dto.adjustFactor(),
         earningsYield,
         pScore,
@@ -236,6 +246,14 @@ public class PromotionRecord {
 
   public void setClosePrice(Float closePrice) {
     this.closePrice = closePrice;
+  }
+
+  public String getCurrency() {
+    return currency;
+  }
+
+  public void setCurrency(String currency) {
+    this.currency = currency;
   }
 
   public Float getAdjustFactor() {

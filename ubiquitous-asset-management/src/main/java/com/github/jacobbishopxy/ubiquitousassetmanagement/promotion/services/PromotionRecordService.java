@@ -4,6 +4,7 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.repositories
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.repositories.PromotionStatisticRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.helper.PromotionCalculationHelper;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.specifications.PromotionRecordSpecification;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.repositories.PromoterRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +36,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class PromotionRecordService {
 
   @Autowired
+  private PromoterRepository pRepo;
+
+  @Autowired
   private PromotionRecordRepository prRepo;
 
   @Autowired
@@ -46,6 +51,14 @@ public class PromotionRecordService {
 
     if (searchDto == null) {
       return prRepo.findAll(PageRequest.of(page, size)).getContent();
+    }
+
+    // since searching promoters is based on nickname, we need to convert to
+    // promoter's email
+    if (searchDto.promoters() != null) {
+      List<String> promoterEmails = new ArrayList<>();
+      promoterEmails = pRepo.findEmailsByNicknameIn(searchDto.promoters());
+      searchDto = PromotionRecordSearch.replacePromoterNamesByPromoterEmails(searchDto, promoterEmails);
     }
 
     PromotionRecordSpecification prs = new PromotionRecordSpecification(searchDto);

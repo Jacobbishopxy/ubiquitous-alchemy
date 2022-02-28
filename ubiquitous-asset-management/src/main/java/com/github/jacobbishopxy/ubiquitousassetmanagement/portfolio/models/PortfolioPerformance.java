@@ -6,8 +6,10 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "portfolio_performance")
+// TODO:
+// temporary disable table auto-generation
+// @Entity
+// @Table(name = "portfolio_performance")
 public class PortfolioPerformance {
   @Id
   @Column(columnDefinition = "serial")

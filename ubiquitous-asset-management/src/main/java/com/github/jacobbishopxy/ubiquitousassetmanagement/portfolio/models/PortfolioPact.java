@@ -6,8 +6,8 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "portfolio_pact")
+// @Entity
+// @Table(name = "portfolio_pact")
 public class PortfolioPact {
   @Id
   @Column(columnDefinition = "serial")

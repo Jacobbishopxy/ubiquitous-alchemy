@@ -28,6 +28,7 @@ public record PromotionRecordInput(
 		Float openPrice,
 		@JsonFormat(pattern = Constants.TIME_FORMAT) Date closeTime,
 		Float closePrice,
+		String currency,
 		Float adjustFactor,
 		String promotionPactName,
 		@JsonFormat(pattern = Constants.TIME_FORMAT) Date createdAt,

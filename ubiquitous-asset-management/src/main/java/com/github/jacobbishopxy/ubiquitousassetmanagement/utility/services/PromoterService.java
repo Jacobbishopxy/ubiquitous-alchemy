@@ -29,9 +29,11 @@ public class PromoterService {
   }
 
   public Optional<String> getEmailByNickname(String nickname) {
-    return repo
-        .findByNickname(nickname)
-        .map(Promoter::getEmail);
+    return repo.findEmailByNickname(nickname);
+  }
+
+  public List<String> getEmailByNicknames(List<String> nicknames) {
+    return repo.findEmailsByNicknameIn(nicknames);
   }
 
 }
