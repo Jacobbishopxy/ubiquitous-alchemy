@@ -45,4 +45,8 @@ public record DateRange(Date start, Date end) {
   public boolean inBetween(Date date) {
     return date.after(start) && date.before(end);
   }
+
+  public boolean isBefore(Date date) {
+    return date.before(start);
+  }
 }

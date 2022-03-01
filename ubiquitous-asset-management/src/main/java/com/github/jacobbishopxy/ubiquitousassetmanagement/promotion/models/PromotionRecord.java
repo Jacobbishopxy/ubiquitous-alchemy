@@ -78,12 +78,9 @@ public class PromotionRecord {
   @Schema(description = "Trading currency.", required = true)
   private String currency;
 
-  // TODO:
-  // this field is actually called adjustFactorChangeRate
-  // which is openTimeAdjustFactor/closeTimeAdjustFactor.
-  // To do so, we need a better solution or rely on the
-  // future auto-adjustment mechanism.
-  private Float adjustFactor;
+  // this field is based on calculation of
+  // openTimeAdjustFactor/closeTimeAdjustFactor.
+  private Float adjustFactorChange;
 
   private Float earningsYield;
 
@@ -129,7 +126,7 @@ public class PromotionRecord {
     this.closeTime = closeTime;
     this.closePrice = closePrice;
     this.currency = currency;
-    this.adjustFactor = adjustFactor;
+    this.adjustFactorChange = adjustFactor;
     this.earningsYield = earningsYield;
     this.performanceScore = performanceScore;
     this.promotionPact = promotionPact;
@@ -145,7 +142,7 @@ public class PromotionRecord {
         dto.direction(),
         dto.openPrice(),
         dto.closePrice(),
-        dto.adjustFactor());
+        dto.adjustFactorChange());
 
     boolean isArchived = PromotionCalculationHelper.calculateIsArchived(
         dto.closeTime());
@@ -166,7 +163,7 @@ public class PromotionRecord {
         dto.closeTime(),
         dto.closePrice(),
         dto.currency(),
-        dto.adjustFactor(),
+        dto.adjustFactorChange(),
         earningsYield,
         pScore,
         new PromotionPact(promotionPactName),
@@ -269,12 +266,12 @@ public class PromotionRecord {
     this.currency = currency;
   }
 
-  public Float getAdjustFactor() {
-    return adjustFactor;
+  public Float getAdjustFactorChange() {
+    return adjustFactorChange;
   }
 
-  public void setAdjustFactor(Float adjustFactor) {
-    this.adjustFactor = adjustFactor;
+  public void setAdjustFactorChange(Float adjustFactorChange) {
+    this.adjustFactorChange = adjustFactorChange;
   }
 
   public Float getEarningsYield() {
@@ -286,7 +283,7 @@ public class PromotionRecord {
         direction,
         openPrice,
         closePrice,
-        adjustFactor);
+        adjustFactorChange);
   }
 
   public Integer getPerformanceScore() {

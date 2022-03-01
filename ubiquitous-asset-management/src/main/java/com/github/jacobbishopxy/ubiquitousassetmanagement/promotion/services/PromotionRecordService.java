@@ -112,10 +112,11 @@ public class PromotionRecordService {
     String promotionPactName = promotionRecord.getPromotionPact().getName();
     String promoterEmail = promotionRecord.getPromoter().getEmail();
 
-    // 0. set promotionRecord's promotionPact since it is null by default
+    // 0. set promotionRecord's id & promotionPact since it is null by default
     PromotionPact promotionPact = this.ppRepo.findByName(promotionPactName)
         .orElseThrow(() -> new IllegalArgumentException(
             String.format("PromotionPact %s does not exist", promotionPactName)));
+    promotionRecord.setId(id);
     promotionRecord.setPromotionPact(promotionPact);
 
     // 1. fetch promotion statistic, create one if not exist
@@ -149,7 +150,7 @@ public class PromotionRecordService {
           record.setOpenPrice(promotionRecord.getOpenPrice());
           record.setCloseTime(promotionRecord.getCloseTime());
           record.setClosePrice(promotionRecord.getClosePrice());
-          record.setAdjustFactor(promotionRecord.getAdjustFactor());
+          record.setAdjustFactorChange(promotionRecord.getAdjustFactorChange());
           record.setPerformanceScore(promotionRecord.getPerformanceScore());
           record.setPromotionPact(promotionRecord.getPromotionPact());
           record.setIsArchived(promotionRecord.getIsArchived());
@@ -168,10 +169,11 @@ public class PromotionRecordService {
     String promotionPactName = promotionRecord.getPromotionPact().getName();
     String promoterEmail = promotionRecord.getPromoter().getEmail();
 
-    // 0. set promotionRecord's promotionPact since it is null by default
+    // 0. set promotionRecord's id & promotionPact since it is null by default
     PromotionPact promotionPact = this.ppRepo.findByName(promotionPactName)
         .orElseThrow(() -> new IllegalArgumentException(
             String.format("PromotionPact %s does not exist", promotionPactName)));
+    promotionRecord.setId(id);
     promotionRecord.setPromotionPact(promotionPact);
 
     // 1. fetch promotion statistic, create one if not exist

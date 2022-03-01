@@ -28,8 +28,6 @@ public class PromotionCalculationHelper {
     CREATE, UPDATE, DELETE
   }
 
-  // TODO:
-  // Temporary solution for the calculation of earnings yield.
   public static Float calculateEarningsYield(
       TradeDirection direction,
       Float openPrice,
@@ -68,36 +66,42 @@ public class PromotionCalculationHelper {
       PromotionStatistic promotionStatistic,
       List<PromotionRecord> relativePromotionRecord) {
 
-    DateRange promotionPactDateRange = promotionRecord.getPromotionPact().getDateRange();
-
-    // check MAX_PROMOTION_PER_PROMOTER constraint
-    int maxPromotionPerPromoter = 0;
-    for (PromotionRecord pr : relativePromotionRecord) {
-      // if openTime is not in promotionPactDateRange, then omit it
-      if (promotionPactDateRange.inBetween(pr.getOpenTime())) {
-        maxPromotionPerPromoter++;
-      }
-    }
-    if (maxPromotionPerPromoter > PromotionConstants.MAX_PROMOTION_PER_PROMOTER) {
-      throw new RuntimeException(
-          String.format("MAX_PROMOTION_PER_PROMOTER %d constraint violated",
-              PromotionConstants.MAX_PROMOTION_PER_PROMOTER));
-    }
-
-    // total records length
-    int relativePromotionRecordSize = relativePromotionRecord.size();
-
     // set promoter
     promotionStatistic.setPromoter(promotionRecord.getPromoter());
 
     // set promotionPact
     promotionStatistic.setPromotionPact(promotionRecord.getPromotionPact());
 
+    // total records length which only include the records in the date range
+    DateRange promotionPactDateRange = promotionRecord.getPromotionPact().getDateRange();
+    int previousPromotionCount = 0;
+    int currentPromotionCount = 0;
+    for (PromotionRecord pr : relativePromotionRecord) {
+      // if openTime is before promotionPactDateRange's startTime, then count it
+      if (promotionPactDateRange.isBefore(pr.getOpenTime())) {
+        previousPromotionCount++;
+      }
+      // if openTime is in promotionPactDateRange, then count it
+      if (promotionPactDateRange.inBetween(pr.getOpenTime())) {
+        currentPromotionCount++;
+      }
+    }
+
+    // check MAX_PROMOTION_PER_PROMOTER constraint
+    if (currentPromotionCount > PromotionConstants.MAX_PROMOTION_PER_PROMOTER) {
+      throw new RuntimeException(
+          String.format("MAX_PROMOTION_PER_PROMOTER %d constraint violated",
+              PromotionConstants.MAX_PROMOTION_PER_PROMOTER));
+    }
+
+    // set previousPromotionCount
+    promotionStatistic.setPreviousPromotionCount(previousPromotionCount);
+
     // set promotionCount
-    promotionStatistic.setPromotionCount(relativePromotionRecordSize);
+    promotionStatistic.setPromotionCount(currentPromotionCount);
 
     // set baseScore
-    Float baseScore = relativePromotionRecordSize * PromotionConstants.BASE_SCORE_FACTOR;
+    Float baseScore = currentPromotionCount * PromotionConstants.BASE_SCORE_FACTOR;
     promotionStatistic.setBaseScore(baseScore);
 
     // set performanceScore
@@ -132,8 +136,9 @@ public class PromotionCalculationHelper {
 
     // set successRate
     Float successRate = 0f;
-    if (relativePromotionRecordSize != 0) {
-      successRate = (float) promotionSuccessCount / successRate;
+    int totalPromotionCount = previousPromotionCount + currentPromotionCount;
+    if (totalPromotionCount != 0) {
+      successRate = (float) promotionSuccessCount / totalPromotionCount;
     }
     promotionStatistic.setSuccessRate(successRate);
     return promotionStatistic;

@@ -42,6 +42,10 @@ public class PromotionStatistic {
   private Float totalScore;
 
   @Column(nullable = false)
+  @Schema(description = "The total number of promotion count from all the previous promotion pacts.", required = true)
+  private Integer previousPromotionCount;
+
+  @Column(nullable = false)
   @Schema(description = "The total number of promotion count of the promoter's performance during the period of time.", required = true)
   private Integer promotionCount;
 
@@ -71,6 +75,7 @@ public class PromotionStatistic {
   public PromotionStatistic(
       Promoter promoter,
       Float totalScore,
+      Integer previousPromotionCount,
       Integer promotionCount,
       Float baseScore,
       Float performanceScore,
@@ -81,6 +86,7 @@ public class PromotionStatistic {
     super();
     this.promoter = promoter;
     this.totalScore = totalScore;
+    this.previousPromotionCount = previousPromotionCount;
     this.promotionCount = promotionCount;
     this.baseScore = baseScore;
     this.performanceScore = performanceScore;
@@ -112,6 +118,14 @@ public class PromotionStatistic {
 
   public void setTotalScore(Float totalScore) {
     this.totalScore = totalScore;
+  }
+
+  public Integer getPreviousPromotionCount() {
+    return previousPromotionCount;
+  }
+
+  public void setPreviousPromotionCount(Integer previousPromotionCount) {
+    this.previousPromotionCount = previousPromotionCount;
   }
 
   public Integer getPromotionCount() {
