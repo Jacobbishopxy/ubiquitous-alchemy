@@ -78,6 +78,11 @@ public class PromotionRecord {
   @Schema(description = "Trading currency.", required = true)
   private String currency;
 
+  // TODO:
+  // this field is actually called adjustFactorChangeRate
+  // which is openTimeAdjustFactor/closeTimeAdjustFactor.
+  // To do so, we need a better solution or rely on the
+  // future auto-adjustment mechanism.
   private Float adjustFactor;
 
   private Float earningsYield;

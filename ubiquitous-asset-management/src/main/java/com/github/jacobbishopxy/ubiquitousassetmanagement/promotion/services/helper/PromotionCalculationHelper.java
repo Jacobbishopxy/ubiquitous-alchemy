@@ -28,6 +28,8 @@ public class PromotionCalculationHelper {
     CREATE, UPDATE, DELETE
   }
 
+  // TODO:
+  // Temporary solution for the calculation of earnings yield.
   public static Float calculateEarningsYield(
       TradeDirection direction,
       Float openPrice,
@@ -38,9 +40,9 @@ public class PromotionCalculationHelper {
       return null;
     }
     if (direction == TradeDirection.BUY) {
-      return (closePrice - openPrice) / openPrice * adjustFactor;
+      return closePrice / openPrice * adjustFactor - 1;
     } else {
-      return (openPrice - closePrice) / openPrice * adjustFactor;
+      return openPrice / closePrice * adjustFactor - 1;
     }
   }
 
