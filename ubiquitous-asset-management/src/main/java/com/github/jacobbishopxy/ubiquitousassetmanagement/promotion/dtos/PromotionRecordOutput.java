@@ -16,6 +16,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.field
  */
 public record PromotionRecordOutput(
 		Integer id,
+		String promotionPactName,
 		String promoter,
 		String symbol,
 		String abbreviation,
@@ -30,14 +31,23 @@ public record PromotionRecordOutput(
 		Float earningsYield,
 		Integer performanceScore,
 		Boolean isArchived,
-		String promotionPactName,
 		@JsonFormat(pattern = Constants.TIME_FORMAT) Date createdAt,
 		@JsonFormat(pattern = Constants.TIME_FORMAT) Date updatedAt) {
 
+	/**
+	 * fromPromotionRecord
+	 * 
+	 * According to GET methods, we will always get a full nested
+	 * `PromotionRecordOutput` object.
+	 * 
+	 * @param promotionRecord
+	 * @return
+	 */
 	public static PromotionRecordOutput fromPromotionRecord(
 			PromotionRecord promotionRecord) {
 		return new PromotionRecordOutput(
 				promotionRecord.getId(),
+				promotionRecord.getPromotionPact().getName(),
 				promotionRecord.getPromoter().getNickname(),
 				promotionRecord.getSymbol(),
 				promotionRecord.getAbbreviation(),
@@ -52,17 +62,30 @@ public record PromotionRecordOutput(
 				promotionRecord.getEarningsYield(),
 				promotionRecord.getPerformanceScore(),
 				promotionRecord.getIsArchived(),
-				promotionRecord.getPromotionPact().getName(),
 				promotionRecord.getCreatedAt(),
 				promotionRecord.getUpdatedAt());
 	}
 
+	/**
+	 * fromPromotionRecord
+	 * 
+	 * According to POST/PUT methods, we will only get the plain fields excluding
+	 * the nested objects; hence, we need extra parameters to construct a
+	 * `PromotionRecordOutput` object.
+	 * 
+	 * 
+	 * @param promotionRecord
+	 * @param promoterName
+	 * @param promotionPactName
+	 * @return
+	 */
 	public static PromotionRecordOutput fromPromotionRecord(
 			PromotionRecord promotionRecord,
-			String promoterName,
-			String promotionPactName) {
+			String promotionPactName,
+			String promoterName) {
 		return new PromotionRecordOutput(
 				promotionRecord.getId(),
+				promotionPactName,
 				promoterName,
 				promotionRecord.getSymbol(),
 				promotionRecord.getAbbreviation(),
@@ -77,7 +100,6 @@ public record PromotionRecordOutput(
 				promotionRecord.getEarningsYield(),
 				promotionRecord.getPerformanceScore(),
 				promotionRecord.getIsArchived(),
-				promotionPactName,
 				promotionRecord.getCreatedAt(),
 				promotionRecord.getUpdatedAt());
 	}

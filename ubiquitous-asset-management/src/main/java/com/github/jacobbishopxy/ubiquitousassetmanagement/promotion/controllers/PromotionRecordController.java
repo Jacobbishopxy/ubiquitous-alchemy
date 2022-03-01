@@ -138,11 +138,12 @@ public class PromotionRecordController {
 
   @Operation(description = "Get promotion record by id.")
   @GetMapping("/promotion_record/{id}")
-  PromotionRecord getPromotionRecord(@PathVariable Integer id) {
-    return promotionRecordService
+  PromotionRecordOutput getPromotionRecord(@PathVariable Integer id) {
+    PromotionRecord pr = promotionRecordService
         .getPromotionRecord(id)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PromotionRecord %s not found", id)));
+    return PromotionRecordOutput.fromPromotionRecord(pr);
   }
 
   @Operation(description = "Create promotion record. Noticed that this method will also effect the promotion statistic automatically.")
@@ -159,11 +160,11 @@ public class PromotionRecordController {
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.BAD_REQUEST, String.format("PromotionPact %s not found", dto.promotionPactName())));
 
-    PromotionRecord pr = PromotionRecord.fromPromotionRecordDto(dto, email, pactName);
+    PromotionRecord pr = PromotionRecord.fromPromotionRecordDto(dto, pactName, email);
 
     pr = promotionRecordService.createPromotionRecord(pr);
 
-    return PromotionRecordOutput.fromPromotionRecord(pr, dto.promoter(), pactName);
+    return PromotionRecordOutput.fromPromotionRecord(pr, pactName, dto.promoter());
   }
 
   @Operation(description = "Update promotion record. Noticed that this method will also effect the promotion statistic automatically.")
@@ -179,14 +180,14 @@ public class PromotionRecordController {
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.BAD_REQUEST, String.format("PromotionPact %s not found", dto.promotionPactName())));
 
-    PromotionRecord pr = PromotionRecord.fromPromotionRecordDto(dto, email, pactName);
+    PromotionRecord pr = PromotionRecord.fromPromotionRecordDto(dto, pactName, email);
 
     pr = promotionRecordService
         .updatePromotionRecord(id, pr)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PromotionRecord %s not found", id)));
 
-    return PromotionRecordOutput.fromPromotionRecord(pr, dto.promoter(), pactName);
+    return PromotionRecordOutput.fromPromotionRecord(pr, pactName, dto.promoter());
   }
 
   @Operation(description = "Delete promotion record. Noticed that this method will also effect the promotion statistic automatically.")

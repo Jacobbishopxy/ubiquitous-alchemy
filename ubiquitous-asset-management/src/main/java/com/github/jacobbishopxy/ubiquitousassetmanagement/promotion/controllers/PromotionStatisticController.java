@@ -6,6 +6,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.controllers
 
 import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.PromotionStatisticOutput;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.PromotionStatistic;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.PromotionStatisticService;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.services.PromoterService;
@@ -37,31 +38,37 @@ public class PromotionStatisticController {
 
   @Operation(description = "Get promotion statistics. `promotionPactName` and `promoterName` are optional, but they cannot exist at the same time.")
   @GetMapping("/promotion_statistic")
-  List<PromotionStatistic> getPromotionStatistics(
+  List<PromotionStatisticOutput> getPromotionStatistics(
       @RequestParam(required = false) String promotionPactName,
       @RequestParam(required = false) String promoterName) {
+    // initialize the search result
+    List<PromotionStatistic> ps;
+
     if (promotionPactName != null && promoterName == null) {
-      return promotionStatisticService.getPromotionStatisticByPromotionPactName(promotionPactName);
-    }
-    if (promotionPactName == null && promoterName != null) {
+      // get promotion statistics by promotion pact name
+      ps = promotionStatisticService.getPromotionStatisticByPromotionPactName(promotionPactName);
+    } else if (promotionPactName == null && promoterName != null) {
+      // get promotion statistics by promoter name
       String email = promoterService
           .getEmailByNickname(promoterName)
-          .orElseThrow(
-              () -> new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, String.format("Promoter %s not found", promoterName)));
-      return promotionStatisticService.getPromotionStatisticByPromoterEmail(email);
+          .orElseThrow(() -> new ResponseStatusException(
+              HttpStatus.NOT_FOUND, String.format("Promoter %s not found", promoterName)));
+      ps = promotionStatisticService.getPromotionStatisticByPromoterEmail(email);
+    } else {
+      // get all promotion statistics
+      ps = promotionStatisticService.getAllPromotionStatistic();
     }
-    return promotionStatisticService.getAllPromotionStatistic();
+    return ps.stream().map(s -> PromotionStatisticOutput.fromPromotionStatistic(s)).toList();
   }
 
   @Operation(description = "Get promotion statistics by id.")
   @GetMapping("/promotion_statistic/{id}")
-  PromotionStatistic getPromotionStatisticById(@PathVariable Integer id) {
-    return promotionStatisticService
+  PromotionStatisticOutput getPromotionStatisticById(@PathVariable Integer id) {
+    PromotionStatistic ps = promotionStatisticService
         .getPromotionStatistic(id)
-        .orElseThrow(
-            () -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, String.format("PromotionStatistic %d not found", id)));
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, String.format("PromotionStatistic %d not found", id)));
+    return PromotionStatisticOutput.fromPromotionStatistic(ps);
   }
 
 }

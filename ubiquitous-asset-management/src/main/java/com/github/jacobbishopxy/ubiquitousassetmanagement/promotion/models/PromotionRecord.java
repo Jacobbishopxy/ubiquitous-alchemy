@@ -32,16 +32,16 @@ public class PromotionRecord {
   private Integer id;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "promoter_email")
-  @NotEmpty
-  @Schema(description = "The promoter who is promoting the asset. Nested object.")
-  private Promoter promoter;
-
-  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "promotion_pact_name")
   @NotEmpty
   @Schema(description = "The promotion pact which the promoter is promoting. Nested object.")
   private PromotionPact promotionPact;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "promoter_email")
+  @NotEmpty
+  @Schema(description = "The promoter who is promoting the asset. Nested object.")
+  private Promoter promoter;
 
   @Column(nullable = false)
   @NotEmpty
@@ -133,8 +133,8 @@ public class PromotionRecord {
 
   public static PromotionRecord fromPromotionRecordDto(
       PromotionRecordInput dto,
-      String promoterEmail,
-      String promotionPactName) {
+      String promotionPactName,
+      String promoterEmail) {
 
     Float earningsYield = PromotionCalculationHelper.calculateEarningsYield(
         dto.direction(),
@@ -178,6 +178,14 @@ public class PromotionRecord {
 
   public Promoter getPromoter() {
     return promoter;
+  }
+
+  public PromotionPact getPromotionPact() {
+    return promotionPact;
+  }
+
+  public void setPromotionPact(PromotionPact promotionPact) {
+    this.promotionPact = promotionPact;
   }
 
   public void setPromoter(Promoter promoter) {
@@ -282,14 +290,6 @@ public class PromotionRecord {
 
   public void setPerformanceScore(Integer performanceScore) {
     this.performanceScore = performanceScore;
-  }
-
-  public PromotionPact getPromotionPact() {
-    return promotionPact;
-  }
-
-  public void setPromotionPact(PromotionPact promotionPact) {
-    this.promotionPact = promotionPact;
   }
 
   public boolean getIsArchived() {

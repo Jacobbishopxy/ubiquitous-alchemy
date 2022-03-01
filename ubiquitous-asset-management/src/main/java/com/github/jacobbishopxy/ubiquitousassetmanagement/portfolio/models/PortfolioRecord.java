@@ -12,8 +12,8 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promote
 import io.swagger.v3.oas.annotations.media.Schema;
 
 // @Entity
-// @Table(name = "personal_portfolio")
-public class PersonalPortfolio {
+// @Table(name = "portfolio_record")
+public class PortfolioRecord {
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)

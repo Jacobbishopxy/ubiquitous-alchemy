@@ -9,15 +9,12 @@ import java.util.Date;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.PortfolioAdjustmentOperation;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.PortfolioAdjustmentOperationPgEnum;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.PortfolioType;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.PortfolioTypePgEnum;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.IndustryInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 import org.hibernate.annotations.Type;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,29 +25,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * A portfolio adjustment is a portfolio adjusted record from a promoter's
  * perspective.
  */
+
 // @Entity
 // @Table(name = "portfolio_adjustment")
-@TypeDefs({
-    @TypeDef(name = "portfolio_type_enum", typeClass = PortfolioTypePgEnum.class),
-    @TypeDef(name = "adjustment_operation_enum", typeClass = PortfolioAdjustmentOperationPgEnum.class),
-})
+@TypeDef(name = "adjustment_operation_enum", typeClass = PortfolioAdjustmentOperationPgEnum.class)
 public class PortfolioAdjustment {
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(nullable = false)
-  @Enumerated(EnumType.STRING)
-  @Type(type = "portfolio_type_enum")
-  @NotEmpty
-  @Schema(description = "The type of the portfolio adjustment.", allowableValues = { "Industrial",
-      "Personal" }, required = true)
-  private PortfolioType portfolioType;
-
-  // TODO:
-  // adjustment has two types: personal and industrial. we need to distinguish
-  // them
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "industry_info_id")
   private IndustryInfo industryInfo;
@@ -95,7 +79,6 @@ public class PortfolioAdjustment {
   }
 
   public PortfolioAdjustment(
-      PortfolioType portfolioType,
       IndustryInfo industryInfo,
       Date adjustTime,
       Promoter promoter,
@@ -104,7 +87,6 @@ public class PortfolioAdjustment {
       PortfolioAdjustmentOperation operation,
       Float weight,
       String description) {
-    this.portfolioType = portfolioType;
     this.industryInfo = industryInfo;
     this.adjustTime = adjustTime;
     this.promoter = promoter;
@@ -121,14 +103,6 @@ public class PortfolioAdjustment {
 
   public void setId(Integer id) {
     this.id = id;
-  }
-
-  public PortfolioType getPortfolioType() {
-    return portfolioType;
-  }
-
-  public void setPortfolioType(PortfolioType portfolioType) {
-    this.portfolioType = portfolioType;
   }
 
   public IndustryInfo getIndustryInfo() {
