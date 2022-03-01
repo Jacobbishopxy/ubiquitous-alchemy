@@ -68,49 +68,53 @@ public class PromotionCalculationHelper {
       PromotionStatistic promotionStatistic,
       List<PromotionRecord> relativePromotionRecord) {
 
-    // System.out.println(promotionRecord.getPromo);
-
     DateRange promotionPactDateRange = promotionRecord.getPromotionPact().getDateRange();
 
-    // length of relativePromotionRecord
-    // if openTime is not in promotionPactDateRange, then omit it
-    int relativePromotionRecordSize = 0;
+    // check MAX_PROMOTION_PER_PROMOTER constraint
+    int maxPromotionPerPromoter = 0;
     for (PromotionRecord pr : relativePromotionRecord) {
+      // if openTime is not in promotionPactDateRange, then omit it
       if (promotionPactDateRange.inBetween(pr.getOpenTime())) {
-        relativePromotionRecordSize++;
+        maxPromotionPerPromoter++;
       }
     }
-    // MAX_PROMOTION_PER_PROMOTER constraint
-    if (relativePromotionRecordSize > PromotionConstants.MAX_PROMOTION_PER_PROMOTER) {
+    if (maxPromotionPerPromoter > PromotionConstants.MAX_PROMOTION_PER_PROMOTER) {
       throw new RuntimeException(
           String.format("MAX_PROMOTION_PER_PROMOTER %d constraint violated",
               PromotionConstants.MAX_PROMOTION_PER_PROMOTER));
     }
 
+    // total records length
+    int relativePromotionRecordSize = relativePromotionRecord.size();
+
     // set promoter
     promotionStatistic.setPromoter(promotionRecord.getPromoter());
+
     // set promotionPact
     promotionStatistic.setPromotionPact(promotionRecord.getPromotionPact());
+
     // set promotionCount
     promotionStatistic.setPromotionCount(relativePromotionRecordSize);
+
     // set baseScore
     Float baseScore = relativePromotionRecordSize * PromotionConstants.BASE_SCORE_FACTOR;
     promotionStatistic.setBaseScore(baseScore);
+
     // set performanceScore
     Integer performanceScore = 0;
-    if (relativePromotionRecordSize != 0) {
-      Integer pScore = relativePromotionRecord
-          .stream()
-          .filter(item -> item.getPerformanceScore() != null)
-          .mapToInt(item -> item.getPerformanceScore())
-          .sum();
-      if (pScore != null) {
-        performanceScore = pScore;
-      }
+    Integer pScore = relativePromotionRecord
+        .stream()
+        .filter(item -> item.getPerformanceScore() != null)
+        .mapToInt(item -> item.getPerformanceScore())
+        .sum();
+    if (pScore != null) {
+      performanceScore = pScore;
     }
     promotionStatistic.setPerformanceScore(performanceScore.floatValue());
+
     // set totalScore
     promotionStatistic.setTotalScore(baseScore + performanceScore);
+
     // set promotionSuccessCount & promotionFailureCount
     Integer promotionSuccessCount = 0;
     Integer promotionFailureCount = 0;
@@ -125,6 +129,7 @@ public class PromotionCalculationHelper {
     }
     promotionStatistic.setPromotionSuccessCount(promotionSuccessCount);
     promotionStatistic.setPromotionFailureCount(promotionFailureCount);
+
     // set successRate
     Float successRate = 0f;
     if (relativePromotionRecordSize != 0) {
