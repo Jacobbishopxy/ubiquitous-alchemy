@@ -84,6 +84,11 @@ public class PortfolioConstituent {
   @NotEmpty
   private Float earningsYield;
 
+  @Column(nullable = false)
+  @NotEmpty
+  @Schema(description = "The version of this portfolio record.", required = true)
+  private int version;
+
   public PortfolioConstituent() {
   }
 
@@ -100,7 +105,8 @@ public class PortfolioConstituent {
       Float currentWeight,
       Float pbpe,
       Float marketValue,
-      Float earningsYield) {
+      Float earningsYield,
+      int version) {
     this.adjustDate = adjustDate;
     this.currentDate = currentDate;
     this.symbol = symbol;
@@ -114,6 +120,7 @@ public class PortfolioConstituent {
     this.pbpe = pbpe;
     this.marketValue = marketValue;
     this.earningsYield = earningsYield;
+    this.version = version;
   }
 
   public Integer getId() {
@@ -228,4 +235,11 @@ public class PortfolioConstituent {
     this.earningsYield = earningsYield;
   }
 
+  public int getVersion() {
+    return version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
+  }
 }

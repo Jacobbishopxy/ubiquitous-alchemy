@@ -57,6 +57,7 @@ public class PortfolioPact {
 
   @Column(nullable = false)
   @NotEmpty
+  @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Schema(description = "The last updated date of the portfolio.", required = true)
   private Date lastUpdatedDate;
 

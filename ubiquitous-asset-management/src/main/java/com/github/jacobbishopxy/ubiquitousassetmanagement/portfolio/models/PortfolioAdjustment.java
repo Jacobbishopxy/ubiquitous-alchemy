@@ -9,7 +9,6 @@ import java.util.Date;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.PortfolioAdjustmentOperation;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.PortfolioAdjustmentOperationPgEnum;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.IndustryInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
 
 import javax.persistence.*;
@@ -25,19 +24,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * A portfolio adjustment is a portfolio adjusted record from a promoter's
  * perspective.
  */
-
-// @Entity
-// @Table(name = "portfolio_adjustment")
+@Entity
+@Table(name = "portfolio_adjustment")
 @TypeDef(name = "adjustment_operation_enum", typeClass = PortfolioAdjustmentOperationPgEnum.class)
 public class PortfolioAdjustment {
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
-
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "industry_info_id")
-  private IndustryInfo industryInfo;
 
   @Column(nullable = false)
   @JsonFormat(pattern = Constants.TIME_FORMAT)
@@ -69,8 +63,13 @@ public class PortfolioAdjustment {
 
   @Column(nullable = false)
   @NotEmpty
-  @Schema(description = "The amount of the adjustment.", example = "0.15", required = true)
-  private Float weight;
+  @Schema(description = "The static weight change of the adjustment.", example = "0.15", required = true)
+  private Float staticWeightChange;
+
+  @Column(nullable = false)
+  @NotEmpty
+  @Schema(description = "The dynamic weight change of the adjustment.", example = "0.15", required = true)
+  private Float dynamicWeightChange;
 
   @Column(columnDefinition = "TEXT")
   private String description;
@@ -79,7 +78,6 @@ public class PortfolioAdjustment {
   }
 
   public PortfolioAdjustment(
-      IndustryInfo industryInfo,
       Date adjustTime,
       Promoter promoter,
       String symbol,
@@ -87,13 +85,12 @@ public class PortfolioAdjustment {
       PortfolioAdjustmentOperation operation,
       Float weight,
       String description) {
-    this.industryInfo = industryInfo;
     this.adjustTime = adjustTime;
     this.promoter = promoter;
     this.symbol = symbol;
     this.abbreviation = abbreviation;
     this.operation = operation;
-    this.weight = weight;
+    this.staticWeightChange = weight;
     this.description = description;
   }
 
@@ -103,14 +100,6 @@ public class PortfolioAdjustment {
 
   public void setId(Integer id) {
     this.id = id;
-  }
-
-  public IndustryInfo getIndustryInfo() {
-    return industryInfo;
-  }
-
-  public void setIndustryInfo(IndustryInfo industryInfo) {
-    this.industryInfo = industryInfo;
   }
 
   public Date getAdjustTime() {
@@ -154,11 +143,11 @@ public class PortfolioAdjustment {
   }
 
   public Float getWeight() {
-    return weight;
+    return staticWeightChange;
   }
 
   public void setWeight(Float weight) {
-    this.weight = weight;
+    this.staticWeightChange = weight;
   }
 
   public String getDescription() {
