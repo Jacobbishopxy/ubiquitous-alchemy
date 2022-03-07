@@ -16,6 +16,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Entity
 @Table(name = "portfolio_constituent")
 public class PortfolioConstituent {
+  // =======================================================================
+  // Fields
+  // =======================================================================
+
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,6 +96,10 @@ public class PortfolioConstituent {
   @Schema(description = "The version of this portfolio record.", required = true)
   private int version;
 
+  // =======================================================================
+  // Constructors
+  // =======================================================================
+
   public PortfolioConstituent() {
   }
 
@@ -125,6 +133,10 @@ public class PortfolioConstituent {
     this.earningsYield = earningsYield;
     this.version = version;
   }
+
+  // =======================================================================
+  // Accessors
+  // =======================================================================
 
   public Integer getId() {
     return id;

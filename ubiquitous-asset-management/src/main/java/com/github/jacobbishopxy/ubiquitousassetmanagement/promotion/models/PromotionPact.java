@@ -19,13 +19,17 @@ import javax.validation.constraints.NotEmpty;
 
 /**
  * PromotionPact
- * 
+ *
  * A promotion pact is a contract defining within a period of time, and with
  * a certain promoters' promotion records and promotion statistics.
  */
 @Entity
 @Table(name = "promotion_pact")
 public class PromotionPact {
+  // =======================================================================
+  // Fields
+  // =======================================================================
+
   @Id
   private String name;
 
@@ -53,6 +57,10 @@ public class PromotionPact {
   @JsonIgnore
   private List<PromotionStatistic> promotionStatistics;
 
+  // =======================================================================
+  // Constructors
+  // =======================================================================
+
   public PromotionPact() {
   }
 
@@ -60,6 +68,10 @@ public class PromotionPact {
     super();
     this.name = name;
   }
+
+  // =======================================================================
+  // Accessors
+  // =======================================================================
 
   public void validate() {
     if (startDate.after(endDate)) {

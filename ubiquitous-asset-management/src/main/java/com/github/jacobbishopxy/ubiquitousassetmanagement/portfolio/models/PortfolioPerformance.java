@@ -16,6 +16,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Entity
 @Table(name = "portfolio_performance")
 public class PortfolioPerformance {
+  // =======================================================================
+  // Fields
+  // =======================================================================
+
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,6 +73,10 @@ public class PortfolioPerformance {
   @Schema(description = "The version of this portfolio record.", required = true)
   private int version;
 
+  // =======================================================================
+  // Constructors
+  // =======================================================================
+
   public PortfolioPerformance() {
   }
 
@@ -93,6 +101,10 @@ public class PortfolioPerformance {
     this.dynamicDifference = dynamicDifference;
     this.version = version;
   }
+
+  // =======================================================================
+  // Accessors
+  // =======================================================================
 
   public Integer getId() {
     return id;

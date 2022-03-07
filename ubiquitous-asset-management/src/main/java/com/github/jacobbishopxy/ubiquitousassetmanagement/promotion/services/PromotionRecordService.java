@@ -75,6 +75,13 @@ public class PromotionRecordService {
 
   @Transactional(rollbackFor = Exception.class)
   public PromotionRecord createPromotionRecord(PromotionRecord promotionRecord) {
+
+    // make sure `closeTimeAdjustFactor` is the same as `openTimeAdjustFactor` when
+    // creating a new record
+    if (promotionRecord.getCloseTimeAdjustFactor() == null) {
+      promotionRecord.setCloseTimeAdjustFactor(promotionRecord.getOpenTimeAdjustFactor());
+    }
+
     String promotionPactName = promotionRecord.getPromotionPact().getName();
     String promoterEmail = promotionRecord.getPromoter().getEmail();
 

@@ -28,6 +28,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Table(name = "portfolio_adjustment")
 @TypeDef(name = "adjustment_operation_enum", typeClass = PortfolioAdjustmentOperationPgEnum.class)
 public class PortfolioAdjustment {
+  // =======================================================================
+  // Fields
+  // =======================================================================
+
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,6 +85,10 @@ public class PortfolioAdjustment {
   @Column(columnDefinition = "TEXT")
   private String description;
 
+  // =======================================================================
+  // Constructors
+  // =======================================================================
+
   public PortfolioAdjustment() {
   }
 
@@ -100,6 +108,10 @@ public class PortfolioAdjustment {
     this.staticWeightChange = weight;
     this.description = description;
   }
+
+  // =======================================================================
+  // Accessors
+  // =======================================================================
 
   public Integer getId() {
     return id;

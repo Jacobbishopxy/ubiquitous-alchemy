@@ -26,6 +26,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Entity
 @Table(name = "promotion_record")
 public class PromotionRecord {
+  // =======================================================================
+  // Fields
+  // =======================================================================
+
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,10 +84,6 @@ public class PromotionRecord {
   @Schema(description = "Trading currency.", required = true)
   private String currency;
 
-  // this field is based on calculation of
-  // openTimeAdjustFactor/closeTimeAdjustFactor.
-  // private Float adjustFactorChange;
-
   private Float openTimeAdjustFactor;
 
   private Float closeTimeAdjustFactor;
@@ -101,6 +101,10 @@ public class PromotionRecord {
   @Temporal(TemporalType.TIMESTAMP)
   @JsonFormat(pattern = Constants.TIME_FORMAT)
   private Date updatedAt;
+
+  // =======================================================================
+  // Constructors
+  // =======================================================================
 
   public PromotionRecord() {
   }
@@ -140,6 +144,10 @@ public class PromotionRecord {
     this.promotionPact = promotionPact;
     this.isArchived = isArchived;
   }
+
+  // =======================================================================
+  // Accessors
+  // =======================================================================
 
   public static PromotionRecord fromPromotionRecordDto(
       PromotionRecordInput dto,

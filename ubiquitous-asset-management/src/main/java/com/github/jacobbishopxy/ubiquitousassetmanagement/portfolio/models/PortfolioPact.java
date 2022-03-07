@@ -20,6 +20,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Table(name = "portfolio_pact", uniqueConstraints = {
     @UniqueConstraint(columnNames = { "promoter_email", "startDate" }) })
 public class PortfolioPact {
+  // =======================================================================
+  // Fields
+  // =======================================================================
+
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,6 +67,10 @@ public class PortfolioPact {
   @Schema(description = "The last updated date of the portfolio.", required = true)
   private Date lastUpdatedDate;
 
+  // =======================================================================
+  // Constructors
+  // =======================================================================
+
   public PortfolioPact() {
   }
 
@@ -85,6 +93,10 @@ public class PortfolioPact {
     this.isActive = isActive;
     this.lastUpdatedDate = lastUpdatedDate;
   }
+
+  // =======================================================================
+  // Accessors
+  // =======================================================================
 
   public Integer getId() {
     return id;

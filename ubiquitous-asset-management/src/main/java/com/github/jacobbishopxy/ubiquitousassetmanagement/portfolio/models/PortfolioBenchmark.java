@@ -16,6 +16,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Entity
 @Table(name = "portfolio_benchmark")
 public class PortfolioBenchmark {
+  // =======================================================================
+  // Fields
+  // =======================================================================
+
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,6 +63,10 @@ public class PortfolioBenchmark {
   @Schema(description = "The weight of this portfolio record.", required = true)
   private Float currentWeight;
 
+  // =======================================================================
+  // Constructors
+  // =======================================================================
+
   public PortfolioBenchmark() {
   }
 
@@ -79,6 +87,10 @@ public class PortfolioBenchmark {
     this.adjustDateWeight = adjustDateWeight;
     this.currentWeight = currentWeight;
   }
+
+  // =======================================================================
+  // Accessors
+  // =======================================================================
 
   public Integer getId() {
     return id;

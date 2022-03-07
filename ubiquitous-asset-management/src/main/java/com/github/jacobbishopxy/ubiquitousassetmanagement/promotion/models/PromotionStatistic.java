@@ -20,6 +20,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Entity
 @Table(name = "promotion_statistic")
 public class PromotionStatistic {
+  // =======================================================================
+  // Fields
+  // =======================================================================
+
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,6 +73,10 @@ public class PromotionStatistic {
   @Schema(description = "The successful promotion rate.", required = true)
   private Float successRate;
 
+  // =======================================================================
+  // Constructors
+  // =======================================================================
+
   public PromotionStatistic() {
   }
 
@@ -95,6 +103,10 @@ public class PromotionStatistic {
     this.successRate = successRate;
     this.promotionPact = promotionPact;
   }
+
+  // =======================================================================
+  // Accessors
+  // =======================================================================
 
   public Integer getId() {
     return id;
