@@ -27,7 +27,8 @@ public record PromotionRecordOutput(
 		@JsonFormat(pattern = Constants.TIME_FORMAT) Date closeTime,
 		Float closePrice,
 		String currency,
-		Float adjustFactorChange,
+		Float openTimeAdjustFactor,
+		Float closeTimeAdjustFactor,
 		Float earningsYield,
 		Integer performanceScore,
 		Boolean isArchived,
@@ -36,10 +37,10 @@ public record PromotionRecordOutput(
 
 	/**
 	 * fromPromotionRecord
-	 * 
+	 *
 	 * According to GET methods, we will always get a full nested
 	 * `PromotionRecordOutput` object.
-	 * 
+	 *
 	 * @param promotionRecord
 	 * @return
 	 */
@@ -58,7 +59,8 @@ public record PromotionRecordOutput(
 				promotionRecord.getCloseTime(),
 				promotionRecord.getClosePrice(),
 				promotionRecord.getCurrency(),
-				promotionRecord.getAdjustFactorChange(),
+				promotionRecord.getOpenTimeAdjustFactor(),
+				promotionRecord.getCloseTimeAdjustFactor(),
 				promotionRecord.getEarningsYield(),
 				promotionRecord.getPerformanceScore(),
 				promotionRecord.getIsArchived(),
@@ -68,12 +70,12 @@ public record PromotionRecordOutput(
 
 	/**
 	 * fromPromotionRecord
-	 * 
+	 *
 	 * According to POST/PUT methods, we will only get the plain fields excluding
 	 * the nested objects; hence, we need extra parameters to construct a
 	 * `PromotionRecordOutput` object.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param promotionRecord
 	 * @param promoterName
 	 * @param promotionPactName
@@ -96,7 +98,8 @@ public record PromotionRecordOutput(
 				promotionRecord.getCloseTime(),
 				promotionRecord.getClosePrice(),
 				promotionRecord.getCurrency(),
-				promotionRecord.getAdjustFactorChange(),
+				promotionRecord.getOpenTimeAdjustFactor(),
+				promotionRecord.getCloseTimeAdjustFactor(),
 				promotionRecord.getEarningsYield(),
 				promotionRecord.getPerformanceScore(),
 				promotionRecord.getIsArchived(),

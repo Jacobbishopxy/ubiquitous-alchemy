@@ -80,7 +80,11 @@ public class PromotionRecord {
 
   // this field is based on calculation of
   // openTimeAdjustFactor/closeTimeAdjustFactor.
-  private Float adjustFactorChange;
+  // private Float adjustFactorChange;
+
+  private Float openTimeAdjustFactor;
+
+  private Float closeTimeAdjustFactor;
 
   private Float earningsYield;
 
@@ -110,7 +114,8 @@ public class PromotionRecord {
       Date closeTime,
       Float closePrice,
       String currency,
-      Float adjustFactor,
+      Float startingAdjustFactor,
+      Float currentAdjustFactor,
       Float earningsYield,
       Integer performanceScore,
       PromotionPact promotionPact,
@@ -126,7 +131,8 @@ public class PromotionRecord {
     this.closeTime = closeTime;
     this.closePrice = closePrice;
     this.currency = currency;
-    this.adjustFactorChange = adjustFactor;
+    this.openTimeAdjustFactor = startingAdjustFactor;
+    this.closeTimeAdjustFactor = currentAdjustFactor;
     this.earningsYield = earningsYield;
     this.performanceScore = performanceScore;
     this.promotionPact = promotionPact;
@@ -142,7 +148,8 @@ public class PromotionRecord {
         dto.direction(),
         dto.openPrice(),
         dto.closePrice(),
-        dto.adjustFactorChange());
+        dto.openTimeAdjustFactor(),
+        dto.closeTimeAdjustFactor());
 
     boolean isArchived = PromotionCalculationHelper.calculateIsArchived(
         dto.closeTime());
@@ -163,7 +170,8 @@ public class PromotionRecord {
         dto.closeTime(),
         dto.closePrice(),
         dto.currency(),
-        dto.adjustFactorChange(),
+        dto.openTimeAdjustFactor(),
+        dto.closeTimeAdjustFactor(),
         earningsYield,
         pScore,
         new PromotionPact(promotionPactName),
@@ -266,12 +274,20 @@ public class PromotionRecord {
     this.currency = currency;
   }
 
-  public Float getAdjustFactorChange() {
-    return adjustFactorChange;
+  public Float getOpenTimeAdjustFactor() {
+    return openTimeAdjustFactor;
   }
 
-  public void setAdjustFactorChange(Float adjustFactorChange) {
-    this.adjustFactorChange = adjustFactorChange;
+  public void setOpenTimeAdjustFactor(Float openTimeAdjustFactor) {
+    this.openTimeAdjustFactor = openTimeAdjustFactor;
+  }
+
+  public Float getCloseTimeAdjustFactor() {
+    return closeTimeAdjustFactor;
+  }
+
+  public void setCloseTimeAdjustFactor(Float closeTimeAdjustFactor) {
+    this.closeTimeAdjustFactor = closeTimeAdjustFactor;
   }
 
   public Float getEarningsYield() {
@@ -283,7 +299,8 @@ public class PromotionRecord {
         direction,
         openPrice,
         closePrice,
-        adjustFactorChange);
+        openTimeAdjustFactor,
+        closeTimeAdjustFactor);
   }
 
   public Integer getPerformanceScore() {

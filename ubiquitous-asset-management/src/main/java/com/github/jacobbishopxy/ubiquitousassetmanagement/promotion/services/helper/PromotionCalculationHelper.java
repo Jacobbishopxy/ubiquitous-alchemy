@@ -32,15 +32,23 @@ public class PromotionCalculationHelper {
       TradeDirection direction,
       Float openPrice,
       Float closePrice,
-      Float adjustFactor) {
+      Float openTimeAdjustFactor,
+      Float closeTimeAdjustFactor) {
+
     // make sure none of the parameters are null
-    if (openPrice == null || closePrice == null || adjustFactor == null) {
+    if (openPrice == null ||
+        closePrice == null ||
+        openTimeAdjustFactor == null ||
+        closeTimeAdjustFactor == null) {
       return null;
     }
+
+    Float adjustFactorChange = openTimeAdjustFactor / closeTimeAdjustFactor;
+
     if (direction == TradeDirection.BUY) {
-      return closePrice / openPrice * adjustFactor - 1;
+      return closePrice / openPrice * adjustFactorChange - 1;
     } else {
-      return openPrice / closePrice * adjustFactor - 1;
+      return openPrice / closePrice * adjustFactorChange - 1;
     }
   }
 
