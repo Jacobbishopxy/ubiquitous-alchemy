@@ -21,16 +21,18 @@ public class PortfolioPerformance {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(nullable = false)
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "portfolio_pact_id")
   @NotEmpty
   @Schema(description = "This portfolio record belongs to a specific portfolio pact")
   private PortfolioPact portfolioPact;
 
+  @Temporal(TemporalType.DATE)
+  @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Column(nullable = false)
   @NotEmpty
-  @JsonFormat(pattern = Constants.TIME_FORMAT)
   @Schema(description = "Current date.", required = true)
-  private Date currentDate;
+  private Date presentDate;
 
   @Column(nullable = false)
   @NotEmpty
@@ -72,7 +74,7 @@ public class PortfolioPerformance {
 
   public PortfolioPerformance(
       PortfolioPact portfolioPact,
-      Date currentDate,
+      Date presentDate,
       Float portfolioStaticEarningsYield,
       Float portfolioDynamicEarningsYield,
       Float benchmarkStaticEarningsYield,
@@ -82,7 +84,7 @@ public class PortfolioPerformance {
       int version) {
     super();
     this.portfolioPact = portfolioPact;
-    this.currentDate = currentDate;
+    this.presentDate = presentDate;
     this.portfolioStaticEarningsYield = portfolioStaticEarningsYield;
     this.portfolioDynamicEarningsYield = portfolioDynamicEarningsYield;
     this.benchmarkStaticEarningsYield = benchmarkStaticEarningsYield;
@@ -108,12 +110,12 @@ public class PortfolioPerformance {
     this.portfolioPact = portfolioPact;
   }
 
-  public Date getCurrentDate() {
-    return currentDate;
+  public Date getPresentDate() {
+    return presentDate;
   }
 
-  public void setCurrentDate(Date currentDate) {
-    this.currentDate = currentDate;
+  public void setPresentDate(Date presentDate) {
+    this.presentDate = presentDate;
   }
 
   public Float getPortfolioStaticEarningsYield() {

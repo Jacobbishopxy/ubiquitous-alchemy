@@ -57,8 +57,9 @@ public class PromotionRecord {
   @Schema(description = "The direction of the trade.", allowableValues = { "BUY", "SELL" }, required = true)
   private TradeDirection direction;
 
-  @Column(nullable = false)
+  @Temporal(TemporalType.TIMESTAMP)
   @JsonFormat(pattern = Constants.TIME_FORMAT)
+  @Column(nullable = false)
   @NotEmpty
   @Schema(description = "The time when the promotion record is created.", example = "2020-02-22 09:45:00", required = true)
   private Date openTime;
@@ -67,6 +68,7 @@ public class PromotionRecord {
   @NotEmpty
   private Float openPrice;
 
+  @Temporal(TemporalType.TIMESTAMP)
   @JsonFormat(pattern = Constants.TIME_FORMAT)
   @Schema(description = "The time when the promotion record is closed.", example = "2020-02-23 10:05:00")
   private Date closeTime;

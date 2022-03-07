@@ -21,22 +21,25 @@ public class PortfolioBenchmark {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(nullable = false)
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "portfolio_pact_id")
   @NotEmpty
   @Schema(description = "This portfolio record belongs to a specific portfolio pact")
   private PortfolioPact portfolioPact;
 
+  @Temporal(TemporalType.DATE)
+  @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Column(nullable = false)
   @NotEmpty
-  @JsonFormat(pattern = Constants.TIME_FORMAT)
   @Schema(description = "The date of adjustment.", required = true)
   private Date adjustDate;
 
+  @Temporal(TemporalType.DATE)
+  @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Column(nullable = false)
   @NotEmpty
-  @JsonFormat(pattern = Constants.TIME_FORMAT)
   @Schema(description = "Current date.", required = true)
-  private Date currentDate;
+  private Date presentDate;
 
   @Column(nullable = false)
   @NotEmpty
@@ -62,7 +65,7 @@ public class PortfolioBenchmark {
   public PortfolioBenchmark(
       PortfolioPact portfolioPact,
       Date adjustDate,
-      Date currentDate,
+      Date presentDate,
       String benchmarkName,
       Float percentageChange,
       Float adjustDateWeight,
@@ -70,7 +73,7 @@ public class PortfolioBenchmark {
     super();
     this.portfolioPact = portfolioPact;
     this.adjustDate = adjustDate;
-    this.currentDate = currentDate;
+    this.presentDate = presentDate;
     this.benchmarkName = benchmarkName;
     this.percentageChange = percentageChange;
     this.adjustDateWeight = adjustDateWeight;
@@ -101,12 +104,12 @@ public class PortfolioBenchmark {
     this.adjustDate = adjustDate;
   }
 
-  public Date getCurrentDate() {
-    return currentDate;
+  public Date getPresentDate() {
+    return presentDate;
   }
 
-  public void setCurrentDate(Date currentDate) {
-    this.currentDate = currentDate;
+  public void setPresentDate(Date presentDate) {
+    this.presentDate = presentDate;
   }
 
   public String getBenchmarkName() {

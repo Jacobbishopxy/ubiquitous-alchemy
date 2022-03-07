@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "portfolio_pact", uniqueConstraints = {
-    @UniqueConstraint(columnNames = { "promoterEmail", "startDate" }) })
+    @UniqueConstraint(columnNames = { "promoter_email", "startDate" }) })
 public class PortfolioPact {
   @Id
   @Column(columnDefinition = "serial")
@@ -29,11 +29,13 @@ public class PortfolioPact {
   @Schema(description = "The name alias of the portfolio pact.", required = true)
   private String alias;
 
-  @Column(nullable = false)
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "promoter_email")
   @Schema(description = "The promoter who is managing the portfolio. Nested object.", required = true)
   private Promoter promoter;
 
-  @Column(nullable = false)
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "industry_info_id")
   @Schema(description = "The industry of the portfolio.", required = true)
   private IndustryInfo industryInfo;
 

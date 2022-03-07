@@ -33,8 +33,15 @@ public class PortfolioAdjustment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(nullable = false)
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "portfolio_pact_id")
+  @NotEmpty
+  @Schema(description = "This portfolio record belongs to a specific portfolio pact")
+  private PortfolioPact portfolioPact;
+
+  @Temporal(TemporalType.TIMESTAMP)
   @JsonFormat(pattern = Constants.TIME_FORMAT)
+  @Column(nullable = false)
   @NotEmpty
   @Schema(description = "The date of the adjustment.", example = "2022-02-22 02:22:22", required = true)
   private Date adjustTime;

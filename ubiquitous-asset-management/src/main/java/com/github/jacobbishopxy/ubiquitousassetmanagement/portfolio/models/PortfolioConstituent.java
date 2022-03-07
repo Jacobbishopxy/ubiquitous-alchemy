@@ -21,22 +21,25 @@ public class PortfolioConstituent {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(nullable = false)
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "portfolio_pact_id")
   @NotEmpty
   @Schema(description = "This portfolio record belongs to a specific portfolio pact")
   private PortfolioPact portfolioPact;
 
+  @Temporal(TemporalType.DATE)
+  @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Column(nullable = false)
   @NotEmpty
-  @JsonFormat(pattern = Constants.TIME_FORMAT)
   @Schema(description = "The date of adjustment.", required = true)
   private Date adjustDate;
 
+  @Temporal(TemporalType.DATE)
+  @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Column(nullable = false)
   @NotEmpty
-  @JsonFormat(pattern = Constants.TIME_FORMAT)
   @Schema(description = "Current date.", required = true)
-  private Date currentDate;
+  private Date presentDate;
 
   @Column(nullable = false)
   @NotEmpty
@@ -94,7 +97,7 @@ public class PortfolioConstituent {
 
   public PortfolioConstituent(
       Date adjustDate,
-      Date currentDate,
+      Date presentDate,
       String symbol,
       String abbreviation,
       Float adjustDatePrice,
@@ -108,7 +111,7 @@ public class PortfolioConstituent {
       Float earningsYield,
       int version) {
     this.adjustDate = adjustDate;
-    this.currentDate = currentDate;
+    this.presentDate = presentDate;
     this.symbol = symbol;
     this.abbreviation = abbreviation;
     this.adjustDatePrice = adjustDatePrice;
@@ -139,12 +142,12 @@ public class PortfolioConstituent {
     this.adjustDate = adjustDate;
   }
 
-  public Date getCurrentDate() {
-    return currentDate;
+  public Date getPresentDate() {
+    return presentDate;
   }
 
-  public void setCurrentDate(Date currentDate) {
-    this.currentDate = currentDate;
+  public void setPresentDate(Date presentDate) {
+    this.presentDate = presentDate;
   }
 
   public String getSymbol() {
