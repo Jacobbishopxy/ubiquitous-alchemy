@@ -43,14 +43,14 @@ public class PortfolioPact {
   @Schema(description = "The industry of the portfolio.", required = true)
   private IndustryInfo industryInfo;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Temporal(TemporalType.DATE)
   @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Column(nullable = false)
   @NotEmpty
   @Schema(example = "2020-01-01", required = true)
   private Date startDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Temporal(TemporalType.DATE)
   @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Schema(example = "2020-12-31")
   private Date endDate;
@@ -61,9 +61,10 @@ public class PortfolioPact {
   @Schema(description = "Is the portfolio pact active?")
   private Boolean isActive;
 
+  @Temporal(TemporalType.DATE)
+  @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Column(nullable = false)
   @NotEmpty
-  @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Schema(description = "The last updated date of the portfolio.", required = true)
   private Date lastUpdatedDate;
 

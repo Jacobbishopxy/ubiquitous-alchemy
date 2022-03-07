@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * PromotionPactService
- * 
+ *
  * PromotionPactService is used to manage promotion pacts.
  */
 @Service
