@@ -17,8 +17,10 @@ services:
         $API_ADDRESS,
         -g,
         $GATEWAY_ADDRESS,
+        -m,
+        $ASSET_MANAGEMENT_ADDRESS,
         -p,
-        ../frontend,
+        ../frontend
       ]
     # tty: true
 
