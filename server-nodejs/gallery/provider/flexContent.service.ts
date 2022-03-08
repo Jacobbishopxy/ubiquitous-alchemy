@@ -53,7 +53,7 @@ export class FlexContentService {
     const exists = await this.repo.findOne(objectId)
     if (!exists) throw new NotFoundException("FlexContent not found")
     // update by id
-    await this.repo.update(content.id!, content)
+    await this.repo.update(objectId, content)
     const update = await this.repo.findOne(objectId)
     return update!
   }
