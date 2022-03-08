@@ -130,7 +130,20 @@ export class ContentService {
    */
   async saveContentToMongoOrPg(name: string, type: string, content: Content) {
     try {
-      const ct = await this.mongoService.saveContentToMongoOrPgByType(type, content)
+      let ct = content
+
+      // check if mongo service is required
+      if (shouldCheckPgContent(type)) {
+        if (content.id === undefined) {
+          ct = await this.mongoService.createContentToMongo(type, content)
+        } else {
+          // get content from postgres
+          const pgContent = await this.getContentById(content.id)
+          const fcId = pgContent.data.id
+          ct = await this.mongoService.updateContentToMongo(type, fcId, content)
+        }
+      }
+
       return this.saveContentInCategory(name, ct)
     }
     catch (err: any) {
@@ -161,5 +174,21 @@ export class ContentService {
     }
     const newContent = this.repo.create(ctn)
     return this.repo.save(newContent)
+  }
+}
+
+
+function shouldCheckPgContent(type: string) {
+  switch (type) {
+    case common.ElementType.Text:
+      return true
+    case common.ElementType.Image:
+      return true
+    case common.ElementType.Excel:
+      return true
+    case common.ElementType.XlsxTable:
+      return true
+    default:
+      return false
   }
 }

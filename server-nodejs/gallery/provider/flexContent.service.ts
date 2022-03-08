@@ -27,12 +27,12 @@ export class FlexContentService {
     return this.repo.find()
   }
 
-  async findOne(collection: string, id: string): Promise<FlexContent> {
+  async findOne(collection: string, objectId: string): Promise<FlexContent> {
     this.switchCollection(collection)
     // validate id
-    if (!ObjectId.isValid(id)) throw new BadRequestException("Invalid id")
+    if (!ObjectId.isValid(objectId)) throw new BadRequestException(`Invalid id: ${objectId}`)
     // find one
-    const fc = await this.repo.findOne(id)
+    const fc = await this.repo.findOne(objectId)
     if (!fc) throw new NotFoundException("FlexContent not found")
     return fc
   }
@@ -45,23 +45,23 @@ export class FlexContentService {
     return this.repo.save(create)
   }
 
-  async update(collection: string, id: string, content: FlexContent): Promise<FlexContent> {
+  async update(collection: string, objectId: string, content: FlexContent): Promise<FlexContent> {
     this.switchCollection(collection)
     // validate id
-    if (!ObjectId.isValid(id)) throw new BadRequestException("Invalid id")
+    if (!ObjectId.isValid(objectId)) throw new BadRequestException(`Invalid id: ${objectId}`)
     // check existence
-    const exists = await this.repo.findOne(id)
+    const exists = await this.repo.findOne(objectId)
     if (!exists) throw new NotFoundException("FlexContent not found")
     // update by id
     await this.repo.update(content.id!, content)
-    const update = await this.repo.findOne(id)
+    const update = await this.repo.findOne(objectId)
     return update!
   }
 
-  async delete(collection: string, id: string): Promise<DeleteResult> {
+  async delete(collection: string, objectId: string): Promise<DeleteResult> {
     this.switchCollection(collection)
     // turn string into ObjectID
-    if (!ObjectId.isValid(id)) throw new BadRequestException("Invalid id")
-    return await this.repo.delete(id)
+    if (!ObjectId.isValid(objectId)) throw new BadRequestException(`Invalid id: ${objectId}`)
+    return await this.repo.delete(objectId)
   }
 }
