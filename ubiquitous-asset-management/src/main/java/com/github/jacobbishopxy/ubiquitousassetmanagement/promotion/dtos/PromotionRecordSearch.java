@@ -63,7 +63,7 @@ public record PromotionRecordSearch(
         SortDirection openTimeSort,
         SortDirection closeTimeSort,
         SortDirection earningsYieldSort,
-        SortDirection scoreSort,
+        SortDirection performanceScoreSort,
         SortDirection createdAtSort,
         SortDirection updateAtSort) {
 
@@ -89,7 +89,7 @@ public record PromotionRecordSearch(
                 && openTimeSort == null
                 && closeTimeSort == null
                 && earningsYieldSort == null
-                && scoreSort == null
+                && performanceScoreSort == null
                 && createdAtSort == null
                 && updateAtSort == null;
     }
@@ -118,8 +118,8 @@ public record PromotionRecordSearch(
         if (earningsYieldSort != null) {
             orders.add(earningsYieldSort.getOrder("earningsYield"));
         }
-        if (scoreSort != null) {
-            orders.add(scoreSort.getOrder("score"));
+        if (performanceScoreSort != null) {
+            orders.add(performanceScoreSort.getOrder("performanceScoreSort"));
         }
         if (createdAtSort != null) {
             orders.add(createdAtSort.getOrder("createdAt"));
@@ -158,7 +158,7 @@ public record PromotionRecordSearch(
                 promotionRecordSearch.openTimeSort,
                 promotionRecordSearch.closeTimeSort,
                 promotionRecordSearch.earningsYieldSort,
-                promotionRecordSearch.scoreSort,
+                promotionRecordSearch.performanceScoreSort,
                 promotionRecordSearch.createdAtSort,
                 promotionRecordSearch.updateAtSort);
     }

@@ -80,6 +80,9 @@ public class PromotionRecordController {
       @RequestParam(value = "updatedAtSort", required = false) String updatedAtSort)
       throws ParseException {
 
+    // TODO:
+    // replace all nullable requestParam by `PromotionRecordSearch`
+
     DateRange otrDto = DateRange.fromString(openTimeRange);
     IntegerRange oprDto = IntegerRange.fromString(openPriceRange);
     DateRange ctrDto = DateRange.fromString(closeTimeRange);

@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * PromotionStatistic
- * 
+ *
  * A promotion statistic is a summation of each promoter's performance during a
  * period of time.
  */

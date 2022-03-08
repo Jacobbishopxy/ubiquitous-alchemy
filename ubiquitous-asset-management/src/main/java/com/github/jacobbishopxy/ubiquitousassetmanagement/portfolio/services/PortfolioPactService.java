@@ -19,7 +19,7 @@ public class PortfolioPactService {
   @Autowired
   private PortfolioPactRepository repo;
 
-  List<PortfolioPact> getAllPortfolioPacts(Boolean isActive) {
+  public List<PortfolioPact> getAllPortfolioPacts(Boolean isActive) {
     if (isActive == null) {
       return repo.findAll();
     } else {
