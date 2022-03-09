@@ -7,10 +7,9 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.PortfolioPact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.PortfolioPactRepository;
-// import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.repositories.PromoterRepository;
-// import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.services.IndustryInfoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,12 +19,6 @@ public class PortfolioPactService {
 
   @Autowired
   private PortfolioPactRepository ppRepo;
-
-  // @Autowired
-  // private PromoterRepository pRepo;
-
-  // @Autowired
-  // private IndustryInfoService iiService;
 
   public List<PortfolioPact> getAllPortfolioPacts(Boolean isActive) {
     if (isActive == null) {
@@ -46,8 +39,9 @@ public class PortfolioPactService {
   public PortfolioPact createPortfolioPact(PortfolioPact portfolioPact) {
     // if alias is not set, use promoter_nickname and start_date as alias
     if (portfolioPact.getAlias() == null) {
-      // String nickname = pRepo.fin
-      String alias = portfolioPact.getPromoter().getNickname() + "-" + portfolioPact.getStartDate();
+      String alias = portfolioPact.getIndustryInfo().getName() + "-" +
+          portfolioPact.getPromoter().getNickname() + "-" +
+          Constants.dateToString(portfolioPact.getStartDate());
       portfolioPact.setAlias(alias);
     }
     return ppRepo.save(portfolioPact);

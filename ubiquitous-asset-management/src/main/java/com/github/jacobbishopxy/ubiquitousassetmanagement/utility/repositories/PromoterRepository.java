@@ -20,4 +20,6 @@ public interface PromoterRepository extends JpaRepository<Promoter, String> {
   @Query("select p.email from Promoter p where p.nickname in (:nicknames)")
   public List<String> findEmailsByNicknameIn(List<String> nicknames);
 
+  public Optional<Promoter> findByNickname(String nickname);
+
 }

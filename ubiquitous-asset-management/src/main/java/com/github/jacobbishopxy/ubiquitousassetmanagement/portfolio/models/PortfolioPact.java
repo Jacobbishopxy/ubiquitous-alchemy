@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioPactInput;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.IndustryInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
 
@@ -98,6 +99,26 @@ public class PortfolioPact {
   // =======================================================================
   // Accessors
   // =======================================================================
+
+  public static PortfolioPact fromPortfolioPactDto(
+      PortfolioPactInput portfolioPactInput,
+      String promoterEmail,
+      int industryInfoId) {
+
+    Promoter promoter = new Promoter(promoterEmail);
+    IndustryInfo industryInfo = new IndustryInfo(industryInfoId);
+    boolean isActive = portfolioPactInput.endDate() == null ? false : true;
+
+    return new PortfolioPact(
+        portfolioPactInput.alias(),
+        promoter,
+        industryInfo,
+        portfolioPactInput.startDate(),
+        portfolioPactInput.endDate(),
+        portfolioPactInput.description(),
+        isActive,
+        new Date());
+  }
 
   public Integer getId() {
     return id;

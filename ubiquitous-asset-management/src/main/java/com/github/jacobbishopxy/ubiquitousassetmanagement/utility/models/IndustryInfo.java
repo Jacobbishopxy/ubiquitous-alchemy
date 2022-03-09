@@ -24,6 +24,11 @@ public class IndustryInfo {
   public IndustryInfo() {
   }
 
+  public IndustryInfo(int id) {
+    super();
+    this.id = id;
+  }
+
   public IndustryInfo(String name) {
     super();
     this.name = name;

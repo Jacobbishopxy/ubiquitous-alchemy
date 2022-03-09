@@ -25,6 +25,10 @@ import javax.validation.constraints.NotEmpty;
 @Table(name = "author")
 @TypeDef(name = "author_role_enum", typeClass = RolePostgresEnumType.class)
 public class Promoter {
+  // =======================================================================
+  // Fields
+  // =======================================================================
+
   @Id
   @Column(nullable = false)
   @Email
@@ -49,6 +53,10 @@ public class Promoter {
   @Column(columnDefinition = "TEXT")
   private String description;
 
+  // =======================================================================
+  // Constructors
+  // =======================================================================
+
   public Promoter() {
   }
 
@@ -65,6 +73,10 @@ public class Promoter {
     this.role = role;
     this.description = description;
   }
+
+  // =======================================================================
+  // Accessors
+  // =======================================================================
 
   public String getEmail() {
     return email;
