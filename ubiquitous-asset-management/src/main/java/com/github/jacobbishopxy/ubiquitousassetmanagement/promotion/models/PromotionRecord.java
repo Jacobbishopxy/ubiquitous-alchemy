@@ -154,18 +154,17 @@ public class PromotionRecord {
       String promotionPactName,
       String promoterEmail) {
 
-    // make sure `closeTimeAdjustFactor` is the same as `openTimeAdjustFactor` when
-    // creating a new record
-    Float closeTimeAdjustFactor = dto.closeTimeAdjustFactor() == null
-        ? dto.openTimeAdjustFactor()
-        : dto.closeTimeAdjustFactor();
+    // if `openTimeAdjustFactor` is null, simply regards it as 1.0
+    Float openTimeAdjustFactor = dto.openTimeAdjustFactor() == null
+        ? 1.0f
+        : dto.openTimeAdjustFactor();
 
     Float earningsYield = PromotionCalculationHelper.calculateEarningsYield(
         dto.direction(),
         dto.openPrice(),
         dto.closePrice(),
-        dto.openTimeAdjustFactor(),
-        closeTimeAdjustFactor);
+        openTimeAdjustFactor,
+        dto.closeTimeAdjustFactor());
 
     boolean isArchived = PromotionCalculationHelper.calculateIsArchived(
         dto.closeTime());
@@ -186,8 +185,8 @@ public class PromotionRecord {
         dto.closeTime(),
         dto.closePrice(),
         dto.currency(),
-        dto.openTimeAdjustFactor(),
-        closeTimeAdjustFactor,
+        openTimeAdjustFactor,
+        dto.closeTimeAdjustFactor(),
         earningsYield,
         pScore,
         new PromotionPact(promotionPactName),

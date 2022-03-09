@@ -43,7 +43,7 @@ public class PromotionCalculationHelper {
       return null;
     }
 
-    Float adjustFactorChange = openTimeAdjustFactor / closeTimeAdjustFactor;
+    Float adjustFactorChange = closeTimeAdjustFactor / openTimeAdjustFactor;
 
     if (direction == TradeDirection.BUY) {
       return closePrice / openPrice * adjustFactorChange - 1;

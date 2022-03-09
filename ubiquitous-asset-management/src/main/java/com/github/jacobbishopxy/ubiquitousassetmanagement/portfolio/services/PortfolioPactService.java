@@ -9,6 +9,8 @@ import java.util.Optional;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.PortfolioPact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.PortfolioPactRepository;
+// import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.repositories.PromoterRepository;
+// import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.services.IndustryInfoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,30 +19,42 @@ import org.springframework.stereotype.Service;
 public class PortfolioPactService {
 
   @Autowired
-  private PortfolioPactRepository repo;
+  private PortfolioPactRepository ppRepo;
+
+  // @Autowired
+  // private PromoterRepository pRepo;
+
+  // @Autowired
+  // private IndustryInfoService iiService;
 
   public List<PortfolioPact> getAllPortfolioPacts(Boolean isActive) {
     if (isActive == null) {
-      return repo.findAll();
+      return ppRepo.findAll();
     } else {
-      return repo.findByIsActive(isActive);
+      return ppRepo.findByIsActive(isActive);
     }
   }
 
   public Optional<PortfolioPact> getPortfolioPactById(int id) {
-    return repo.findById(id);
+    return ppRepo.findById(id);
   }
 
   public Optional<PortfolioPact> getPortfolioPactByAlias(String alias) {
-    return repo.findByAlias(alias);
+    return ppRepo.findByAlias(alias);
   }
 
   public PortfolioPact createPortfolioPact(PortfolioPact portfolioPact) {
-    return repo.save(portfolioPact);
+    // if alias is not set, use promoter_nickname and start_date as alias
+    if (portfolioPact.getAlias() == null) {
+      // String nickname = pRepo.fin
+      String alias = portfolioPact.getPromoter().getNickname() + "-" + portfolioPact.getStartDate();
+      portfolioPact.setAlias(alias);
+    }
+    return ppRepo.save(portfolioPact);
   }
 
   public Optional<PortfolioPact> updatePortfolioPact(int id, PortfolioPact portfolioPact) {
-    return repo.findById(id).map(
+    return ppRepo.findById(id).map(
         record -> {
           record.setAlias(portfolioPact.getAlias());
           record.setPromoter(portfolioPact.getPromoter());
@@ -49,12 +63,12 @@ public class PortfolioPactService {
           record.setEndDate(portfolioPact.getEndDate());
           record.setDescription(portfolioPact.getDescription());
           record.setIsActive(portfolioPact.getIsActive());
-          return repo.save(record);
+          return ppRepo.save(record);
         });
   }
 
   public Optional<PortfolioPact> updatePortfolioPact(String alias, PortfolioPact portfolioPact) {
-    return repo.findByAlias(alias).map(
+    return ppRepo.findByAlias(alias).map(
         record -> {
           record.setAlias(portfolioPact.getAlias());
           record.setPromoter(portfolioPact.getPromoter());
@@ -63,16 +77,16 @@ public class PortfolioPactService {
           record.setEndDate(portfolioPact.getEndDate());
           record.setDescription(portfolioPact.getDescription());
           record.setIsActive(portfolioPact.getIsActive());
-          return repo.save(record);
+          return ppRepo.save(record);
         });
   }
 
   public void deletePortfolioPact(int id) {
-    repo.deleteById(id);
+    ppRepo.deleteById(id);
   }
 
   public void deletePortfolioPact(String alias) {
-    repo.deleteByAlias(alias);
+    ppRepo.deleteByAlias(alias);
   }
 
 }
