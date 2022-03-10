@@ -4,13 +4,8 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
-
-import java.util.Date;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
@@ -26,17 +21,10 @@ public class PortfolioPerformance {
   private Integer id;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "portfolio_pact_id")
+  @JoinColumn(name = "portfolio_adjustment_record_id")
   @NotEmpty
-  @Schema(description = "This portfolio record belongs to a specific portfolio pact")
-  private PortfolioPact portfolioPact;
-
-  @Temporal(TemporalType.DATE)
-  @JsonFormat(pattern = Constants.DATE_FORMAT)
-  @Column(nullable = false)
-  @NotEmpty
-  @Schema(description = "Current date.", required = true)
-  private Date presentDate;
+  @Schema(description = "This portfolio record belongs to a specific portfolio pact's adjustment record.", required = true)
+  private PortfolioAdjustmentRecord portfolioAdjustmentRecord;
 
   @Column(nullable = false)
   @NotEmpty
@@ -81,8 +69,7 @@ public class PortfolioPerformance {
   }
 
   public PortfolioPerformance(
-      PortfolioPact portfolioPact,
-      Date presentDate,
+      PortfolioAdjustmentRecord portfolioAdjustmentRecord,
       Float portfolioStaticEarningsYield,
       Float portfolioDynamicEarningsYield,
       Float benchmarkStaticEarningsYield,
@@ -91,8 +78,7 @@ public class PortfolioPerformance {
       Float dynamicDifference,
       int version) {
     super();
-    this.portfolioPact = portfolioPact;
-    this.presentDate = presentDate;
+    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
     this.portfolioStaticEarningsYield = portfolioStaticEarningsYield;
     this.portfolioDynamicEarningsYield = portfolioDynamicEarningsYield;
     this.benchmarkStaticEarningsYield = benchmarkStaticEarningsYield;
@@ -114,20 +100,12 @@ public class PortfolioPerformance {
     this.id = id;
   }
 
-  public PortfolioPact getPortfolioPact() {
-    return portfolioPact;
+  public PortfolioAdjustmentRecord getPortfolioAdjustmentRecord() {
+    return portfolioAdjustmentRecord;
   }
 
-  public void setPortfolioPact(PortfolioPact portfolioPact) {
-    this.portfolioPact = portfolioPact;
-  }
-
-  public Date getPresentDate() {
-    return presentDate;
-  }
-
-  public void setPresentDate(Date presentDate) {
-    this.presentDate = presentDate;
+  public void setPortfolioAdjustmentRecord(PortfolioAdjustmentRecord portfolioAdjustmentRecord) {
+    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
   }
 
   public Float getPortfolioStaticEarningsYield() {

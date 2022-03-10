@@ -4,7 +4,8 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -44,17 +45,16 @@ public class PortfolioPact {
   @Schema(description = "The industry of the portfolio.", required = true)
   private IndustryInfo industryInfo;
 
-  @Temporal(TemporalType.DATE)
   @JsonFormat(pattern = Constants.DATE_FORMAT)
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "DATE")
   @NotEmpty
   @Schema(example = "2020-01-01", required = true)
-  private Date startDate;
+  private LocalDate startDate;
 
-  @Temporal(TemporalType.DATE)
   @JsonFormat(pattern = Constants.DATE_FORMAT)
+  @Column(columnDefinition = "DATE")
   @Schema(example = "2020-12-31")
-  private Date endDate;
+  private LocalDate endDate;
 
   @Schema(description = "The description of the portfolio pact.")
   private String description;
@@ -62,12 +62,8 @@ public class PortfolioPact {
   @Schema(description = "Is the portfolio pact active?")
   private Boolean isActive;
 
-  @Temporal(TemporalType.DATE)
-  @JsonFormat(pattern = Constants.DATE_FORMAT)
-  @Column(nullable = false)
-  @NotEmpty
-  @Schema(description = "The last updated date of the portfolio.", required = true)
-  private Date lastUpdatedDate;
+  @OneToMany(mappedBy = "portfolioPact", fetch = FetchType.EAGER)
+  private List<PortfolioAdjustmentRecord> portfolioAdjustmentRecords;
 
   // =======================================================================
   // Constructors
@@ -80,11 +76,10 @@ public class PortfolioPact {
       String alias,
       Promoter promoter,
       IndustryInfo industryInfo,
-      Date startDate,
-      Date endDate,
+      LocalDate startDate,
+      LocalDate endDate,
       String description,
-      Boolean isActive,
-      Date lastUpdatedDate) {
+      Boolean isActive) {
     super();
     this.alias = alias;
     this.promoter = promoter;
@@ -93,7 +88,6 @@ public class PortfolioPact {
     this.endDate = endDate;
     this.description = description;
     this.isActive = isActive;
-    this.lastUpdatedDate = lastUpdatedDate;
   }
 
   // =======================================================================
@@ -116,8 +110,7 @@ public class PortfolioPact {
         portfolioPactInput.startDate(),
         portfolioPactInput.endDate(),
         portfolioPactInput.description(),
-        isActive,
-        new Date());
+        isActive);
   }
 
   public Integer getId() {
@@ -152,19 +145,19 @@ public class PortfolioPact {
     this.industryInfo = industryInfo;
   }
 
-  public Date getStartDate() {
+  public LocalDate getStartDate() {
     return startDate;
   }
 
-  public void setStartDate(Date startDate) {
+  public void setStartDate(LocalDate startDate) {
     this.startDate = startDate;
   }
 
-  public Date getEndDate() {
+  public LocalDate getEndDate() {
     return endDate;
   }
 
-  public void setEndDate(Date endDate) {
+  public void setEndDate(LocalDate endDate) {
     this.endDate = endDate;
   }
 
@@ -184,12 +177,12 @@ public class PortfolioPact {
     this.isActive = isActive;
   }
 
-  public Date getLastUpdatedDate() {
-    return lastUpdatedDate;
+  public List<PortfolioAdjustmentRecord> getPortfolioAdjustmentRecords() {
+    return portfolioAdjustmentRecords;
   }
 
-  public void setLastUpdatedDate(Date lastUpdatedDate) {
-    this.lastUpdatedDate = lastUpdatedDate;
+  public void setPortfolioAdjustmentRecords(List<PortfolioAdjustmentRecord> portfolioAdjustmentRecords) {
+    this.portfolioAdjustmentRecords = portfolioAdjustmentRecords;
   }
 
 }

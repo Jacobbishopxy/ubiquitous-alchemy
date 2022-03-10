@@ -4,14 +4,14 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public record PortfolioPactInput(
-    String alias,
-    String promoter,
-    String industry,
-    Date startDate,
-    Date endDate,
-    String description) {
+        String alias,
+        String promoter,
+        String industry,
+        LocalDate startDate,
+        LocalDate endDate,
+        String description) {
 
 }

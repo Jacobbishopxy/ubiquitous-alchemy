@@ -4,18 +4,20 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.PortfolioAdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.PortfolioPact;
 
 public record PortfolioPactOutput(String alias,
     String promoter,
     String industry,
-    Date startDate,
-    Date endDate,
+    LocalDate startDate,
+    LocalDate endDate,
     String description,
     Boolean isActive,
-    Date lastUpdatedDate) {
+    List<PortfolioAdjustmentRecord> portfolioAdjustmentRecords) {
 
   public static PortfolioPactOutput fromPortfolioPact(
       PortfolioPact portfolioPact) {
@@ -27,7 +29,7 @@ public record PortfolioPactOutput(String alias,
         portfolioPact.getEndDate(),
         portfolioPact.getDescription(),
         portfolioPact.getIsActive(),
-        portfolioPact.getLastUpdatedDate());
+        portfolioPact.getPortfolioAdjustmentRecords());
   }
 
   public static PortfolioPactOutput fromPortfolioPact(
@@ -42,6 +44,6 @@ public record PortfolioPactOutput(String alias,
         portfolioPact.getEndDate(),
         portfolioPact.getDescription(),
         portfolioPact.getIsActive(),
-        portfolioPact.getLastUpdatedDate());
+        portfolioPact.getPortfolioAdjustmentRecords());
   }
 }

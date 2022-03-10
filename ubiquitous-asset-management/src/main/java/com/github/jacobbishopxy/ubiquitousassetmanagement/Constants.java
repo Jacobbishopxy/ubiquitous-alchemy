@@ -14,14 +14,17 @@ import java.util.Date;
  */
 public class Constants {
 
+  public static final String API_VERSION = "v1";
+
   public static final String DATE_FORMAT = "yyyy-MM-dd";
-  public static final String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  public static final String TIME_FORMAT = "HH:mm:ss";
+  public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
   public static final String dateToString(Date date) {
     return new SimpleDateFormat(DATE_FORMAT).format(date);
   }
 
-  public static final String timeToString(Date date) {
-    return new SimpleDateFormat(TIME_FORMAT).format(date);
+  public static final String datetimeToString(Date date) {
+    return new SimpleDateFormat(DATETIME_FORMAT).format(date);
   }
 }

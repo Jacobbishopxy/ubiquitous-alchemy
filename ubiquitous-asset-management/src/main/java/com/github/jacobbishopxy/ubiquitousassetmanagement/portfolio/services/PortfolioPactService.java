@@ -7,7 +7,6 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.PortfolioPact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.PortfolioPactRepository;
 
@@ -41,7 +40,7 @@ public class PortfolioPactService {
     if (portfolioPact.getAlias() == null) {
       String alias = portfolioPact.getIndustryInfo().getName() + "-" +
           portfolioPact.getPromoter().getNickname() + "-" +
-          Constants.dateToString(portfolioPact.getStartDate());
+          portfolioPact.getStartDate().toString();
       portfolioPact.setAlias(alias);
     }
     return ppRepo.save(portfolioPact);

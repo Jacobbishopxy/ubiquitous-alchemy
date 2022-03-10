@@ -62,7 +62,7 @@ public class PromotionRecord {
   private TradeDirection direction;
 
   @Temporal(TemporalType.TIMESTAMP)
-  @JsonFormat(pattern = Constants.TIME_FORMAT)
+  @JsonFormat(pattern = Constants.DATETIME_FORMAT)
   @Column(nullable = false)
   @NotEmpty
   @Schema(description = "The time when the promotion record is created.", example = "2020-02-22 09:45:00", required = true)
@@ -73,7 +73,7 @@ public class PromotionRecord {
   private Float openPrice;
 
   @Temporal(TemporalType.TIMESTAMP)
-  @JsonFormat(pattern = Constants.TIME_FORMAT)
+  @JsonFormat(pattern = Constants.DATETIME_FORMAT)
   @Schema(description = "The time when the promotion record is closed.", example = "2020-02-23 10:05:00")
   private Date closeTime;
 
@@ -95,11 +95,11 @@ public class PromotionRecord {
   private Boolean isArchived;
 
   @Temporal(TemporalType.TIMESTAMP)
-  @JsonFormat(pattern = Constants.TIME_FORMAT)
+  @JsonFormat(pattern = Constants.DATETIME_FORMAT)
   private Date createdAt;
 
   @Temporal(TemporalType.TIMESTAMP)
-  @JsonFormat(pattern = Constants.TIME_FORMAT)
+  @JsonFormat(pattern = Constants.DATETIME_FORMAT)
   private Date updatedAt;
 
   // =======================================================================

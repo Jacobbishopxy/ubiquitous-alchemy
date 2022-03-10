@@ -4,12 +4,11 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
-import java.util.Date;
+import java.time.LocalTime;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.PortfolioAdjustmentOperation;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.PortfolioAdjustmentOperationPgEnum;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -38,23 +37,16 @@ public class PortfolioAdjustment {
   private Integer id;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "portfolio_pact_id")
+  @JoinColumn(name = "portfolio_adjustment_record_id")
   @NotEmpty
-  @Schema(description = "This portfolio record belongs to a specific portfolio pact")
-  private PortfolioPact portfolioPact;
+  @Schema(description = "This portfolio record belongs to a specific portfolio pact's adjustment record.", required = true)
+  private PortfolioAdjustmentRecord portfolioAdjustmentRecord;
 
-  @Temporal(TemporalType.TIMESTAMP)
   @JsonFormat(pattern = Constants.TIME_FORMAT)
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "TIME")
   @NotEmpty
-  @Schema(description = "The date of the adjustment.", example = "2022-02-22 02:22:22", required = true)
-  private Date adjustTime;
-
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "promoter_email")
-  @NotEmpty
-  @Schema(description = "The promoter who is adjusting the portfolio. Nested object.", required = true)
-  private Promoter promoter;
+  @Schema(description = "The time of the adjustment.", example = "02:22:22", required = true)
+  private LocalTime adjustTime;
 
   @Column(nullable = false)
   @NotEmpty
@@ -93,15 +85,16 @@ public class PortfolioAdjustment {
   }
 
   public PortfolioAdjustment(
-      Date adjustTime,
-      Promoter promoter,
+      PortfolioAdjustmentRecord portfolioAdjustmentRecord,
+      LocalTime adjustTime,
       String symbol,
       String abbreviation,
       PortfolioAdjustmentOperation operation,
       Float weight,
       String description) {
+    super();
+    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
     this.adjustTime = adjustTime;
-    this.promoter = promoter;
     this.symbol = symbol;
     this.abbreviation = abbreviation;
     this.operation = operation;
@@ -121,20 +114,20 @@ public class PortfolioAdjustment {
     this.id = id;
   }
 
-  public Date getAdjustTime() {
+  public PortfolioAdjustmentRecord getPortfolioAdjustmentRecord() {
+    return portfolioAdjustmentRecord;
+  }
+
+  public void setPortfolioAdjustmentRecord(PortfolioAdjustmentRecord portfolioAdjustmentRecord) {
+    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
+  }
+
+  public LocalTime getAdjustTime() {
     return adjustTime;
   }
 
-  public void setAdjustTime(Date adjustTime) {
+  public void setAdjustTime(LocalTime adjustTime) {
     this.adjustTime = adjustTime;
-  }
-
-  public Promoter getPromoter() {
-    return promoter;
-  }
-
-  public void setPromoter(Promoter promoter) {
-    this.promoter = promoter;
   }
 
   public String getSymbol() {

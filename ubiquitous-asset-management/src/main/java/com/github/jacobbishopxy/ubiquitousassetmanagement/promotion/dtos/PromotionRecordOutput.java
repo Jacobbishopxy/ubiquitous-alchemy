@@ -22,9 +22,9 @@ public record PromotionRecordOutput(
 		String abbreviation,
 		String industry,
 		TradeDirection direction,
-		@JsonFormat(pattern = Constants.TIME_FORMAT) Date openTime,
+		@JsonFormat(pattern = Constants.DATETIME_FORMAT) Date openTime,
 		Float openPrice,
-		@JsonFormat(pattern = Constants.TIME_FORMAT) Date closeTime,
+		@JsonFormat(pattern = Constants.DATETIME_FORMAT) Date closeTime,
 		Float closePrice,
 		String currency,
 		Float openTimeAdjustFactor,
@@ -32,8 +32,8 @@ public record PromotionRecordOutput(
 		Float earningsYield,
 		Integer performanceScore,
 		Boolean isArchived,
-		@JsonFormat(pattern = Constants.TIME_FORMAT) Date createdAt,
-		@JsonFormat(pattern = Constants.TIME_FORMAT) Date updatedAt) {
+		@JsonFormat(pattern = Constants.DATETIME_FORMAT) Date createdAt,
+		@JsonFormat(pattern = Constants.DATETIME_FORMAT) Date updatedAt) {
 
 	/**
 	 * fromPromotionRecord

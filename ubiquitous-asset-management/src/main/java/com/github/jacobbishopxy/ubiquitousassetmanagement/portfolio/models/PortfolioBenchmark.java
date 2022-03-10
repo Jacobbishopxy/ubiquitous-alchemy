@@ -4,7 +4,7 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 
@@ -26,24 +26,16 @@ public class PortfolioBenchmark {
   private Integer id;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "portfolio_pact_id")
+  @JoinColumn(name = "portfolio_adjustment_record_id")
   @NotEmpty
-  @Schema(description = "This portfolio record belongs to a specific portfolio pact")
-  private PortfolioPact portfolioPact;
+  @Schema(description = "This portfolio record belongs to a specific portfolio pact's adjustment record.", required = true)
+  private PortfolioAdjustmentRecord portfolioAdjustmentRecord;
 
-  @Temporal(TemporalType.DATE)
   @JsonFormat(pattern = Constants.DATE_FORMAT)
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "DATE")
   @NotEmpty
   @Schema(description = "The date of adjustment.", required = true)
-  private Date adjustDate;
-
-  @Temporal(TemporalType.DATE)
-  @JsonFormat(pattern = Constants.DATE_FORMAT)
-  @Column(nullable = false)
-  @NotEmpty
-  @Schema(description = "Current date.", required = true)
-  private Date presentDate;
+  private LocalDate adjustDate;
 
   @Column(nullable = false)
   @NotEmpty
@@ -71,17 +63,15 @@ public class PortfolioBenchmark {
   }
 
   public PortfolioBenchmark(
-      PortfolioPact portfolioPact,
-      Date adjustDate,
-      Date presentDate,
+      PortfolioAdjustmentRecord portfolioAdjustmentRecord,
+      LocalDate adjustDate,
       String benchmarkName,
       Float percentageChange,
       Float adjustDateWeight,
       Float currentWeight) {
     super();
-    this.portfolioPact = portfolioPact;
+    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
     this.adjustDate = adjustDate;
-    this.presentDate = presentDate;
     this.benchmarkName = benchmarkName;
     this.percentageChange = percentageChange;
     this.adjustDateWeight = adjustDateWeight;
@@ -100,28 +90,20 @@ public class PortfolioBenchmark {
     this.id = id;
   }
 
-  public PortfolioPact getPortfolioPact() {
-    return portfolioPact;
+  public PortfolioAdjustmentRecord getPortfolioAdjustmentRecord() {
+    return portfolioAdjustmentRecord;
   }
 
-  public void setPortfolioPact(PortfolioPact portfolioPact) {
-    this.portfolioPact = portfolioPact;
+  public void setPortfolioAdjustmentRecord(PortfolioAdjustmentRecord portfolioAdjustmentRecord) {
+    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
   }
 
-  public Date getAdjustDate() {
+  public LocalDate getAdjustDate() {
     return adjustDate;
   }
 
-  public void setAdjustDate(Date adjustDate) {
+  public void setAdjustDate(LocalDate adjustDate) {
     this.adjustDate = adjustDate;
-  }
-
-  public Date getPresentDate() {
-    return presentDate;
-  }
-
-  public void setPresentDate(Date presentDate) {
-    this.presentDate = presentDate;
   }
 
   public String getBenchmarkName() {
