@@ -6,6 +6,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.controllers
 
 import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.PromotionStatisticOutput;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.PromotionStatistic;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.PromotionStatisticService;
@@ -21,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "PromotionStatistic", description = "PromotionStatistic related operations. Notice that PromotionStatistic is automatically modified by PromotionRecord, hence only GET methods are supported.")
 @RestController
-@RequestMapping("v1")
+@RequestMapping(Constants.API_VERSION + Constants.API_PROMOTION)
 public class PromotionStatisticController {
 
   @Autowired
@@ -31,13 +32,13 @@ public class PromotionStatisticController {
   private PromoterService promoterService;
 
   @Operation(description = "Count promotion statistics by promotion pact name.")
-  @GetMapping("/count_promotion_statistic")
+  @GetMapping("/statistic_count")
   Integer countPromotionStatistics(@RequestParam String promotionPactName) {
     return promotionStatisticService.countByPromotionPactName(promotionPactName);
   }
 
   @Operation(description = "Get promotion statistics. `promotionPactName` and `promoterName` are optional, but they cannot exist at the same time.")
-  @GetMapping("/promotion_statistic")
+  @GetMapping("/statistic")
   List<PromotionStatisticOutput> getPromotionStatistics(
       @RequestParam(required = false) String promotionPactName,
       @RequestParam(required = false) String promoterName) {
@@ -62,7 +63,7 @@ public class PromotionStatisticController {
   }
 
   @Operation(description = "Get promotion statistics by id.")
-  @GetMapping("/promotion_statistic/{id}")
+  @GetMapping("/statistic/{id}")
   PromotionStatisticOutput getPromotionStatisticById(@PathVariable Integer id) {
     PromotionStatistic ps = promotionStatisticService
         .getPromotionStatistic(id)

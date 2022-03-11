@@ -7,21 +7,21 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.PortfolioAdjustmentRecord;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.PortfolioPact;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 
-public record PortfolioPactOutput(String alias,
+public record PactOutput(String alias,
     String promoter,
     String industry,
     LocalDate startDate,
     LocalDate endDate,
     String description,
     Boolean isActive,
-    List<PortfolioAdjustmentRecord> portfolioAdjustmentRecords) {
+    List<AdjustmentRecord> adjustmentRecords) {
 
-  public static PortfolioPactOutput fromPortfolioPact(
-      PortfolioPact portfolioPact) {
-    return new PortfolioPactOutput(
+  public static PactOutput fromPortfolioPact(
+      Pact portfolioPact) {
+    return new PactOutput(
         portfolioPact.getAlias(),
         portfolioPact.getPromoter().getNickname(),
         portfolioPact.getIndustryInfo().getName(),
@@ -29,14 +29,14 @@ public record PortfolioPactOutput(String alias,
         portfolioPact.getEndDate(),
         portfolioPact.getDescription(),
         portfolioPact.getIsActive(),
-        portfolioPact.getPortfolioAdjustmentRecords());
+        portfolioPact.getAdjustmentRecords());
   }
 
-  public static PortfolioPactOutput fromPortfolioPact(
-      PortfolioPact portfolioPact,
+  public static PactOutput fromPortfolioPact(
+      Pact portfolioPact,
       String promoterName,
       String industryName) {
-    return new PortfolioPactOutput(
+    return new PactOutput(
         portfolioPact.getAlias(),
         promoterName,
         industryName,
@@ -44,6 +44,6 @@ public record PortfolioPactOutput(String alias,
         portfolioPact.getEndDate(),
         portfolioPact.getDescription(),
         portfolioPact.getIsActive(),
-        portfolioPact.getPortfolioAdjustmentRecords());
+        portfolioPact.getAdjustmentRecords());
   }
 }

@@ -16,7 +16,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 @Table(name = "portfolio_adjustment_record", uniqueConstraints = {
     @UniqueConstraint(columnNames = { "portfolio_pact_id", "adjustDate", "adjustVersion" })
 })
-public class PortfolioAdjustmentRecord {
+public class AdjustmentRecord {
   // =======================================================================
   // Fields
   // =======================================================================
@@ -29,7 +29,7 @@ public class PortfolioAdjustmentRecord {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "portfolio_pact_id")
   @JsonIgnore
-  private PortfolioPact portfolioPact;
+  private Pact pact;
 
   @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Column(nullable = false, columnDefinition = "DATE")
@@ -42,15 +42,15 @@ public class PortfolioAdjustmentRecord {
   // Constructors
   // =======================================================================
 
-  public PortfolioAdjustmentRecord() {
+  public AdjustmentRecord() {
   }
 
-  public PortfolioAdjustmentRecord(
-      PortfolioPact portfolioPact,
+  public AdjustmentRecord(
+      Pact pact,
       LocalDate adjustDate,
       Integer adjustVersion) {
     super();
-    this.portfolioPact = portfolioPact;
+    this.pact = pact;
     this.adjustDate = adjustDate;
     this.adjustVersion = adjustVersion;
   }
@@ -67,12 +67,12 @@ public class PortfolioAdjustmentRecord {
     this.id = id;
   }
 
-  public PortfolioPact getPortfolioPact() {
-    return portfolioPact;
+  public Pact getPact() {
+    return pact;
   }
 
-  public void setPortfolioPact(PortfolioPact portfolioPact) {
-    this.portfolioPact = portfolioPact;
+  public void setPact(Pact pact) {
+    this.pact = pact;
   }
 
   public LocalDate getAdjustDate() {

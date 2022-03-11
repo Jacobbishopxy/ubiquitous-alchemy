@@ -7,8 +7,8 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 import java.time.LocalTime;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.PortfolioAdjustmentOperation;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.PortfolioAdjustmentOperationPgEnum;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.AdjustmentOperation;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.AdjustmentOperationPgEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -25,8 +25,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 @Entity
 @Table(name = "portfolio_adjustment")
-@TypeDef(name = "adjustment_operation_enum", typeClass = PortfolioAdjustmentOperationPgEnum.class)
-public class PortfolioAdjustment {
+@TypeDef(name = "adjustment_operation_enum", typeClass = AdjustmentOperationPgEnum.class)
+public class Adjustment {
   // =======================================================================
   // Fields
   // =======================================================================
@@ -40,7 +40,7 @@ public class PortfolioAdjustment {
   @JoinColumn(name = "portfolio_adjustment_record_id")
   @NotEmpty
   @Schema(description = "This portfolio record belongs to a specific portfolio pact's adjustment record.", required = true)
-  private PortfolioAdjustmentRecord portfolioAdjustmentRecord;
+  private AdjustmentRecord adjustmentRecord;
 
   @JsonFormat(pattern = Constants.TIME_FORMAT)
   @Column(nullable = false, columnDefinition = "TIME")
@@ -62,7 +62,7 @@ public class PortfolioAdjustment {
   @NotEmpty
   @Schema(description = "The operation of the adjustment.", allowableValues = { "Setup", "Join", "Leave", "Increase",
       "Decrease" }, required = true)
-  private PortfolioAdjustmentOperation operation;
+  private AdjustmentOperation operation;
 
   @Column(nullable = false)
   @NotEmpty
@@ -81,19 +81,19 @@ public class PortfolioAdjustment {
   // Constructors
   // =======================================================================
 
-  public PortfolioAdjustment() {
+  public Adjustment() {
   }
 
-  public PortfolioAdjustment(
-      PortfolioAdjustmentRecord portfolioAdjustmentRecord,
+  public Adjustment(
+      AdjustmentRecord adjustmentRecord,
       LocalTime adjustTime,
       String symbol,
       String abbreviation,
-      PortfolioAdjustmentOperation operation,
+      AdjustmentOperation operation,
       Float weight,
       String description) {
     super();
-    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
+    this.adjustmentRecord = adjustmentRecord;
     this.adjustTime = adjustTime;
     this.symbol = symbol;
     this.abbreviation = abbreviation;
@@ -114,12 +114,12 @@ public class PortfolioAdjustment {
     this.id = id;
   }
 
-  public PortfolioAdjustmentRecord getPortfolioAdjustmentRecord() {
-    return portfolioAdjustmentRecord;
+  public AdjustmentRecord getAdjustmentRecord() {
+    return adjustmentRecord;
   }
 
-  public void setPortfolioAdjustmentRecord(PortfolioAdjustmentRecord portfolioAdjustmentRecord) {
-    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
+  public void setAdjustmentRecord(AdjustmentRecord adjustmentRecord) {
+    this.adjustmentRecord = adjustmentRecord;
   }
 
   public LocalTime getAdjustTime() {
@@ -146,11 +146,11 @@ public class PortfolioAdjustment {
     this.abbreviation = abbreviation;
   }
 
-  public PortfolioAdjustmentOperation getOperation() {
+  public AdjustmentOperation getOperation() {
     return operation;
   }
 
-  public void setOperation(PortfolioAdjustmentOperation operation) {
+  public void setOperation(AdjustmentOperation operation) {
     this.operation = operation;
   }
 

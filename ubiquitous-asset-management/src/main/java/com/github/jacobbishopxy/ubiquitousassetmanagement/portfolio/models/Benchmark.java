@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Table(name = "portfolio_benchmark")
-public class PortfolioBenchmark {
+public class Benchmark {
   // =======================================================================
   // Fields
   // =======================================================================
@@ -29,7 +29,7 @@ public class PortfolioBenchmark {
   @JoinColumn(name = "portfolio_adjustment_record_id")
   @NotEmpty
   @Schema(description = "This portfolio record belongs to a specific portfolio pact's adjustment record.", required = true)
-  private PortfolioAdjustmentRecord portfolioAdjustmentRecord;
+  private AdjustmentRecord adjustmentRecord;
 
   @JsonFormat(pattern = Constants.DATE_FORMAT)
   @Column(nullable = false, columnDefinition = "DATE")
@@ -59,18 +59,18 @@ public class PortfolioBenchmark {
   // Constructors
   // =======================================================================
 
-  public PortfolioBenchmark() {
+  public Benchmark() {
   }
 
-  public PortfolioBenchmark(
-      PortfolioAdjustmentRecord portfolioAdjustmentRecord,
+  public Benchmark(
+      AdjustmentRecord adjustmentRecord,
       LocalDate adjustDate,
       String benchmarkName,
       Float percentageChange,
       Float adjustDateWeight,
       Float currentWeight) {
     super();
-    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
+    this.adjustmentRecord = adjustmentRecord;
     this.adjustDate = adjustDate;
     this.benchmarkName = benchmarkName;
     this.percentageChange = percentageChange;
@@ -90,12 +90,12 @@ public class PortfolioBenchmark {
     this.id = id;
   }
 
-  public PortfolioAdjustmentRecord getPortfolioAdjustmentRecord() {
-    return portfolioAdjustmentRecord;
+  public AdjustmentRecord getAdjustmentRecord() {
+    return adjustmentRecord;
   }
 
-  public void setPortfolioAdjustmentRecord(PortfolioAdjustmentRecord portfolioAdjustmentRecord) {
-    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
+  public void setAdjustmentRecord(AdjustmentRecord adjustmentRecord) {
+    this.adjustmentRecord = adjustmentRecord;
   }
 
   public LocalDate getAdjustDate() {

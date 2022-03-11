@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Table(name = "portfolio_performance")
-public class PortfolioPerformance {
+public class Performance {
   // =======================================================================
   // Fields
   // =======================================================================
@@ -24,7 +24,7 @@ public class PortfolioPerformance {
   @JoinColumn(name = "portfolio_adjustment_record_id")
   @NotEmpty
   @Schema(description = "This portfolio record belongs to a specific portfolio pact's adjustment record.", required = true)
-  private PortfolioAdjustmentRecord portfolioAdjustmentRecord;
+  private AdjustmentRecord adjustmentRecord;
 
   @Column(nullable = false)
   @NotEmpty
@@ -65,11 +65,11 @@ public class PortfolioPerformance {
   // Constructors
   // =======================================================================
 
-  public PortfolioPerformance() {
+  public Performance() {
   }
 
-  public PortfolioPerformance(
-      PortfolioAdjustmentRecord portfolioAdjustmentRecord,
+  public Performance(
+      AdjustmentRecord adjustmentRecord,
       Float portfolioStaticEarningsYield,
       Float portfolioDynamicEarningsYield,
       Float benchmarkStaticEarningsYield,
@@ -78,7 +78,7 @@ public class PortfolioPerformance {
       Float dynamicDifference,
       int version) {
     super();
-    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
+    this.adjustmentRecord = adjustmentRecord;
     this.portfolioStaticEarningsYield = portfolioStaticEarningsYield;
     this.portfolioDynamicEarningsYield = portfolioDynamicEarningsYield;
     this.benchmarkStaticEarningsYield = benchmarkStaticEarningsYield;
@@ -100,12 +100,12 @@ public class PortfolioPerformance {
     this.id = id;
   }
 
-  public PortfolioAdjustmentRecord getPortfolioAdjustmentRecord() {
-    return portfolioAdjustmentRecord;
+  public AdjustmentRecord getAdjustmentRecord() {
+    return adjustmentRecord;
   }
 
-  public void setPortfolioAdjustmentRecord(PortfolioAdjustmentRecord portfolioAdjustmentRecord) {
-    this.portfolioAdjustmentRecord = portfolioAdjustmentRecord;
+  public void setAdjustmentRecord(AdjustmentRecord adjustmentRecord) {
+    this.adjustmentRecord = adjustmentRecord;
   }
 
   public Float getPortfolioStaticEarningsYield() {

@@ -28,6 +28,10 @@ public class PromoterService {
     return repo.findAll();
   }
 
+  public Optional<Promoter> getPromoterByNickname(String nickname) {
+    return repo.findByNickname(nickname);
+  }
+
   public Optional<String> getEmailByNickname(String nickname) {
     return repo.findEmailByNickname(nickname);
   }

@@ -6,6 +6,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.controllers
 
 import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.models.PromotionPact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.services.PromotionPactService;
 
@@ -18,20 +19,20 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "PromotionPact", description = "PromotionPact related operations")
 @RestController
-@RequestMapping("v1")
+@RequestMapping(Constants.API_VERSION + Constants.API_PROMOTION)
 public class PromotionPactController {
 
   @Autowired
   private PromotionPactService service;
 
   @Operation(description = "Get all promotion pact.")
-  @GetMapping("/promotion_pact")
+  @GetMapping("/pact")
   List<PromotionPact> getPromotionPacts() {
     return service.getAllPromotionPacts();
   }
 
   @Operation(description = "Get a promotion pact by name.")
-  @GetMapping("/promotion_pact/{name}")
+  @GetMapping("/pact/{name}")
   PromotionPact getPromotionPact(@PathVariable("name") String name) {
     return service.getPromotionPact(name).orElseThrow(
         () -> new ResponseStatusException(
@@ -39,14 +40,14 @@ public class PromotionPactController {
   }
 
   @Operation(description = "Create a promotion pact. Notice that `startDate` must be less than `endDate`")
-  @PostMapping("/promotion_pact")
+  @PostMapping("/pact")
   PromotionPact createPromotionPact(@RequestBody PromotionPact promotionPact) {
     promotionPact.validate();
     return service.createPromotionPact(promotionPact);
   }
 
   @Operation(description = "Update a promotion pact. Notice that `startDate` must be less than `endDate`")
-  @PutMapping("/promotion_pact/{name}")
+  @PutMapping("/pact/{name}")
   PromotionPact updatePromotionPact(
       @PathVariable("name") String name,
       @RequestBody PromotionPact promotionPact) {
@@ -59,7 +60,7 @@ public class PromotionPactController {
   }
 
   @Operation(description = "Delete a promotion pact.")
-  @DeleteMapping("/promotion_pact/{name}")
+  @DeleteMapping("/pact/{name}")
   void deletePromotionPact(@PathVariable("name") String name) {
     service.deletePromotionPact(name);
   }

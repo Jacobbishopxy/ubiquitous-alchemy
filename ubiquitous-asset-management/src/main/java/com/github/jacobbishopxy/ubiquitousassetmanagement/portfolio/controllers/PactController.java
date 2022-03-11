@@ -6,10 +6,13 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.controllers
 
 import java.util.List;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioPactInput;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioPactOutput;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.PortfolioPact;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.PortfolioPactService;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PactInput;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PactOutput;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.PactService;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.IndustryInfo;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.services.IndustryInfoService;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.services.PromoterService;
 
@@ -24,11 +27,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "PortfolioPact", description = "PortfolioPact related operations")
 @RestController
-@RequestMapping("v1")
-public class PortfolioPactController {
+@RequestMapping(Constants.API_VERSION + Constants.API_PORTFOLIO)
+public class PactController {
 
   @Autowired
-  private PortfolioPactService ppService;
+  private PactService ppService;
 
   @Autowired
   private PromoterService pService;
@@ -36,82 +39,80 @@ public class PortfolioPactController {
   @Autowired
   private IndustryInfoService iiService;
 
-  @GetMapping(value = "/portfolio_pact")
-  List<PortfolioPactOutput> getPortfolioPacts(
+  @GetMapping(value = "/pact")
+  List<PactOutput> getPortfolioPacts(
       @RequestParam(value = "isActive", required = false) Boolean isActive) {
     return ppService.getAllPortfolioPacts(isActive)
         .stream()
-        .map(pp -> PortfolioPactOutput.fromPortfolioPact(pp))
+        .map(pp -> PactOutput.fromPortfolioPact(pp))
         .toList();
   }
 
-  @GetMapping(value = "/portfolio_pact/{id}")
-  PortfolioPactOutput getPortfolioPact(@PathVariable("id") int id) {
-    PortfolioPact pp = ppService.getPortfolioPactById(id).orElseThrow(
+  @GetMapping(value = "/pact/{id}")
+  PactOutput getPortfolioPact(@PathVariable("id") int id) {
+    Pact pp = ppService.getPortfolioPactById(id).orElseThrow(
         () -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PortfolioPact id: %s not found", id)));
-    return PortfolioPactOutput.fromPortfolioPact(pp);
+    return PactOutput.fromPortfolioPact(pp);
   }
 
-  @GetMapping(value = "/portfolio_pact_by_alias")
-  PortfolioPactOutput getPortfolioPact(@RequestParam("alias") String alias) {
-    PortfolioPact pp = ppService.getPortfolioPactByAlias(alias).orElseThrow(
+  @GetMapping(value = "/pact_by_alias")
+  PactOutput getPortfolioPact(@RequestParam("alias") String alias) {
+    Pact pp = ppService.getPortfolioPactByAlias(alias).orElseThrow(
         () -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PortfolioPact alias: %s not found", alias)));
-    return PortfolioPactOutput.fromPortfolioPact(pp);
+    return PactOutput.fromPortfolioPact(pp);
   }
 
-  @PostMapping(value = "/portfolio_pact")
-  PortfolioPactOutput createPortfolioPact(@RequestBody PortfolioPactInput dto) {
-    String email = pService
-        .getEmailByNickname(dto.promoter())
+  @PostMapping(value = "/pact")
+  PactOutput createPortfolioPact(@RequestBody PactInput dto) {
+    Promoter promoter = pService
+        .getPromoterByNickname(dto.promoter())
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("Promoter nickname: %s not found", dto.promoter())));
 
-    int indId = iiService
+    IndustryInfo indInfo = iiService
         .getIndustryInfoByName(dto.industry())
         .orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND, String.format("Industry name: %s not found", dto.industry())))
-        .getId();
+            HttpStatus.NOT_FOUND, String.format("Industry name: %s not found", dto.industry())));
 
-    PortfolioPact pp = PortfolioPact.fromPortfolioPactDto(dto, email, indId);
+    Pact pp = Pact.fromPortfolioPactDto(dto, promoter, indInfo);
 
     pp = ppService.createPortfolioPact(pp);
 
-    return PortfolioPactOutput.fromPortfolioPact(pp, dto.promoter(), dto.industry());
+    return PactOutput.fromPortfolioPact(pp, dto.promoter(), dto.industry());
   }
 
-  @PutMapping(value = "/portfolio_pact/{id}")
-  PortfolioPactOutput updatePortfolioPact(
+  @PutMapping(value = "/pact/{id}")
+  PactOutput updatePortfolioPact(
       @PathVariable("id") int id,
-      @RequestBody PortfolioPactInput dto) {
-    String email = pService
-        .getEmailByNickname(dto.promoter())
+      @RequestBody PactInput dto) {
+    Promoter promoter = pService
+        .getPromoterByNickname(dto.promoter())
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("Promoter nickname: %s not found", dto.promoter())));
 
-    int indId = iiService
+    IndustryInfo indInfo = iiService
         .getIndustryInfoByName(dto.industry())
         .orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND, String.format("Industry name: %s not found", dto.industry())))
-        .getId();
+            HttpStatus.NOT_FOUND, String.format("Industry name: %s not found", dto.industry())));
 
-    PortfolioPact pp = PortfolioPact.fromPortfolioPactDto(dto, email, indId);
+    Pact pp = Pact.fromPortfolioPactDto(dto, promoter, indInfo);
 
     pp = ppService
         .updatePortfolioPact(id, pp)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PortfolioPact id: %s not found", id)));
 
-    return PortfolioPactOutput.fromPortfolioPact(pp, dto.promoter(), dto.industry());
+    return PactOutput.fromPortfolioPact(pp, dto.promoter(), dto.industry());
   }
 
-  @DeleteMapping(value = "/portfolio_pact/{id}")
+  @DeleteMapping(value = "/pact/{id}")
   void deletePortfolioPact(@PathVariable("id") int id) {
     ppService.deletePortfolioPact(id);
   }
 
-  @DeleteMapping(value = "/portfolio_pact_by_alias")
+  @DeleteMapping(value = "/pact_by_alias")
   void deletePortfolioPact(@RequestParam("alias") String alias) {
     ppService.deletePortfolioPact(alias);
   }

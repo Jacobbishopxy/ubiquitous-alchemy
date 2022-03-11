@@ -7,19 +7,19 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.PortfolioPact;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.PortfolioPactRepository;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.PactRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PortfolioPactService {
+public class PactService {
 
   @Autowired
-  private PortfolioPactRepository ppRepo;
+  private PactRepository ppRepo;
 
-  public List<PortfolioPact> getAllPortfolioPacts(Boolean isActive) {
+  public List<Pact> getAllPortfolioPacts(Boolean isActive) {
     if (isActive == null) {
       return ppRepo.findAll();
     } else {
@@ -27,26 +27,26 @@ public class PortfolioPactService {
     }
   }
 
-  public Optional<PortfolioPact> getPortfolioPactById(int id) {
+  public Optional<Pact> getPortfolioPactById(int id) {
     return ppRepo.findById(id);
   }
 
-  public Optional<PortfolioPact> getPortfolioPactByAlias(String alias) {
+  public Optional<Pact> getPortfolioPactByAlias(String alias) {
     return ppRepo.findByAlias(alias);
   }
 
-  public PortfolioPact createPortfolioPact(PortfolioPact portfolioPact) {
+  public Pact createPortfolioPact(Pact portfolioPact) {
     // if alias is not set, use promoter_nickname and start_date as alias
     if (portfolioPact.getAlias() == null) {
-      String alias = portfolioPact.getIndustryInfo().getName() + "-" +
-          portfolioPact.getPromoter().getNickname() + "-" +
+      String alias = portfolioPact.getIndustryInfo().getName() + "_" +
+          portfolioPact.getPromoter().getNickname() + "_" +
           portfolioPact.getStartDate().toString();
       portfolioPact.setAlias(alias);
     }
     return ppRepo.save(portfolioPact);
   }
 
-  public Optional<PortfolioPact> updatePortfolioPact(int id, PortfolioPact portfolioPact) {
+  public Optional<Pact> updatePortfolioPact(int id, Pact portfolioPact) {
     return ppRepo.findById(id).map(
         record -> {
           record.setAlias(portfolioPact.getAlias());
@@ -60,7 +60,7 @@ public class PortfolioPactService {
         });
   }
 
-  public Optional<PortfolioPact> updatePortfolioPact(String alias, PortfolioPact portfolioPact) {
+  public Optional<Pact> updatePortfolioPact(String alias, Pact portfolioPact) {
     return ppRepo.findByAlias(alias).map(
         record -> {
           record.setAlias(portfolioPact.getAlias());

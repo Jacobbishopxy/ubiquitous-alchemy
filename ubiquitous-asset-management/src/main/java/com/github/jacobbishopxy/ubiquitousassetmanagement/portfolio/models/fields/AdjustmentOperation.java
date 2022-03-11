@@ -4,7 +4,7 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields;
 
-public enum PortfolioAdjustmentOperation {
+public enum AdjustmentOperation {
   Setup,
   Join,
   Leave,

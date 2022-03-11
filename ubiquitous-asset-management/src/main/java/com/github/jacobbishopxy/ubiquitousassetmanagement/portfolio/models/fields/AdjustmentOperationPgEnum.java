@@ -12,7 +12,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.EnumType;
 
-public class PortfolioAdjustmentOperationPgEnum extends EnumType<PortfolioAdjustmentOperation> {
+public class AdjustmentOperationPgEnum extends EnumType<AdjustmentOperation> {
 
   public void nullSafeSet(
       PreparedStatement st,

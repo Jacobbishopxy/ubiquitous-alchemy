@@ -11,7 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioPactInput;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PactInput;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.IndustryInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.models.Promoter;
 
@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table(name = "portfolio_pact", uniqueConstraints = {
     @UniqueConstraint(columnNames = { "promoter_email", "startDate" }) })
-public class PortfolioPact {
+public class Pact {
   // =======================================================================
   // Fields
   // =======================================================================
@@ -62,17 +62,17 @@ public class PortfolioPact {
   @Schema(description = "Is the portfolio pact active?")
   private Boolean isActive;
 
-  @OneToMany(mappedBy = "portfolioPact", fetch = FetchType.EAGER)
-  private List<PortfolioAdjustmentRecord> portfolioAdjustmentRecords;
+  @OneToMany(mappedBy = "pact", fetch = FetchType.EAGER)
+  private List<AdjustmentRecord> adjustmentRecords;
 
   // =======================================================================
   // Constructors
   // =======================================================================
 
-  public PortfolioPact() {
+  public Pact() {
   }
 
-  public PortfolioPact(
+  public Pact(
       String alias,
       Promoter promoter,
       IndustryInfo industryInfo,
@@ -94,16 +94,14 @@ public class PortfolioPact {
   // Accessors
   // =======================================================================
 
-  public static PortfolioPact fromPortfolioPactDto(
-      PortfolioPactInput portfolioPactInput,
-      String promoterEmail,
-      int industryInfoId) {
+  public static Pact fromPortfolioPactDto(
+      PactInput portfolioPactInput,
+      Promoter promoter,
+      IndustryInfo industryInfo) {
 
-    Promoter promoter = new Promoter(promoterEmail);
-    IndustryInfo industryInfo = new IndustryInfo(industryInfoId);
-    boolean isActive = portfolioPactInput.endDate() == null ? false : true;
+    boolean isActive = portfolioPactInput.endDate() == null ? true : false;
 
-    return new PortfolioPact(
+    return new Pact(
         portfolioPactInput.alias(),
         promoter,
         industryInfo,
@@ -177,12 +175,12 @@ public class PortfolioPact {
     this.isActive = isActive;
   }
 
-  public List<PortfolioAdjustmentRecord> getPortfolioAdjustmentRecords() {
-    return portfolioAdjustmentRecords;
+  public List<AdjustmentRecord> getAdjustmentRecords() {
+    return adjustmentRecords;
   }
 
-  public void setPortfolioAdjustmentRecords(List<PortfolioAdjustmentRecord> portfolioAdjustmentRecords) {
-    this.portfolioAdjustmentRecords = portfolioAdjustmentRecords;
+  public void setAdjustmentRecords(List<AdjustmentRecord> adjustmentRecords) {
+    this.adjustmentRecords = adjustmentRecords;
   }
 
 }

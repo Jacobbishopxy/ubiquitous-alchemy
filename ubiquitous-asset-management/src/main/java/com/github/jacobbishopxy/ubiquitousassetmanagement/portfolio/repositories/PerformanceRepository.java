@@ -4,10 +4,10 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.PortfolioBenchmark;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PortfolioBenchmarkRepository extends JpaRepository<PortfolioBenchmark, Integer> {
+public interface PerformanceRepository extends JpaRepository<Performance, Integer> {
 
 }

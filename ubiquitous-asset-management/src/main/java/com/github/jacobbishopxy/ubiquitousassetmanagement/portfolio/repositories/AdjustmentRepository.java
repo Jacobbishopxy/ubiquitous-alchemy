@@ -4,10 +4,10 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.PortfolioAdjustment;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Adjustment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PortfolioAdjustmentRepository extends JpaRepository<PortfolioAdjustment, Integer> {
+public interface AdjustmentRepository extends JpaRepository<Adjustment, Integer> {
 
 }

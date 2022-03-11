@@ -15,6 +15,8 @@ import java.util.Date;
 public class Constants {
 
   public static final String API_VERSION = "v1";
+  public static final String API_PROMOTION = "/promotion";
+  public static final String API_PORTFOLIO = "/portfolio";
 
   public static final String DATE_FORMAT = "yyyy-MM-dd";
   public static final String TIME_FORMAT = "HH:mm:ss";

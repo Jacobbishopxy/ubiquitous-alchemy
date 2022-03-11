@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.controllers
 import java.text.ParseException;
 import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.DateRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.IntegerRange;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.promotion.dtos.PromotionRecordInput;
@@ -29,7 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "PromotionRecord", description = "PromotionRecord related operations")
 @RestController
-@RequestMapping("v1")
+@RequestMapping(Constants.API_VERSION + Constants.API_PROMOTION)
 public class PromotionRecordController {
 
   @Autowired
@@ -42,14 +43,14 @@ public class PromotionRecordController {
   private PromotionRecordService promotionRecordService;
 
   @Operation(description = "Count promotion records by promotion pact name.")
-  @GetMapping("/count_promotion_record")
+  @GetMapping("/record_count")
   long countPromotionRecords(@RequestParam String promotionPactName) {
     return promotionRecordService
         .countPromotionRecordsByPromotionPactName(promotionPactName);
   }
 
   @Operation(description = "Get promotion records by page and size. Searching parameters are optional.")
-  @GetMapping("/promotion_record")
+  @GetMapping("/record")
   List<PromotionRecordOutput> getPromotionRecords(
       @RequestParam("page") int page,
       @RequestParam("size") int size,
@@ -140,7 +141,7 @@ public class PromotionRecordController {
   }
 
   @Operation(description = "Get promotion record by id.")
-  @GetMapping("/promotion_record/{id}")
+  @GetMapping("/record/{id}")
   PromotionRecordOutput getPromotionRecord(@PathVariable Integer id) {
     PromotionRecord pr = promotionRecordService
         .getPromotionRecord(id)
@@ -150,7 +151,7 @@ public class PromotionRecordController {
   }
 
   @Operation(description = "Create promotion record. Noticed that this method will also effect the promotion statistic automatically.")
-  @PostMapping("/promotion_record")
+  @PostMapping("/record")
   PromotionRecordOutput createPromotionRecord(@RequestBody PromotionRecordInput dto) {
     String email = promoterService
         .getEmailByNickname(dto.promoter())
@@ -171,7 +172,7 @@ public class PromotionRecordController {
   }
 
   @Operation(description = "Update promotion record. Noticed that this method will also effect the promotion statistic automatically.")
-  @PutMapping("/promotion_record/{id}")
+  @PutMapping("/record/{id}")
   PromotionRecordOutput updatePromotionRecord(@PathVariable Integer id, @RequestBody PromotionRecordInput dto) {
     String email = promoterService.getEmailByNickname(dto.promoter())
         .orElseThrow(() -> new ResponseStatusException(
@@ -194,7 +195,7 @@ public class PromotionRecordController {
   }
 
   @Operation(description = "Delete promotion record. Noticed that this method will also effect the promotion statistic automatically.")
-  @DeleteMapping("/promotion_record/{id}")
+  @DeleteMapping("/record/{id}")
   void deletePromotionRecord(@PathVariable Integer id) {
     promotionRecordService.deletePromotionRecord(id);
   }
