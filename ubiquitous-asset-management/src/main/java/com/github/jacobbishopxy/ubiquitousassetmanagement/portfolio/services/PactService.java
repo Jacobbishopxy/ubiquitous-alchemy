@@ -19,7 +19,7 @@ public class PactService {
   @Autowired
   private PactRepository ppRepo;
 
-  public List<Pact> getAllPortfolioPacts(Boolean isActive) {
+  public List<Pact> getAllPacts(Boolean isActive) {
     if (isActive == null) {
       return ppRepo.findAll();
     } else {
@@ -27,15 +27,15 @@ public class PactService {
     }
   }
 
-  public Optional<Pact> getPortfolioPactById(int id) {
+  public Optional<Pact> getPactById(int id) {
     return ppRepo.findById(id);
   }
 
-  public Optional<Pact> getPortfolioPactByAlias(String alias) {
+  public Optional<Pact> getPactByAlias(String alias) {
     return ppRepo.findByAlias(alias);
   }
 
-  public Pact createPortfolioPact(Pact portfolioPact) {
+  public Pact createPact(Pact portfolioPact) {
     // if alias is not set, use promoter_nickname and start_date as alias
     if (portfolioPact.getAlias() == null) {
       String alias = portfolioPact.getIndustryInfo().getName() + "_" +
@@ -46,7 +46,7 @@ public class PactService {
     return ppRepo.save(portfolioPact);
   }
 
-  public Optional<Pact> updatePortfolioPact(int id, Pact portfolioPact) {
+  public Optional<Pact> updatePact(int id, Pact portfolioPact) {
     return ppRepo.findById(id).map(
         record -> {
           record.setAlias(portfolioPact.getAlias());
@@ -60,7 +60,7 @@ public class PactService {
         });
   }
 
-  public Optional<Pact> updatePortfolioPact(String alias, Pact portfolioPact) {
+  public Optional<Pact> updatePact(String alias, Pact portfolioPact) {
     return ppRepo.findByAlias(alias).map(
         record -> {
           record.setAlias(portfolioPact.getAlias());
@@ -74,11 +74,11 @@ public class PactService {
         });
   }
 
-  public void deletePortfolioPact(int id) {
+  public void deletePact(int id) {
     ppRepo.deleteById(id);
   }
 
-  public void deletePortfolioPact(String alias) {
+  public void deletePact(String alias) {
     ppRepo.deleteByAlias(alias);
   }
 

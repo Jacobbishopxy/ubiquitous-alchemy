@@ -42,7 +42,7 @@ public class PactController {
   @GetMapping(value = "/pact")
   List<PactOutput> getPortfolioPacts(
       @RequestParam(value = "isActive", required = false) Boolean isActive) {
-    return ppService.getAllPortfolioPacts(isActive)
+    return ppService.getAllPacts(isActive)
         .stream()
         .map(pp -> PactOutput.fromPortfolioPact(pp))
         .toList();
@@ -50,7 +50,7 @@ public class PactController {
 
   @GetMapping(value = "/pact/{id}")
   PactOutput getPortfolioPact(@PathVariable("id") int id) {
-    Pact pp = ppService.getPortfolioPactById(id).orElseThrow(
+    Pact pp = ppService.getPactById(id).orElseThrow(
         () -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PortfolioPact id: %s not found", id)));
     return PactOutput.fromPortfolioPact(pp);
@@ -58,7 +58,7 @@ public class PactController {
 
   @GetMapping(value = "/pact_by_alias")
   PactOutput getPortfolioPact(@RequestParam("alias") String alias) {
-    Pact pp = ppService.getPortfolioPactByAlias(alias).orElseThrow(
+    Pact pp = ppService.getPactByAlias(alias).orElseThrow(
         () -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PortfolioPact alias: %s not found", alias)));
     return PactOutput.fromPortfolioPact(pp);
@@ -78,7 +78,7 @@ public class PactController {
 
     Pact pp = Pact.fromPortfolioPactDto(dto, promoter, indInfo);
 
-    pp = ppService.createPortfolioPact(pp);
+    pp = ppService.createPact(pp);
 
     return PactOutput.fromPortfolioPact(pp, dto.promoter(), dto.industry());
   }
@@ -100,7 +100,7 @@ public class PactController {
     Pact pp = Pact.fromPortfolioPactDto(dto, promoter, indInfo);
 
     pp = ppService
-        .updatePortfolioPact(id, pp)
+        .updatePact(id, pp)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PortfolioPact id: %s not found", id)));
 
@@ -109,12 +109,12 @@ public class PactController {
 
   @DeleteMapping(value = "/pact/{id}")
   void deletePortfolioPact(@PathVariable("id") int id) {
-    ppService.deletePortfolioPact(id);
+    ppService.deletePact(id);
   }
 
   @DeleteMapping(value = "/pact_by_alias")
   void deletePortfolioPact(@RequestParam("alias") String alias) {
-    ppService.deletePortfolioPact(alias);
+    ppService.deletePact(alias);
   }
 
 }

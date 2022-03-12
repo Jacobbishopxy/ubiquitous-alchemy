@@ -25,20 +25,29 @@ public class AdjustmentRecordService {
   @Autowired
   private AdjustmentRecordRepository parRepo;
 
+  // =======================================================================
+  // Query methods
+  //
   // expose to controller
+  // =======================================================================
+
   public List<AdjustmentRecord> getPAR(int portfolioPactId) {
     return parRepo.findByPactId(portfolioPactId);
   }
 
-  // expose to controller
   public List<AdjustmentRecord> getPARAtLatestAdjustDate(int portfolioPactId) {
     return parRepo.findByPactIdAndLatestAdjustDate(portfolioPactId);
   }
 
-  // expose to controller
   public Optional<AdjustmentRecord> getPARAtLatestAdjustDateAndVersion(int portfolioPactId) {
     return parRepo.findByPactIdAndLatestAdjustDate(portfolioPactId).stream().findFirst();
   }
+
+  // =======================================================================
+  // Mutation methods
+  //
+  // called by internal services
+  // =======================================================================
 
   public AdjustmentRecord createPAR(AdjustmentRecord par) {
     return parRepo.save(par);

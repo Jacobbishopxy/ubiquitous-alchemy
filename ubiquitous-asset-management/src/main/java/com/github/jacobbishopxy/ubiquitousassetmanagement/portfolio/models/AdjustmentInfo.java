@@ -18,15 +18,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * PortfolioAdjustment
+ * AdjustmentInfo
  *
  * A portfolio adjustment is a portfolio adjusted record from a promoter's
  * perspective.
  */
 @Entity
-@Table(name = "portfolio_adjustment")
+@Table(name = "portfolio_adjustment_info")
 @TypeDef(name = "adjustment_operation_enum", typeClass = AdjustmentOperationPgEnum.class)
-public class Adjustment {
+public class AdjustmentInfo {
   // =======================================================================
   // Fields
   // =======================================================================
@@ -81,10 +81,10 @@ public class Adjustment {
   // Constructors
   // =======================================================================
 
-  public Adjustment() {
+  public AdjustmentInfo() {
   }
 
-  public Adjustment(
+  public AdjustmentInfo(
       AdjustmentRecord adjustmentRecord,
       LocalTime adjustTime,
       String symbol,
