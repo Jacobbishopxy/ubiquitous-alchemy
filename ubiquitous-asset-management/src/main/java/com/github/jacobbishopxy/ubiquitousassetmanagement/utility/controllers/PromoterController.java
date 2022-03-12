@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * simple
  * GET method to get all promoters.
  */
-@Tag(name = "Promoter", description = "Promoter related operations")
+@Tag(name = "Utility")
 @RestController
 @RequestMapping("v1")
 public class PromoterController {

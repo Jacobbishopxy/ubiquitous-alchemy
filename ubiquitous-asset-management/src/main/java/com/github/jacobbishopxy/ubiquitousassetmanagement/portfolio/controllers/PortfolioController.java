@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Portfolio", description = "Portfolio related operations")
+@Tag(name = "Portfolio")
 @RestController
 @RequestMapping(Constants.API_VERSION + Constants.API_PORTFOLIO)
 public class PortfolioController {

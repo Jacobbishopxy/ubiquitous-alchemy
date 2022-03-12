@@ -20,7 +20,14 @@ import org.springframework.web.server.ResponseStatusException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "PromotionStatistic", description = "PromotionStatistic related operations. Notice that PromotionStatistic is automatically modified by PromotionRecord, hence only GET methods are supported.")
+/**
+ * PromotionStatisticController
+ * 
+ * PromotionStatistic related operations. Notice that PromotionStatistic is
+ * automatically modified by PromotionRecord, hence only GET methods are
+ * supported.
+ */
+@Tag(name = "Promotion")
 @RestController
 @RequestMapping(Constants.API_VERSION + Constants.API_PROMOTION)
 public class PromotionStatisticController {

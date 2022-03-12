@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "PortfolioAdjustmentRecord", description = "PortfolioAdjustmentRecord related operations")
+@Tag(name = "Portfolio")
 @RestController
 @RequestMapping(Constants.API_VERSION + Constants.API_PORTFOLIO)
 public class AdjustmentRecordController {

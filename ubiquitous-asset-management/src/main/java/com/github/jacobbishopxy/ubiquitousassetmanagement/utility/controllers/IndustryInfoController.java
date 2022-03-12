@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "IndustryInfo", description = "IndustryInfo related operations")
+@Tag(name = "Utility")
 @RestController
 @RequestMapping("v1")
 public class IndustryInfoController {

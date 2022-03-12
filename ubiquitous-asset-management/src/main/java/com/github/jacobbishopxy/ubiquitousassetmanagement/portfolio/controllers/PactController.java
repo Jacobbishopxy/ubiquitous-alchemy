@@ -25,7 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "PortfolioPact", description = "PortfolioPact related operations")
+@Tag(name = "Portfolio")
 @RestController
 @RequestMapping(Constants.API_VERSION + Constants.API_PORTFOLIO)
 public class PactController {

@@ -28,7 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "PromotionRecord", description = "PromotionRecord related operations")
+@Tag(name = "Promotion")
 @RestController
 @RequestMapping(Constants.API_VERSION + Constants.API_PROMOTION)
 public class PromotionRecordController {
