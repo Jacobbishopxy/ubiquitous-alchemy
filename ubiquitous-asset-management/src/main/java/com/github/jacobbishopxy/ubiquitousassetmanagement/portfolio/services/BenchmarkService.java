@@ -19,19 +19,23 @@ public class BenchmarkService {
   @Autowired
   private BenchmarkRepository pbRepo;
 
-  public List<Benchmark> getPortfolioBenchmarks(int adjustmentRecordId) {
+  public List<Benchmark> getBenchmarksByAdjustmentRecordId(int adjustmentRecordId) {
     return pbRepo.findByAdjustmentRecordId(adjustmentRecordId);
   }
 
-  public List<Benchmark> getPortfolioBenchmarks(List<Integer> adjustmentRecordIds) {
+  public List<Benchmark> getBenchmarksByAdjustmentRecordIds(List<Integer> adjustmentRecordIds) {
     return pbRepo.findByAdjustmentRecordIdIn(adjustmentRecordIds);
   }
 
-  public Benchmark createPortfolioBenchmark(Benchmark portfolioBenchmark) {
+  public Optional<Benchmark> getBenchmarkById(int id) {
+    return pbRepo.findById(id);
+  }
+
+  public Benchmark createBenchmark(Benchmark portfolioBenchmark) {
     return pbRepo.save(portfolioBenchmark);
   }
 
-  public Optional<Benchmark> updatePortfolioBenchmark(int id, Benchmark portfolioBenchmark) {
+  public Optional<Benchmark> updateBenchmark(int id, Benchmark portfolioBenchmark) {
     return pbRepo.findById(id).map(
         record -> {
           record.setAdjustDate(portfolioBenchmark.getAdjustDate());
@@ -43,7 +47,7 @@ public class BenchmarkService {
         });
   }
 
-  public void deletePortfolioBenchmark(int id) {
+  public void deleteBenchmark(int id) {
     pbRepo.deleteById(id);
   }
 }

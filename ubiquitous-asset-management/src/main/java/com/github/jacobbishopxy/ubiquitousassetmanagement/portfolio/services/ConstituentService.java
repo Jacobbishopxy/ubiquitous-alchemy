@@ -19,19 +19,23 @@ public class ConstituentService {
   @Autowired
   private ConstituentRepository pcRepo;
 
-  public List<Constituent> getPortfolioConstituents(int adjustmentRecordId) {
+  public List<Constituent> getConstituentsByAdjustmentRecordId(int adjustmentRecordId) {
     return pcRepo.findByAdjustmentRecordId(adjustmentRecordId);
   }
 
-  public List<Constituent> getPortfolioConstituents(List<Integer> adjustmentRecordIds) {
+  public List<Constituent> getConstituentsByAdjustmentRecordIds(List<Integer> adjustmentRecordIds) {
     return pcRepo.findByAdjustmentRecordIdIn(adjustmentRecordIds);
   }
 
-  public Constituent createPortfolioConstituent(Constituent portfolioConstituent) {
+  public Optional<Constituent> getConstituentById(int id) {
+    return pcRepo.findById(id);
+  }
+
+  public Constituent createConstituent(Constituent portfolioConstituent) {
     return pcRepo.save(portfolioConstituent);
   }
 
-  public Optional<Constituent> updatePortfolioConstituent(int id, Constituent portfolioConstituent) {
+  public Optional<Constituent> updateConstituent(int id, Constituent portfolioConstituent) {
     return pcRepo.findById(id).map(
         record -> {
           record.setAdjustDate(portfolioConstituent.getAdjustDate());
@@ -50,7 +54,7 @@ public class ConstituentService {
         });
   }
 
-  public void deletePortfolioConstituent(int id) {
+  public void deleteConstituent(int id) {
     pcRepo.deleteById(id);
   }
 
