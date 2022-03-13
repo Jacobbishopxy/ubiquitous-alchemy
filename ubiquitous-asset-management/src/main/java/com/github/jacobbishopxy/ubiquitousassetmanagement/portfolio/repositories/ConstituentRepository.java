@@ -16,5 +16,9 @@ public interface ConstituentRepository
 
   List<Constituent> findByAdjustmentRecordId(int adjustmentRecordId);
 
+  void deleteByAdjustmentRecordId(int adjustmentRecordId);
+
   List<Constituent> findByAdjustmentRecordIdIn(List<Integer> adjustmentRecordIds);
+
+  void deleteByAdjustmentRecordIdIn(List<Integer> adjustmentRecordIds);
 }

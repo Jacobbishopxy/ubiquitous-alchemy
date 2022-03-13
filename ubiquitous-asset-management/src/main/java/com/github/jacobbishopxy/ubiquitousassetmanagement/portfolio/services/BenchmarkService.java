@@ -50,4 +50,12 @@ public class BenchmarkService {
   public void deleteBenchmark(int id) {
     pbRepo.deleteById(id);
   }
+
+  public void deleteBenchmarksByAdjustmentRecordId(int adjustmentRecordId) {
+    pbRepo.deleteByAdjustmentRecordId(adjustmentRecordId);
+  }
+
+  public void deleteBenchmarksByAdjustmentRecordIds(List<Integer> adjustmentRecordIds) {
+    pbRepo.deleteByAdjustmentRecordIdIn(adjustmentRecordIds);
+  }
 }

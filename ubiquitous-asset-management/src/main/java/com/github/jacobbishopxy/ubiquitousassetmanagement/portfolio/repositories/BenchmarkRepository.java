@@ -16,5 +16,9 @@ public interface BenchmarkRepository
 
   List<Benchmark> findByAdjustmentRecordId(int adjustmentRecordId);
 
+  void deleteByAdjustmentRecordId(int adjustmentRecordId);
+
   List<Benchmark> findByAdjustmentRecordIdIn(List<Integer> adjustmentRecordIds);
+
+  void deleteByAdjustmentRecordIdIn(List<Integer> adjustmentRecordIds);
 }

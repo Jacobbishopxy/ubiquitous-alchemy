@@ -58,4 +58,12 @@ public class ConstituentService {
     pcRepo.deleteById(id);
   }
 
+  public void deleteConstituentsByAdjustmentRecordId(int adjustmentRecordId) {
+    pcRepo.deleteByAdjustmentRecordId(adjustmentRecordId);
+  }
+
+  public void deleteConstituentsByAdjustmentRecordIds(List<Integer> adjustmentRecordIds) {
+    pcRepo.deleteByAdjustmentRecordIdIn(adjustmentRecordIds);
+  }
+
 }

@@ -6,8 +6,4 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.he
 
 public class PortfolioCalculationHelper {
 
-  public enum PortfolioCommand {
-    SETTLE, CANCEL_SETTLE, ADJUST, CANCEL_ADJUST
-  }
-
 }
