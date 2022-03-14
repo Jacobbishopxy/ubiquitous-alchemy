@@ -124,7 +124,17 @@ public class PortfolioService {
     // delete performance
   }
 
-  // TODO:
-  // adjust
-  // cancel_adjust
+  public void adjust(
+      int pactId,
+      LocalDate adjustDate,
+      List<Constituent> constituents,
+      List<Benchmark> benchmarks) {
+
+    // TODO:
+  }
+
+  public void cancel_adjust(int pactId) {
+
+    // TODO:
+  }
 }

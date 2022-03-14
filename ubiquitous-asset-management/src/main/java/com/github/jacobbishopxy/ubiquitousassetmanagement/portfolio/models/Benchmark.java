@@ -47,13 +47,13 @@ public class Benchmark {
 
   @Column(nullable = false)
   @NotEmpty
-  @Schema(description = "The weight of this portfolio record.", required = true)
-  private Float adjustDateWeight;
+  @Schema(description = "The static weight of this portfolio record.", required = true)
+  private Float staticWeight;
 
   @Column(nullable = false)
   @NotEmpty
-  @Schema(description = "The weight of this portfolio record.", required = true)
-  private Float currentWeight;
+  @Schema(description = "The dynamic weight of this portfolio record.", required = true)
+  private Float dynamicWeight;
 
   // =======================================================================
   // Constructors
@@ -67,15 +67,15 @@ public class Benchmark {
       LocalDate adjustDate,
       String benchmarkName,
       Float percentageChange,
-      Float adjustDateWeight,
-      Float currentWeight) {
+      Float staticWeight,
+      Float dynamicWeight) {
     super();
     this.adjustmentRecord = adjustmentRecord;
     this.adjustDate = adjustDate;
     this.benchmarkName = benchmarkName;
     this.percentageChange = percentageChange;
-    this.adjustDateWeight = adjustDateWeight;
-    this.currentWeight = currentWeight;
+    this.staticWeight = staticWeight;
+    this.dynamicWeight = dynamicWeight;
   }
 
   // =======================================================================
@@ -122,20 +122,20 @@ public class Benchmark {
     this.percentageChange = percentageChange;
   }
 
-  public Float getAdjustDateWeight() {
-    return adjustDateWeight;
+  public Float getStaticWeight() {
+    return staticWeight;
   }
 
-  public void setAdjustDateWeight(Float adjustDateWeight) {
-    this.adjustDateWeight = adjustDateWeight;
+  public void setStaticWeight(Float staticWeight) {
+    this.staticWeight = staticWeight;
   }
 
-  public Float getCurrentWeight() {
-    return currentWeight;
+  public Float getDynamicWeight() {
+    return dynamicWeight;
   }
 
-  public void setCurrentWeight(Float currentWeight) {
-    this.currentWeight = currentWeight;
+  public void setDynamicWeight(Float dynamicWeight) {
+    this.dynamicWeight = dynamicWeight;
   }
 
 }

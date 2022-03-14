@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 import java.time.LocalDate;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.ConstituentInput;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -63,13 +64,13 @@ public class Constituent {
 
   @Column(nullable = false)
   @NotEmpty
-  @Schema(description = "The weight of this portfolio record.", required = true)
-  private Float adjustDateWeight;
+  @Schema(description = "The static weight of this portfolio record.", required = true)
+  private Float staticWeight;
 
   @Column(nullable = false)
   @NotEmpty
-  @Schema(description = "The weight of this portfolio record.", required = true)
-  private Float currentWeight;
+  @Schema(description = "The dynamic weight of this portfolio record.", required = true)
+  private Float dynamicWeight;
 
   @Column(nullable = false)
   @NotEmpty
@@ -103,8 +104,7 @@ public class Constituent {
       Float currentWeight,
       Float pbpe,
       Float marketValue,
-      Float earningsYield,
-      int version) {
+      Float earningsYield) {
     super();
     this.adjustmentRecord = adjustmentRecord;
     this.adjustDate = adjustDate;
@@ -114,8 +114,8 @@ public class Constituent {
     this.currentPrice = currentPrice;
     this.adjustDateFactor = adjustDateFactor;
     this.currentFactor = currentFactor;
-    this.adjustDateWeight = adjustDateWeight;
-    this.currentWeight = currentWeight;
+    this.staticWeight = adjustDateWeight;
+    this.dynamicWeight = currentWeight;
     this.pbpe = pbpe;
     this.marketValue = marketValue;
     this.earningsYield = earningsYield;
@@ -124,6 +124,49 @@ public class Constituent {
   // =======================================================================
   // Accessors
   // =======================================================================
+
+  public int get_adjustment_record_id() {
+    Integer id = adjustmentRecord.getId();
+    if (id == null) {
+      throw new IllegalArgumentException("The adjustment record id cannot be null.");
+    }
+    return id;
+  }
+
+  public Constituent fromConstituentDto(ConstituentInput dto) {
+
+    AdjustmentRecord ar = new AdjustmentRecord();
+    ar.setId(dto.adjustmentRecordId());
+
+    Float earningsYield = 0f;
+    Float pctChg = 0f;
+    if (dto.adjustDatePrice() != null &&
+        dto.currentPrice() != null &&
+        dto.adjustDateFactor() != null &&
+        dto.currentFactor() != null) {
+      Float adjChg = dto.currentFactor() / dto.adjustDateFactor();
+      pctChg = adjChg * dto.currentPrice() / dto.adjustDatePrice();
+      earningsYield = pctChg - 1;
+    }
+    // since we not yet have the totalPctChg, saving expansionRate in order to
+    // calculate the currentWeight afterwards
+    Float expansionRate = dto.weight() * pctChg;
+
+    return new Constituent(
+        ar,
+        dto.adjustDate(),
+        dto.symbol(),
+        dto.abbreviation(),
+        dto.adjustDatePrice(),
+        dto.currentPrice(),
+        dto.adjustDateFactor(),
+        dto.currentFactor(),
+        dto.weight(),
+        expansionRate, // currentWeight = expansionRate / sum of all expansionRates
+        dto.pbpe(),
+        dto.marketValue(),
+        earningsYield);
+  }
 
   public Integer getId() {
     return id;
@@ -197,20 +240,20 @@ public class Constituent {
     this.currentFactor = currentFactor;
   }
 
-  public Float getAdjustDateWeight() {
-    return adjustDateWeight;
+  public Float getStaticWeight() {
+    return staticWeight;
   }
 
-  public void setAdjustDateWeight(Float adjustDateWeight) {
-    this.adjustDateWeight = adjustDateWeight;
+  public void setStaticWeight(Float staticWeight) {
+    this.staticWeight = staticWeight;
   }
 
-  public Float getCurrentWeight() {
-    return currentWeight;
+  public Float getDynamicWeight() {
+    return dynamicWeight;
   }
 
-  public void setCurrentWeight(Float currentWeight) {
-    this.currentWeight = currentWeight;
+  public void setDynamicWeight(Float dynamicWeight) {
+    this.dynamicWeight = dynamicWeight;
   }
 
   public Float getPbpe() {

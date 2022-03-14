@@ -6,6 +6,9 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioCalculationHelper;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
@@ -28,38 +31,18 @@ public class Performance {
 
   @Column(nullable = false)
   @NotEmpty
-  @Schema(description = "The earnings yield of custom portfolio. (static weight calculation)", required = true)
-  private Float portfolioStaticEarningsYield;
+  @Schema(description = "The earnings yield of custom portfolio.", required = true)
+  private Float portfolioEarningsYield;
 
   @Column(nullable = false)
   @NotEmpty
-  @Schema(description = "The earnings yield of custom portfolio. (dynamic weight calculation)", required = true)
-  private Float portfolioDynamicEarningsYield;
+  @Schema(description = "The earnings yield of benchmark.", required = true)
+  private Float benchmarkEarningsYield;
 
   @Column(nullable = false)
   @NotEmpty
-  @Schema(description = "The earnings yield of benchmark. (static weight calculation)", required = true)
-  private Float benchmarkStaticEarningsYield;
-
-  @Column(nullable = false)
-  @NotEmpty
-  @Schema(description = "The earnings yield of benchmark. (static weight calculation)", required = true)
-  private Float benchmarkDynamicEarningsYield;
-
-  @Column(nullable = false)
-  @NotEmpty
-  @Schema(description = "The static difference between custom portfolio and benchmark.", required = true)
-  private Float staticDifference;
-
-  @Column(nullable = false)
-  @NotEmpty
-  @Schema(description = "The dynamic difference between custom portfolio and benchmark.", required = true)
-  private Float dynamicDifference;
-
-  @Column(nullable = false)
-  @NotEmpty
-  @Schema(description = "The version of this portfolio record.", required = true)
-  private int version;
+  @Schema(description = "The difference between custom portfolio and benchmark.", required = true)
+  private Float alpha;
 
   // =======================================================================
   // Constructors
@@ -70,22 +53,13 @@ public class Performance {
 
   public Performance(
       AdjustmentRecord adjustmentRecord,
-      Float portfolioStaticEarningsYield,
-      Float portfolioDynamicEarningsYield,
-      Float benchmarkStaticEarningsYield,
-      Float benchmarkDynamicEarningsYield,
-      Float staticDifference,
-      Float dynamicDifference,
-      int version) {
+      Float portfolioEarningsYield,
+      Float benchmarkEarningsYield) {
     super();
     this.adjustmentRecord = adjustmentRecord;
-    this.portfolioStaticEarningsYield = portfolioStaticEarningsYield;
-    this.portfolioDynamicEarningsYield = portfolioDynamicEarningsYield;
-    this.benchmarkStaticEarningsYield = benchmarkStaticEarningsYield;
-    this.benchmarkDynamicEarningsYield = benchmarkDynamicEarningsYield;
-    this.staticDifference = staticDifference;
-    this.dynamicDifference = dynamicDifference;
-    this.version = version;
+    this.portfolioEarningsYield = portfolioEarningsYield;
+    this.benchmarkEarningsYield = benchmarkEarningsYield;
+    this.alpha = PortfolioCalculationHelper.calculateAlpha(portfolioEarningsYield, benchmarkEarningsYield);
   }
 
   // =======================================================================
@@ -108,59 +82,27 @@ public class Performance {
     this.adjustmentRecord = adjustmentRecord;
   }
 
-  public Float getPortfolioStaticEarningsYield() {
-    return portfolioStaticEarningsYield;
+  public Float getPortfolioEarningsYield() {
+    return portfolioEarningsYield;
   }
 
-  public void setPortfolioStaticEarningsYield(Float portfolioStaticEarningsYield) {
-    this.portfolioStaticEarningsYield = portfolioStaticEarningsYield;
+  public void setPortfolioEarningsYield(Float portfolioEarningsYield) {
+    this.portfolioEarningsYield = portfolioEarningsYield;
   }
 
-  public Float getPortfolioDynamicEarningsYield() {
-    return portfolioDynamicEarningsYield;
+  public Float getBenchmarkEarningsYield() {
+    return benchmarkEarningsYield;
   }
 
-  public void setPortfolioDynamicEarningsYield(Float portfolioDynamicEarningsYield) {
-    this.portfolioDynamicEarningsYield = portfolioDynamicEarningsYield;
+  public void setBenchmarkEarningsYield(Float benchmarkEarningsYield) {
+    this.benchmarkEarningsYield = benchmarkEarningsYield;
   }
 
-  public Float getBenchmarkStaticEarningsYield() {
-    return benchmarkStaticEarningsYield;
+  public Float getAlpha() {
+    return alpha;
   }
 
-  public void setBenchmarkStaticEarningsYield(Float benchmarkStaticEarningsYield) {
-    this.benchmarkStaticEarningsYield = benchmarkStaticEarningsYield;
-  }
-
-  public Float getBenchmarkDynamicEarningsYield() {
-    return benchmarkDynamicEarningsYield;
-  }
-
-  public void setBenchmarkDynamicEarningsYield(Float benchmarkDynamicEarningsYield) {
-    this.benchmarkDynamicEarningsYield = benchmarkDynamicEarningsYield;
-  }
-
-  public Float getStaticDifference() {
-    return staticDifference;
-  }
-
-  public void setStaticDifference(Float staticDifference) {
-    this.staticDifference = staticDifference;
-  }
-
-  public Float getDynamicDifference() {
-    return dynamicDifference;
-  }
-
-  public void setDynamicDifference(Float dynamicDifference) {
-    this.dynamicDifference = dynamicDifference;
-  }
-
-  public int getVersion() {
-    return version;
-  }
-
-  public void setVersion(int version) {
-    this.version = version;
+  public void setAlpha(Float alpha) {
+    this.alpha = alpha;
   }
 }

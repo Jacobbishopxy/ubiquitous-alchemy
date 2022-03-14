@@ -41,8 +41,8 @@ public class BenchmarkService {
           record.setAdjustDate(portfolioBenchmark.getAdjustDate());
           record.setBenchmarkName(portfolioBenchmark.getBenchmarkName());
           record.setPercentageChange(portfolioBenchmark.getPercentageChange());
-          record.setAdjustDateWeight(portfolioBenchmark.getAdjustDateWeight());
-          record.setCurrentWeight(portfolioBenchmark.getCurrentWeight());
+          record.setStaticWeight(portfolioBenchmark.getStaticWeight());
+          record.setDynamicWeight(portfolioBenchmark.getDynamicWeight());
           return pbRepo.save(record);
         });
   }
