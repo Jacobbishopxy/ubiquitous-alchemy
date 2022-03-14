@@ -54,7 +54,11 @@ public class ConstituentController {
   Constituent updateConstituent(
       @PathVariable("id") int id,
       @RequestBody Constituent constituent) {
-    return constituentService.updateConstituent(id, constituent);
+    return constituentService
+        .updateConstituent(id, constituent)
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            String.format("Constituent for id: %s not found", id)));
   }
 
   @DeleteMapping("/constituent/{id}")

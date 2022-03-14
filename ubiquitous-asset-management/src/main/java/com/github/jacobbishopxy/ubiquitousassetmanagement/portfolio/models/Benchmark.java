@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 import java.time.LocalDate;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.BenchmarkInput;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -81,6 +82,30 @@ public class Benchmark {
   // =======================================================================
   // Accessors
   // =======================================================================
+
+  public int get_adjustment_record_id() {
+    Integer id = adjustmentRecord.getId();
+    if (id == null) {
+      throw new IllegalStateException("The adjustment record id cannot be null.");
+    }
+    return id;
+  }
+
+  public Benchmark fromBenchmarkDto(BenchmarkInput dto) {
+
+    AdjustmentRecord ar = new AdjustmentRecord();
+    ar.setId(dto.adjustmentRecordId());
+
+    Float expansionRate = dto.weight() * dto.percentageChange();
+
+    return new Benchmark(
+        ar,
+        dto.adjustDate(),
+        dto.benchmarkName(),
+        dto.percentageChange(),
+        dto.weight(),
+        expansionRate);
+  }
 
   public Integer getId() {
     return id;

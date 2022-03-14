@@ -16,7 +16,7 @@ public class PortfolioCalculationHelper {
       Float earningsYield) {
   }
 
-  public static ConstituentsResult calculatePortfolioEarningsYield(
+  public static ConstituentsResult modifyConstituentsAndCalculatePortfolioEarningsYield(
       List<Constituent> constituents) {
 
     Float totalExpansion = constituents
@@ -47,7 +47,7 @@ public class PortfolioCalculationHelper {
       Float earningsYield) {
   }
 
-  public static BenchmarksResult calculateBenchmarkEarningsYield(
+  public static BenchmarksResult modifyBenchmarksAndCalculateBenchmarkEarningsYield(
       List<Benchmark> benchmarks) {
 
     Float totalExpansion = benchmarks

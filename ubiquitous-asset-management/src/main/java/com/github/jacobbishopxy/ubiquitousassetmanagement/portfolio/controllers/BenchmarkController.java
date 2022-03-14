@@ -53,9 +53,11 @@ public class BenchmarkController {
   Benchmark updateBenchmark(
       @PathVariable("id") int id,
       @RequestBody Benchmark benchmark) {
-    return benchmarkService.updateBenchmark(id, benchmark).orElseThrow(
-        () -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND, String.format("Benchmark for id: %s not found", id)));
+    return benchmarkService
+        .updateBenchmark(id, benchmark)
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            String.format("Benchmark for id: %s not found", id)));
   }
 
   @DeleteMapping("/benchmark/{id}")
