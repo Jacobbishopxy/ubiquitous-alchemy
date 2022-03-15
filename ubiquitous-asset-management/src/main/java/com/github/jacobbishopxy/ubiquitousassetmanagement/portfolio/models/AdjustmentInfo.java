@@ -154,12 +154,20 @@ public class AdjustmentInfo {
     this.operation = operation;
   }
 
-  public Float getWeight() {
+  public Float getStaticWeight() {
     return staticWeightChange;
   }
 
-  public void setWeight(Float weight) {
+  public void setStaticWeight(Float weight) {
     this.staticWeightChange = weight;
+  }
+
+  public Float getDynamicWeight() {
+    return dynamicWeightChange;
+  }
+
+  public void setDynamicWeight(Float weight) {
+    this.dynamicWeightChange = weight;
   }
 
   public String getDescription() {

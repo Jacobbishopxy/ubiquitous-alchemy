@@ -7,11 +7,13 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioAdjustmentHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -133,6 +135,10 @@ public class PortfolioService {
     performanceService.deletePerformanceByAdjustmentRecordId(ar.getId());
   }
 
+  // automation process:
+  // 1. settle
+  // 2. adjust -> AdjustmentInfo
+  // 3. settle
   public void adjust(
       int pactId,
       LocalDate adjustDate,
@@ -145,6 +151,9 @@ public class PortfolioService {
     // TODO:
     // call `PortfolioAdjustmentHelper.adjust(...)` to get `AdjustmentOperation` and
     // fill in the `AdjustmentInfo`.
+    List<AdjustmentInfo> ais = PortfolioAdjustmentHelper.adjust(sr.constituents(), constituents);
+
+    adjustmentInfoService.createAdjustmentInfos(ais);
 
   }
 
