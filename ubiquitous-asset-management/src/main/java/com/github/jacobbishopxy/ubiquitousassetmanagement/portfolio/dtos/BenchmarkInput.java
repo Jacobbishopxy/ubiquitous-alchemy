@@ -6,11 +6,15 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos;
 
 import java.time.LocalDate;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public record BenchmarkInput(
-        int adjustmentRecordId,
-        LocalDate adjustDate,
-        String benchmarkName,
-        Float percentageChange,
-        Float weight) {
+    int adjustmentRecordId,
+    @JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
+    String benchmarkName,
+    Float percentageChange,
+    Float weight) {
 
 }

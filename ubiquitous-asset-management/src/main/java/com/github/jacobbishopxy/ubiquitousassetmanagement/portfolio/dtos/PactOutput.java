@@ -9,12 +9,15 @@ import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public record PactOutput(String alias,
     String promoter,
     String industry,
-    LocalDate startDate,
-    LocalDate endDate,
+    @JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate startDate,
+    @JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate endDate,
     String description,
     Boolean isActive,
     List<AdjustmentRecord> adjustmentRecords) {
