@@ -8,8 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Sets;
 
 import org.junit.jupiter.api.Test;
@@ -79,4 +82,20 @@ public class GuavaTests {
     assertEquals(diff2.size(), 1);
   }
 
+  @Test
+  void testHashBiMap() {
+    List<String> foo = List.of("a", "b", "c");
+
+    Map<String, String> fooMap = HashBiMap.create(
+        foo.stream().collect(
+            Collectors.toMap(
+                s -> s,
+                s -> s + "-" + "foo")));
+
+    assertEquals(fooMap.get("a"), "a-foo");
+    assertEquals(fooMap.get("b"), "b-foo");
+    assertEquals(fooMap.get("c"), "c-foo");
+
+    assertEquals(fooMap.keySet(), Sets.newHashSet(foo));
+  }
 }

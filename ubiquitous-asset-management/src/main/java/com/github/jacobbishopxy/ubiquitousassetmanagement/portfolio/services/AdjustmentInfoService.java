@@ -4,6 +4,7 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,16 +58,21 @@ public class AdjustmentInfoService {
       a.setAbbreviation(adjustmentInfo.getAbbreviation());
       a.setOperation(adjustmentInfo.getOperation());
       a.setStaticWeight(adjustmentInfo.getStaticWeight());
-      a.setDynamicWeight(adjustmentInfo.getDynamicWeight());
       a.setDescription(adjustmentInfo.getDescription());
       return aRepo.save(a);
     });
   }
 
   // EXCEPTION: expose to controller
-  public Optional<AdjustmentInfo> modifyAdjustmentInfoDescription(int id, String description) {
+  public Optional<AdjustmentInfo> modifyAdjustmentInfo(int id, LocalTime adjustTime, String description) {
     return aRepo.findById(id).map(a -> {
-      a.setDescription(description);
+      if (adjustTime != null) {
+        a.setAdjustTime(adjustTime);
+      }
+      if (description != null) {
+        a.setDescription(description);
+      }
+
       return aRepo.save(a);
     });
   }

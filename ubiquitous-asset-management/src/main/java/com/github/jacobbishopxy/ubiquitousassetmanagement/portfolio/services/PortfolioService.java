@@ -145,15 +145,20 @@ public class PortfolioService {
       List<Constituent> constituents,
       List<Benchmark> benchmarks) {
 
-    // 0. make a copy of the latest data and bind them to a new adjustment record
+    // 1. make a copy of the latest data and bind them to a new adjustment record
+    // TODO:
+    // check if the portfolio has already been settled; if settled, use the settled
+    // ones.
+    // ASKING: how to distinguish if the portfolio is settled?
     SettleResult sr = settle(pactId, adjustDate);
 
-    // TODO:
-    // call `PortfolioAdjustmentHelper.adjust(...)` to get `AdjustmentOperation` and
-    // fill in the `AdjustmentInfo`.
+    // 2. according to the latest adjustment record, create AdjustmentInfos by
+    // comparing the new constituents with the old ones
     List<AdjustmentInfo> ais = PortfolioAdjustmentHelper.adjust(sr.constituents(), constituents);
-
     adjustmentInfoService.createAdjustmentInfos(ais);
+
+    // TODO:
+    // now we've saved the adjustment info, next step is to settle the new portfolio
 
   }
 

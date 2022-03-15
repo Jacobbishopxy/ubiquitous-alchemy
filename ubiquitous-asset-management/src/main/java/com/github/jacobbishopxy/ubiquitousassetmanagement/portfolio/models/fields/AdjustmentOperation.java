@@ -5,9 +5,9 @@
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields;
 
 public enum AdjustmentOperation {
-  Setup,
   Join,
   Leave,
+  Unchanged,
   Increase,
   Decrease;
 }

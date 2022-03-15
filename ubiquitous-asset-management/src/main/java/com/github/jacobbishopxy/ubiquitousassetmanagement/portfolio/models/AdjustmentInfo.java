@@ -69,11 +69,6 @@ public class AdjustmentInfo {
   @Schema(description = "The static weight change of the adjustment.", example = "0.15", required = true)
   private Float staticWeightChange;
 
-  @Column(nullable = false)
-  @NotEmpty
-  @Schema(description = "The dynamic weight change of the adjustment.", example = "0.15", required = true)
-  private Float dynamicWeightChange;
-
   @Column(columnDefinition = "TEXT")
   private String description;
 
@@ -160,14 +155,6 @@ public class AdjustmentInfo {
 
   public void setStaticWeight(Float weight) {
     this.staticWeightChange = weight;
-  }
-
-  public Float getDynamicWeight() {
-    return dynamicWeightChange;
-  }
-
-  public void setDynamicWeight(Float weight) {
-    this.dynamicWeightChange = weight;
   }
 
   public String getDescription() {
