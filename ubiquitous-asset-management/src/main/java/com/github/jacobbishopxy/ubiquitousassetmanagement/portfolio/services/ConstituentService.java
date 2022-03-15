@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.ConstituentRepository;
@@ -68,6 +69,7 @@ public class ConstituentService {
     Performance performance = pRepo
         .findByAdjustmentRecordId(adjustmentRecordId)
         .orElse(new Performance());
+    performance.setAdjustmentRecord(new AdjustmentRecord(adjustmentRecordId));
     performance.setPortfolioEarningsYield(res.earningsYield());
     performance.setAlpha(res.earningsYield() - performance.getBenchmarkEarningsYield());
     pRepo.save(performance);

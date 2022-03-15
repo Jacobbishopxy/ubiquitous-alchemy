@@ -45,6 +45,10 @@ public class AdjustmentRecord {
   public AdjustmentRecord() {
   }
 
+  public AdjustmentRecord(int id) {
+    this.id = id;
+  }
+
   public AdjustmentRecord(
       Pact pact,
       LocalDate adjustDate,

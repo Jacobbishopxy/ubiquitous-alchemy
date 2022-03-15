@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.BenchmarkRepository;
@@ -68,6 +69,7 @@ public class BenchmarkService {
     Performance performance = pRepo
         .findByAdjustmentRecordId(adjustmentRecordId)
         .orElse(new Performance());
+    performance.setAdjustmentRecord(new AdjustmentRecord(adjustmentRecordId));
     performance.setBenchmarkEarningsYield(res.earningsYield());
     performance.setAlpha(performance.getPortfolioEarningsYield() - res.earningsYield());
     pRepo.save(performance);

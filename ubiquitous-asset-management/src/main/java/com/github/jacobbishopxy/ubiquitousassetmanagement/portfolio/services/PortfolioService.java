@@ -11,6 +11,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Adjus
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,9 +42,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PortfolioService {
 
   @Autowired
-  private PactService pactService;
-
-  @Autowired
   private AdjustmentRecordService adjustmentRecordService;
 
   @Autowired
@@ -58,8 +56,14 @@ public class PortfolioService {
   @Autowired
   private PerformanceService performanceService;
 
+  public record SettleResult(
+      AdjustmentRecord adjustmentRecord,
+      List<Benchmark> benchmarks,
+      List<Constituent> constituents) {
+  }
+
   @Transactional(rollbackFor = Exception.class)
-  public void settle(int pactId, LocalDate settlementDate) {
+  public SettleResult settle(int pactId, LocalDate settlementDate) {
     AdjustmentRecord preAr = adjustmentRecordService
         .getPARAtLatestAdjustDateAndVersion(pactId)
         .orElseThrow(() -> new RuntimeException("No latest adjustment record found for pactId: " + pactId));
@@ -100,9 +104,14 @@ public class PortfolioService {
       return constituentService.createConstituent(c);
     });
 
-    // TODO:
     // copy performance
+    Performance pfm = performanceService
+        .getPerformanceByAdjustmentRecordId(preAr.getId())
+        .orElse(new Performance());
+    pfm.setAdjustmentRecord(newAr);
+    performanceService.createPerformance(pfm);
 
+    return new SettleResult(newAr, bms, cons);
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -120,8 +129,8 @@ public class PortfolioService {
     // delete constituents
     constituentService.deleteConstituentsByAdjustmentRecordId(ar.getId());
 
-    // TODO:
     // delete performance
+    performanceService.deletePerformanceByAdjustmentRecordId(ar.getId());
   }
 
   public void adjust(
@@ -130,7 +139,13 @@ public class PortfolioService {
       List<Constituent> constituents,
       List<Benchmark> benchmarks) {
 
+    // 0. make a copy of the latest data and bind them to a new adjustment record
+    SettleResult sr = settle(pactId, adjustDate);
+
     // TODO:
+    // call `PortfolioAdjustmentHelper.adjust(...)` to get `AdjustmentOperation` and
+    // fill in the `AdjustmentInfo`.
+
   }
 
   public void cancel_adjust(int pactId) {
