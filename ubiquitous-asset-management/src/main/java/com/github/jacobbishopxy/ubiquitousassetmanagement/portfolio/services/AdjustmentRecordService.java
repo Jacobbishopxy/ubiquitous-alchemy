@@ -31,16 +31,20 @@ public class AdjustmentRecordService {
   // expose to controller
   // =======================================================================
 
-  public List<AdjustmentRecord> getPAR(int portfolioPactId) {
+  public List<AdjustmentRecord> getAR(int portfolioPactId) {
     return parRepo.findByPactId(portfolioPactId);
   }
 
-  public List<AdjustmentRecord> getPARAtLatestAdjustDate(int portfolioPactId) {
+  public List<AdjustmentRecord> getARAtLatestAdjustDate(int portfolioPactId) {
     return parRepo.findByPactIdAndLatestAdjustDate(portfolioPactId);
   }
 
-  public Optional<AdjustmentRecord> getPARAtLatestAdjustDateAndVersion(int portfolioPactId) {
+  public Optional<AdjustmentRecord> getARAtLatestAdjustDateAndVersion(int portfolioPactId) {
     return parRepo.findByPactIdAndLatestAdjustDate(portfolioPactId).stream().findFirst();
+  }
+
+  public Optional<AdjustmentRecord> getARById(int id) {
+    return parRepo.findById(id);
   }
 
   // =======================================================================

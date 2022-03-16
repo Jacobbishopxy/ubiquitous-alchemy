@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDto;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
@@ -58,16 +59,50 @@ public class PortfolioService {
   @Autowired
   private PerformanceService performanceService;
 
-  public record SettleResult(
-      AdjustmentRecord adjustmentRecord,
-      List<Benchmark> benchmarks,
-      List<Constituent> constituents) {
+  // =======================================================================
+  // Query methods
+  // =======================================================================
+
+  public PortfolioDto getPortfolioLatestAdjustDateAndVersion(int pactId) {
+    AdjustmentRecord ar = adjustmentRecordService
+        .getARAtLatestAdjustDateAndVersion(pactId)
+        .orElseThrow(() -> new RuntimeException(
+            "No latest adjustment record found for pactId: " + pactId));
+    int arId = ar.getId();
+
+    List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
+    List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
+    // if performance is null, return empty performance
+    Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
+    List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
+
+    return new PortfolioDto(ar, benchmarks, constituents, performance, adjustmentInfos);
   }
 
+  public PortfolioDto getPortfolioByAdjustmentRecordId(int adjustmentRecordId) {
+    AdjustmentRecord ar = adjustmentRecordService
+        .getARById(adjustmentRecordId)
+        .orElseThrow(() -> new RuntimeException(
+            "No adjustment record found for id: " + adjustmentRecordId));
+    int arId = ar.getId();
+
+    List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
+    List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
+    // if performance is null, return empty performance
+    Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
+    List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
+
+    return new PortfolioDto(ar, benchmarks, constituents, performance, adjustmentInfos);
+  }
+
+  // =======================================================================
+  // Mutation methods
+  // =======================================================================
+
   @Transactional(rollbackFor = Exception.class)
-  public SettleResult settle(int pactId, LocalDate settlementDate) {
+  public PortfolioDto settle(int pactId, LocalDate settlementDate) {
     AdjustmentRecord preAr = adjustmentRecordService
-        .getPARAtLatestAdjustDateAndVersion(pactId)
+        .getARAtLatestAdjustDateAndVersion(pactId)
         .orElseThrow(() -> new RuntimeException("No latest adjustment record found for pactId: " + pactId));
 
     // pact with id
@@ -113,13 +148,13 @@ public class PortfolioService {
     pfm.setAdjustmentRecord(newAr);
     performanceService.createPerformance(pfm);
 
-    return new SettleResult(newAr, bms, cons);
+    return new PortfolioDto(newAr, bms, cons, pfm, null);
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void cancel_settle(int pactId) {
+  public void cancelSettle(int pactId) {
     AdjustmentRecord ar = adjustmentRecordService
-        .getPARAtLatestAdjustDateAndVersion(pactId)
+        .getARAtLatestAdjustDateAndVersion(pactId)
         .orElseThrow(() -> new RuntimeException("No latest adjustment record found for pactId: " + pactId));
 
     // delete the latest adjustment record
@@ -150,7 +185,7 @@ public class PortfolioService {
     // check if the portfolio has already been settled; if settled, use the settled
     // ones.
     // ASKING: how to distinguish if the portfolio is settled?
-    SettleResult sr = settle(pactId, adjustDate);
+    PortfolioDto sr = settle(pactId, adjustDate);
 
     // 2. according to the latest adjustment record, create AdjustmentInfos by
     // comparing the new constituents with the old ones
@@ -162,7 +197,7 @@ public class PortfolioService {
 
   }
 
-  public void cancel_adjust(int pactId) {
+  public void cancelAdjust(int pactId) {
 
     // TODO:
   }

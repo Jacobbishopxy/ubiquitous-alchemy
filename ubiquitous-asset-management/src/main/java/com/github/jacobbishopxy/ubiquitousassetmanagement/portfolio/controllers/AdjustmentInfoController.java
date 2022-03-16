@@ -27,13 +27,13 @@ public class AdjustmentInfoController {
   @Autowired
   private AdjustmentInfoService aService;
 
-  @GetMapping("/adjustmentInfo")
+  @GetMapping("/adjustment_info")
   List<AdjustmentInfo> getAdjustmentInfosByAdjustmentRecordId(
       @RequestParam(value = "adjustmentRecordId", required = true) Integer adjustmentRecordId) {
     return aService.getAdjustmentInfosByAdjustmentRecordId(adjustmentRecordId);
   }
 
-  @GetMapping("/adjustmentInfo/{id}")
+  @GetMapping("/adjustment_info/{id}")
   AdjustmentInfo getAdjustmentInfoById(@PathVariable("id") Integer id) {
     return aService
         .getAdjustmentInfoById(id)
@@ -41,7 +41,7 @@ public class AdjustmentInfoController {
             HttpStatus.NOT_FOUND, String.format("AdjustmentInfo for id: %s not found", id)));
   }
 
-  @PatchMapping("/adjustmentInfo/{id}")
+  @PatchMapping("/adjustment_info/{id}")
   AdjustmentInfo updateAdjustmentInfo(
       @PathVariable("id") int id,
       @RequestBody AdjustmentInfoPatch dto) {

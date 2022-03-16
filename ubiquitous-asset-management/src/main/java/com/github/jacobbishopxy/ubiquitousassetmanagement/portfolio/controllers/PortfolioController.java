@@ -5,12 +5,14 @@
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.controllers;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.BenchmarkService;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.ConstituentService;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.PactService;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioAdjust;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDto;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioSettle;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.PortfolioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Portfolio")
@@ -19,12 +21,46 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class PortfolioController {
 
   @Autowired
-  private PactService pactService;
+  private PortfolioService portfolioService;
 
-  @Autowired
-  private BenchmarkService benchmarkService;
+  // =======================================================================
+  // Query methods
+  // =======================================================================
 
-  @Autowired
-  private ConstituentService constituentService;
+  @GetMapping("/portfolio_by_pact_id")
+  PortfolioDto getPortfolioByPactId(@RequestParam("pactId") int pactId) {
+    return portfolioService.getPortfolioLatestAdjustDateAndVersion(pactId);
+  }
 
+  @GetMapping("/portfolio_by_adjustment_record_id")
+  PortfolioDto getPortfolioByAdjustmentRecordId(@RequestParam("adjustmentRecordId") int adjustmentRecordId) {
+    return portfolioService.getPortfolioByAdjustmentRecordId(adjustmentRecordId);
+  }
+
+  // =======================================================================
+  // Mutation methods
+  // =======================================================================
+
+  @PostMapping("/portfolio_settle")
+  void settlePortfolio(@RequestBody PortfolioSettle portfolioSettle) {
+    portfolioService.settle(
+        portfolioSettle.pactId(),
+        portfolioSettle.settlementDate());
+  }
+
+  @DeleteMapping("/portfolio_settle")
+  void cancelSettlePortfolio(@RequestParam("pactId") int pactId) {
+    portfolioService.cancelSettle(pactId);
+  }
+
+  @PostMapping("/portfolio_adjust")
+  void adjustPortfolio(
+      @RequestParam("pactId") int pactId,
+      @RequestBody PortfolioAdjust portfolioAdjust) {
+    portfolioService.adjust(
+        pactId,
+        portfolioAdjust.adjustDate(),
+        portfolioAdjust.constituents(),
+        portfolioAdjust.benchmarks());
+  }
 }

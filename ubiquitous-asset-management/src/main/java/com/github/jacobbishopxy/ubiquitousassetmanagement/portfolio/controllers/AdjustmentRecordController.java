@@ -28,19 +28,19 @@ public class AdjustmentRecordController {
   @GetMapping(value = "/adjustment_record")
   List<AdjustmentRecord> getPortfolioAdjustmentRecords(
       @RequestParam(value = "portfolioPactId", required = true) Integer portfolioPactId) {
-    return parService.getPAR(portfolioPactId);
+    return parService.getAR(portfolioPactId);
   }
 
-  @GetMapping(value = "/adjustment_record_latest_date")
+  @GetMapping(value = "/adjustment_record/latest_date")
   List<AdjustmentRecord> getLatestPortfolioAdjustmentRecords(
       @RequestParam(value = "portfolioPactId", required = true) Integer portfolioPactId) {
-    return parService.getPARAtLatestAdjustDate(portfolioPactId);
+    return parService.getARAtLatestAdjustDate(portfolioPactId);
   }
 
-  @GetMapping(value = "/adjustment_record_latest_date_version")
+  @GetMapping(value = "/adjustment_record/latest_date_version")
   AdjustmentRecord getLatestPortfolioAdjustmentRecord(
       @RequestParam(value = "portfolioPactId", required = true) Integer portfolioPactId) {
-    return parService.getPARAtLatestAdjustDateAndVersion(portfolioPactId).orElseThrow(
+    return parService.getARAtLatestAdjustDateAndVersion(portfolioPactId).orElseThrow(
         () -> new ResponseStatusException(
             HttpStatus.NOT_FOUND,
             String.format("PortfolioAdjustmentRecord for portfolioPactId: %s not found", portfolioPactId)));
