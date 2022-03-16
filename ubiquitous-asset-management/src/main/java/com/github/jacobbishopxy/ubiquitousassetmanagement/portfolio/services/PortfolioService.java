@@ -103,7 +103,8 @@ public class PortfolioService {
   public PortfolioDto settle(int pactId, LocalDate settlementDate) {
     AdjustmentRecord preAr = adjustmentRecordService
         .getARAtLatestAdjustDateAndVersion(pactId)
-        .orElseThrow(() -> new RuntimeException("No latest adjustment record found for pactId: " + pactId));
+        .orElseThrow(() -> new RuntimeException(
+            "No latest adjustment record found for pactId: " + pactId));
 
     // pact with id
     Pact pact = new Pact();
@@ -155,7 +156,8 @@ public class PortfolioService {
   public void cancelSettle(int pactId) {
     AdjustmentRecord ar = adjustmentRecordService
         .getARAtLatestAdjustDateAndVersion(pactId)
-        .orElseThrow(() -> new RuntimeException("No latest adjustment record found for pactId: " + pactId));
+        .orElseThrow(() -> new RuntimeException(
+            "No latest adjustment record found for pactId: " + pactId));
 
     // delete the latest adjustment record
     adjustmentRecordService.deletePAR(ar.getId());

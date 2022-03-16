@@ -63,4 +63,9 @@ public class PortfolioController {
         portfolioAdjust.constituents(),
         portfolioAdjust.benchmarks());
   }
+
+  @DeleteMapping("/portfolio_adjust")
+  void cancelAdjustPortfolio(@RequestParam("pactId") int pactId) {
+    portfolioService.cancelAdjust(pactId);
+  }
 }

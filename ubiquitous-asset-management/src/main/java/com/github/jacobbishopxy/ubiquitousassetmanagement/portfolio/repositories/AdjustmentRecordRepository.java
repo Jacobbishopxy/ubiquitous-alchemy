@@ -17,7 +17,13 @@ public interface AdjustmentRecordRepository
 
   List<AdjustmentRecord> findByPactId(int portfolioPactId);
 
-  @Query("select p1 from AdjustmentRecord p1 where p1.pact.id = ?1 and p1.adjustDate = (select max(p2.adjustDate) from AdjustmentRecord p2 where p2.pact.id = ?1)")
-  List<AdjustmentRecord> findByPactIdAndLatestAdjustDate(int portfolioPactId);
+  String queryLatestAdjustDate = """
+      SELECT p1 FROM AdjustmentRecord p1
+      WHERE p1.pact.id = ?1
+      AND p1.adjustDate = (SELECT MAX(p2.adjustDate) FROM AdjustmentRecord p2 WHERE p2.pact.id = ?1)
+      ORDER BY p1.adjustVersion DESC
+      """;
 
+  @Query(queryLatestAdjustDate)
+  List<AdjustmentRecord> findByPactIdAndLatestAdjustDate(int portfolioPactId);
 }
