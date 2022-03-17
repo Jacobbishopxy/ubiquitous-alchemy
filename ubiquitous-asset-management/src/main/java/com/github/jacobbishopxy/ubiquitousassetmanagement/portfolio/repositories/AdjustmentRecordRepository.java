@@ -11,6 +11,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Adjus
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface AdjustmentRecordRepository
     extends JpaRepository<AdjustmentRecord, Integer>, JpaSpecificationExecutor<AdjustmentRecord> {
@@ -18,12 +19,42 @@ public interface AdjustmentRecordRepository
   List<AdjustmentRecord> findByPactId(int portfolioPactId);
 
   String queryLatestAdjustDate = """
-      SELECT p1 FROM AdjustmentRecord p1
+      SELECT p1
+      FROM AdjustmentRecord p1
       WHERE p1.pact.id = ?1
-      AND p1.adjustDate = (SELECT MAX(p2.adjustDate) FROM AdjustmentRecord p2 WHERE p2.pact.id = ?1)
+      AND p1.adjustDate = (
+        SELECT MAX(p2.adjustDate) FROM AdjustmentRecord p2
+        WHERE p2.pact.id = ?1
+      )
       ORDER BY p1.adjustVersion DESC
       """;
 
   @Query(queryLatestAdjustDate)
-  List<AdjustmentRecord> findByPactIdAndLatestAdjustDate(int portfolioPactId);
+  List<AdjustmentRecord> findByPactIdAndLatestAdjustDate(int pactId);
+
+  String queryActiveLatestAdjustDateVersion = """
+      SELECT p.*
+      FROM portfolio_adjustment_record p
+      INNER JOIN (
+        SELECT p1.portfolio_pact_id, p1.adjust_date, max(p1.adjust_version) max_version
+        FROM portfolio_adjustment_record p1
+        INNER JOIN (
+            SELECT p2.portfolio_pact_id, MAX(p2.adjust_date) AS max_date
+            FROM portfolio_adjustment_record p2
+            WHERE p2.portfolio_pact_id in :pactIds
+            GROUP BY p2.portfolio_pact_id
+        ) p3
+        ON p1.portfolio_pact_id = p3.portfolio_pact_id AND p1.adjust_date = p3.max_date
+        WHERE p1.portfolio_pact_id in :pactIds
+        GROUP BY p1.portfolio_pact_id, p1.adjust_date
+      ) p4
+      ON p.portfolio_pact_id = p4.portfolio_pact_id
+      AND p.adjust_date = p4.adjust_date
+      AND p.adjust_version = p4.max_version
+      WHERE p.portfolio_pact_id in :pactIds
+      """;
+
+  @Query(value = queryActiveLatestAdjustDateVersion, nativeQuery = true)
+  List<AdjustmentRecord> findByPactIdsAndLatestAdjustDateVersion(@Param("pactIds") List<Integer> pactIds);
+
 }

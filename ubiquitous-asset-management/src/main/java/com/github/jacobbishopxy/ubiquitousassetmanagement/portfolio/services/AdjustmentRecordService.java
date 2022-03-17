@@ -39,6 +39,10 @@ public class AdjustmentRecordService {
     return parRepo.findByPactIdAndLatestAdjustDate(pactId);
   }
 
+  public List<AdjustmentRecord> getARsAtLatestAdjustDateVersion(List<Integer> pactIds) {
+    return parRepo.findByPactIdsAndLatestAdjustDateVersion(pactIds);
+  }
+
   public Optional<AdjustmentRecord> getARAtLatestAdjustDateAndVersion(int pactId) {
     return parRepo.findByPactIdAndLatestAdjustDate(pactId).stream().findFirst();
   }

@@ -6,7 +6,9 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.Overview;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDto;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
@@ -45,6 +47,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class PortfolioService {
 
   @Autowired
+  private PactService pactService;
+
+  @Autowired
   private AdjustmentRecordService adjustmentRecordService;
 
   @Autowired
@@ -62,6 +67,21 @@ public class PortfolioService {
   // =======================================================================
   // Query methods
   // =======================================================================
+
+  public List<Overview> getPortfolioOverviews(Boolean isActive) {
+
+    List<Pact> pacts = pactService.getAllPacts(isActive);
+    List<Integer> pactIds = pacts.stream().map(Pact::getId).collect(Collectors.toList());
+
+    List<AdjustmentRecord> ars = adjustmentRecordService.getARsAtLatestAdjustDateVersion(pactIds);
+    List<Integer> arIds = ars.stream().map(AdjustmentRecord::getId).collect(Collectors.toList());
+
+    List<Performance> pfm = performanceService.getPerformancesByAdjustmentRecordIds(arIds);
+
+    // TODO:
+    // return new Overview();
+    return null;
+  }
 
   public PortfolioDto getPortfolioLatestAdjustDateAndVersion(int pactId) {
     AdjustmentRecord ar = adjustmentRecordService

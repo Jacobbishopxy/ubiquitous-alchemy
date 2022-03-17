@@ -4,7 +4,10 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.controllers;
 
+import java.util.List;
+
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.Overview;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioAdjust;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDto;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioSettle;
@@ -26,6 +29,12 @@ public class PortfolioController {
   // =======================================================================
   // Query methods
   // =======================================================================
+
+  @GetMapping("/portfolio_overview")
+  List<Overview> getPortfolioOverviews(
+      @RequestParam(value = "isActivate", required = false) boolean isActivate) {
+    return portfolioService.getPortfolioOverviews(isActivate);
+  }
 
   @GetMapping("/portfolio_by_pact_id")
   PortfolioDto getPortfolioByPactId(@RequestParam("pactId") int pactId) {

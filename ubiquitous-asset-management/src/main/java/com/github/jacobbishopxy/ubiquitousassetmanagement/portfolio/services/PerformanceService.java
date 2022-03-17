@@ -4,6 +4,7 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
@@ -26,6 +27,10 @@ public class PerformanceService {
 
   public Optional<Performance> getPerformanceByAdjustmentRecordId(int adjustmentRecordId) {
     return pRepo.findByAdjustmentRecordId(adjustmentRecordId);
+  }
+
+  public List<Performance> getPerformancesByAdjustmentRecordIds(List<Integer> adjustmentRecordIds) {
+    return pRepo.findByAdjustmentRecordIdIn(adjustmentRecordIds);
   }
 
   // =======================================================================

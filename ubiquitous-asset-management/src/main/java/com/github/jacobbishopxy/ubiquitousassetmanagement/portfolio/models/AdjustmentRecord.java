@@ -14,7 +14,8 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 
 @Entity
 @Table(name = "portfolio_adjustment_record", uniqueConstraints = {
-    @UniqueConstraint(columnNames = { "portfolio_pact_id", "adjustDate", "adjustVersion" })
+    @UniqueConstraint(name = "unique_pact_id_adj_date_version", columnNames = { "portfolio_pact_id", "adjustDate",
+        "adjustVersion" })
 })
 public class AdjustmentRecord {
   // =======================================================================

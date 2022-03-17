@@ -46,4 +46,10 @@ public class AdjustmentRecordController {
             HttpStatus.NOT_FOUND,
             String.format("PortfolioAdjustmentRecord for portfolioPactId: %s not found", portfolioPactId)));
   }
+
+  @GetMapping(value = "/adjustment_records/latest_date_version")
+  List<AdjustmentRecord> getLatestPortfolioAdjustmentRecords(
+      @RequestParam(value = "portfolioPactIds", required = true) List<Integer> portfolioPactIds) {
+    return parService.getARsAtLatestAdjustDateVersion(portfolioPactIds);
+  }
 }

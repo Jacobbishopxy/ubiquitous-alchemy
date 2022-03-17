@@ -17,23 +17,31 @@ import org.springframework.stereotype.Service;
 public class PactService {
 
   @Autowired
-  private PactRepository ppRepo;
+  private PactRepository pRepo;
+
+  // =======================================================================
+  // Query methods
+  // =======================================================================
 
   public List<Pact> getAllPacts(Boolean isActive) {
     if (isActive == null) {
-      return ppRepo.findAll();
+      return pRepo.findAll();
     } else {
-      return ppRepo.findByIsActive(isActive);
+      return pRepo.findByIsActive(isActive);
     }
   }
 
   public Optional<Pact> getPactById(int id) {
-    return ppRepo.findById(id);
+    return pRepo.findById(id);
   }
 
   public Optional<Pact> getPactByAlias(String alias) {
-    return ppRepo.findByAlias(alias);
+    return pRepo.findByAlias(alias);
   }
+
+  // =======================================================================
+  // Mutation methods
+  // =======================================================================
 
   public Pact createPact(Pact portfolioPact) {
     // if alias is not set, use promoter_nickname and start_date as alias
@@ -43,11 +51,11 @@ public class PactService {
           portfolioPact.getStartDate().toString();
       portfolioPact.setAlias(alias);
     }
-    return ppRepo.save(portfolioPact);
+    return pRepo.save(portfolioPact);
   }
 
   public Optional<Pact> updatePact(int id, Pact portfolioPact) {
-    return ppRepo.findById(id).map(
+    return pRepo.findById(id).map(
         record -> {
           record.setAlias(portfolioPact.getAlias());
           record.setPromoter(portfolioPact.getPromoter());
@@ -56,12 +64,12 @@ public class PactService {
           record.setEndDate(portfolioPact.getEndDate());
           record.setDescription(portfolioPact.getDescription());
           record.setIsActive(portfolioPact.getIsActive());
-          return ppRepo.save(record);
+          return pRepo.save(record);
         });
   }
 
   public Optional<Pact> updatePact(String alias, Pact portfolioPact) {
-    return ppRepo.findByAlias(alias).map(
+    return pRepo.findByAlias(alias).map(
         record -> {
           record.setAlias(portfolioPact.getAlias());
           record.setPromoter(portfolioPact.getPromoter());
@@ -70,16 +78,16 @@ public class PactService {
           record.setEndDate(portfolioPact.getEndDate());
           record.setDescription(portfolioPact.getDescription());
           record.setIsActive(portfolioPact.getIsActive());
-          return ppRepo.save(record);
+          return pRepo.save(record);
         });
   }
 
   public void deletePact(int id) {
-    ppRepo.deleteById(id);
+    pRepo.deleteById(id);
   }
 
   public void deletePact(String alias) {
-    ppRepo.deleteByAlias(alias);
+    pRepo.deleteByAlias(alias);
   }
 
 }
