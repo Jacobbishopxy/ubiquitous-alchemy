@@ -83,7 +83,7 @@ public class Benchmark {
   // Accessors
   // =======================================================================
 
-  public int get_adjustment_record_id() {
+  public int getAdjustmentRecordId() {
     Integer id = adjustmentRecord.getId();
     if (id == null) {
       throw new IllegalStateException("The adjustment record id cannot be null.");

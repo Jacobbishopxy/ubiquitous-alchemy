@@ -14,8 +14,8 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Perfo
 
 public record PortfolioDetail(
 		AdjustmentRecord adjustmentRecord,
-		List<Benchmark> benchmarks,
 		List<Constituent> constituents,
+		List<Benchmark> benchmarks,
 		Performance performance,
 		List<AdjustmentInfo> adjustmentInfos) {
 

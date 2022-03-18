@@ -25,6 +25,10 @@ public class ConstituentController {
   @Autowired
   private ConstituentService constituentService;
 
+  // =======================================================================
+  // Query methods
+  // =======================================================================
+
   @GetMapping("/constituent")
   List<Constituent> getConstituentsByAdjustmentRecordId(
       @RequestParam(value = "adjustmentRecordId", required = true) Integer adjustmentRecordId) {
@@ -45,6 +49,12 @@ public class ConstituentController {
     return constituentService.getConstituentsByAdjustmentRecordIds(adjustmentRecordIds);
   }
 
+  // =======================================================================
+  // Mutation methods
+  // =======================================================================
+
+  // TODO:
+  // use ConstituentInput instead of Constituent
   @PostMapping("/constituent")
   Constituent createConstituent(@RequestBody Constituent constituent) {
     return constituentService.createConstituent(constituent);

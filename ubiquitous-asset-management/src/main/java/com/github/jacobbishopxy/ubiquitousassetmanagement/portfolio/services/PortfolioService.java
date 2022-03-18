@@ -143,7 +143,7 @@ public class PortfolioService {
     Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
     List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
 
-    return new PortfolioDetail(ar, benchmarks, constituents, performance, adjustmentInfos);
+    return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos);
   }
 
   public PortfolioDetail getPortfolioByAdjustmentRecordId(int adjustmentRecordId) {
@@ -159,7 +159,7 @@ public class PortfolioService {
     Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
     List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
 
-    return new PortfolioDetail(ar, benchmarks, constituents, performance, adjustmentInfos);
+    return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos);
   }
 
   // =======================================================================
@@ -223,7 +223,7 @@ public class PortfolioService {
     pfm.setAdjustmentRecord(newAr);
     performanceService.createPerformance(pfm);
 
-    return new PortfolioDetail(newAr, bms, cons, pfm, null);
+    return new PortfolioDetail(newAr, cons, bms, pfm, null);
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -292,12 +292,20 @@ public class PortfolioService {
         sr = settle(pactId, adjustDate);
       } else {
         // if no adjustmentInfos, simply regard it as a normal update
+        // update constituents
         List<Constituent> cons = constituentService.updateConstituents(constituents);
+        // update benchmarks
+        List<Benchmark> bms = benchmarkService.updateBenchmarks(benchmarks);
+        // get performance
+        Performance pfm = performanceService.getPerformanceByAdjustmentRecordId(latestAr.getId()).get();
 
-        // TODO:
-        // !!! assign new data to sr
+        sr = new PortfolioDetail(
+            latestAr,
+            cons,
+            bms,
+            pfm,
+            List.of());
       }
-
     }
 
     return sr;

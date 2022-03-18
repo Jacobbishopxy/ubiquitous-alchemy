@@ -6,6 +6,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
@@ -52,11 +53,16 @@ public class ConstituentService {
   // called by internal services
   // =======================================================================
 
-  // common mutations is called when create/update/delete a constituent
+  // raw mutation is called when create/update/delete a constituent
   @Transactional(rollbackFor = Exception.class)
-  private void commonMutation(int adjustmentRecordId) {
-    // 1. find all constituents in the portfolio
-    List<Constituent> constituents = getConstituentsByAdjustmentRecordId(adjustmentRecordId);
+  private void rawMutation(List<Constituent> constituents) {
+    // 0. constituents cannot be empty
+    if (constituents.isEmpty()) {
+      throw new IllegalArgumentException("Constituents cannot be empty");
+    }
+
+    // 1. get adjustment record id
+    int adjustmentRecordId = constituents.get(0).getAdjustmentRecordId();
 
     // 2. recalculate all constituents and their related performance
     ConstituentsResult res = PortfolioCalculationHelper
@@ -75,12 +81,22 @@ public class ConstituentService {
     pRepo.save(performance);
   }
 
+  // common mutations is a wrapper of raw mutation, which only needs adjustment
+  // record id as input
+  @Transactional(rollbackFor = Exception.class)
+  private void commonMutation(int adjustmentRecordId) {
+    // find all constituents in the portfolio
+    List<Constituent> constituents = getConstituentsByAdjustmentRecordId(adjustmentRecordId);
+
+    rawMutation(constituents);
+  }
+
   @Transactional(rollbackFor = Exception.class)
   public Constituent createConstituent(Constituent constituent) {
     // 0. validate constituent
     // IMPORTANT: constituent's adjustmentRecord id cannot be null. In other words,
     // it must have an adjustmentRecord to create a constituent.
-    int adjustmentRecordId = constituent.get_adjustment_record_id();
+    int adjustmentRecordId = constituent.getAdjustmentRecordId();
 
     // 1. save constituent.
     Constituent newC = cRepo.save(constituent);
@@ -97,7 +113,7 @@ public class ConstituentService {
   @Transactional(rollbackFor = Exception.class)
   public Optional<Constituent> updateConstituent(int id, Constituent constituent) {
     // 0. validate constituent
-    int adjustmentRecordId = constituent.get_adjustment_record_id();
+    int adjustmentRecordId = constituent.getAdjustmentRecordId();
 
     // 1. update constituent
     cRepo
@@ -128,10 +144,36 @@ public class ConstituentService {
 
   @Transactional(rollbackFor = Exception.class)
   public List<Constituent> updateConstituents(List<Constituent> constituents) {
-    // TODO:
-    // not implemented yet
+    // 0. make sure all constituents' id are valid
+    List<Integer> ids = constituents
+        .stream()
+        .map(Constituent::getId)
+        .collect(Collectors.toList());
 
-    return null;
+    // 1. only modify constituents that are in the database
+    List<Constituent> newCons = cRepo
+        .findAllById(ids)
+        .stream()
+        .map(c -> {
+          c.setAdjustDate(constituents.get(ids.indexOf(c.getId())).getAdjustDate());
+          c.setSymbol(constituents.get(ids.indexOf(c.getId())).getSymbol());
+          c.setAbbreviation(constituents.get(ids.indexOf(c.getId())).getAbbreviation());
+          c.setAdjustDatePrice(constituents.get(ids.indexOf(c.getId())).getAdjustDatePrice());
+          c.setCurrentPrice(constituents.get(ids.indexOf(c.getId())).getCurrentPrice());
+          c.setAdjustDateFactor(constituents.get(ids.indexOf(c.getId())).getAdjustDateFactor());
+          c.setCurrentFactor(constituents.get(ids.indexOf(c.getId())).getCurrentFactor());
+          c.setStaticWeight(constituents.get(ids.indexOf(c.getId())).getStaticWeight());
+          c.setPbpe(constituents.get(ids.indexOf(c.getId())).getPbpe());
+          c.setMarketValue(constituents.get(ids.indexOf(c.getId())).getMarketValue());
+          c.setEarningsYield(constituents.get(ids.indexOf(c.getId())).getEarningsYield());
+          return c;
+        })
+        .collect(Collectors.toList());
+
+    // 2. raw mutation
+    rawMutation(newCons);
+
+    return newCons;
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -141,7 +183,7 @@ public class ConstituentService {
         .findById(id)
         .orElseThrow(() -> new RuntimeException(
             String.format("Constituent %d not found", id)));
-    int adjustmentRecordId = c.get_adjustment_record_id();
+    int adjustmentRecordId = c.getAdjustmentRecordId();
 
     // 1. delete constituent. Since we've called findById, here can be sure that the
     // constituent is deleted.

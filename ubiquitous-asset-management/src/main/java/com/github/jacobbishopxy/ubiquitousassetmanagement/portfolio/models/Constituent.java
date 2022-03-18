@@ -125,7 +125,7 @@ public class Constituent {
   // Accessors
   // =======================================================================
 
-  public int get_adjustment_record_id() {
+  public int getAdjustmentRecordId() {
     Integer id = adjustmentRecord.getId();
     if (id == null) {
       throw new IllegalArgumentException("The adjustment record id cannot be null.");

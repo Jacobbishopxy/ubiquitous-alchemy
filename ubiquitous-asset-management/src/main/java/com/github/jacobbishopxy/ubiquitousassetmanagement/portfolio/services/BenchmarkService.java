@@ -6,6 +6,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
@@ -52,11 +53,15 @@ public class BenchmarkService {
   // called by internal services
   // =======================================================================
 
-  // common mutations is called when create/update/delete a benchmark
   @Transactional(rollbackFor = Exception.class)
-  private void commonMutation(int adjustmentRecordId) {
-    // 1. find all benchmarks in the portfolio
-    List<Benchmark> benchmarks = getBenchmarksByAdjustmentRecordId(adjustmentRecordId);
+  private void rawMutation(List<Benchmark> benchmarks) {
+    // 0. benchmarks cannot be empty
+    if (benchmarks.isEmpty()) {
+      throw new IllegalArgumentException("Benchmarks cannot be empty");
+    }
+
+    // 1. get adjustment record id
+    int adjustmentRecordId = benchmarks.get(0).getAdjustmentRecordId();
 
     // 2. recalculate all benchmarks and their related performance
     BenchmarksResult res = PortfolioCalculationHelper
@@ -75,12 +80,22 @@ public class BenchmarkService {
     pRepo.save(performance);
   }
 
+  // common mutations is a wrapper of raw mutation, which only needs adjustment
+  // record id as input
+  @Transactional(rollbackFor = Exception.class)
+  private void commonMutation(int adjustmentRecordId) {
+    // find all benchmarks in the portfolio
+    List<Benchmark> benchmarks = getBenchmarksByAdjustmentRecordId(adjustmentRecordId);
+
+    rawMutation(benchmarks);
+  }
+
   @Transactional(rollbackFor = Exception.class)
   public Benchmark createBenchmark(Benchmark benchmark) {
     // 0. validate benchmark
     // IMPORTANT: benchmark's adjustmentRecord id cannot be null. In other words,
     // it must have an adjustmentRecord to create a benchmark.
-    int adjustmentRecordId = benchmark.get_adjustment_record_id();
+    int adjustmentRecordId = benchmark.getAdjustmentRecordId();
 
     // 1. save benchmark.
     Benchmark newB = bRepo.save(benchmark);
@@ -97,7 +112,7 @@ public class BenchmarkService {
   @Transactional(rollbackFor = Exception.class)
   public Optional<Benchmark> updateBenchmark(int id, Benchmark portfolioBenchmark) {
     // 0. validate benchmark
-    int adjustmentRecordId = portfolioBenchmark.get_adjustment_record_id();
+    int adjustmentRecordId = portfolioBenchmark.getAdjustmentRecordId();
 
     // 1. update benchmark
     bRepo
@@ -120,13 +135,41 @@ public class BenchmarkService {
   }
 
   @Transactional(rollbackFor = Exception.class)
+  public List<Benchmark> updateBenchmarks(List<Benchmark> benchmarks) {
+    // 0. make sure all benchmarks' id are valid
+    List<Integer> ids = benchmarks
+        .stream()
+        .map(Benchmark::getId)
+        .collect(Collectors.toList());
+
+    // 1. only modify benchmarks that are in the database
+    List<Benchmark> newBms = bRepo
+        .findAllById(ids)
+        .stream()
+        .map(b -> {
+          // update benchmark
+          b.setAdjustDate(benchmarks.get(ids.indexOf(b.getId())).getAdjustDate());
+          b.setBenchmarkName(benchmarks.get(ids.indexOf(b.getId())).getBenchmarkName());
+          b.setPercentageChange(benchmarks.get(ids.indexOf(b.getId())).getPercentageChange());
+          b.setStaticWeight(benchmarks.get(ids.indexOf(b.getId())).getStaticWeight());
+          return b;
+        })
+        .collect(Collectors.toList());
+
+    // 2. raw mutation
+    rawMutation(newBms);
+
+    return newBms;
+  }
+
+  @Transactional(rollbackFor = Exception.class)
   public void deleteBenchmark(int id) {
     // 0. validate benchmark
     Benchmark b = bRepo
         .findById(id)
         .orElseThrow(() -> new RuntimeException(
             String.format("Benchmark %d not found", id)));
-    int adjustmentRecordId = b.get_adjustment_record_id();
+    int adjustmentRecordId = b.getAdjustmentRecordId();
 
     // 1. delete benchmark
     bRepo.deleteById(id);
