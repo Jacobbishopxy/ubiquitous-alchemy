@@ -5,9 +5,7 @@
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 
@@ -19,8 +17,7 @@ public record PactOutput(String alias,
     @JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate startDate,
     @JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate endDate,
     String description,
-    Boolean isActive,
-    List<AdjustmentRecord> adjustmentRecords) {
+    Boolean isActive) {
 
   public static PactOutput fromPortfolioPact(
       Pact portfolioPact) {
@@ -31,8 +28,7 @@ public record PactOutput(String alias,
         portfolioPact.getStartDate(),
         portfolioPact.getEndDate(),
         portfolioPact.getDescription(),
-        portfolioPact.getIsActive(),
-        portfolioPact.getAdjustmentRecords());
+        portfolioPact.getIsActive());
   }
 
   public static PactOutput fromPortfolioPact(
@@ -46,7 +42,6 @@ public record PactOutput(String alias,
         portfolioPact.getStartDate(),
         portfolioPact.getEndDate(),
         portfolioPact.getDescription(),
-        portfolioPact.getIsActive(),
-        portfolioPact.getAdjustmentRecords());
+        portfolioPact.getIsActive());
   }
 }

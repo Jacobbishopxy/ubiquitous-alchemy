@@ -60,7 +60,7 @@ public class PactController {
     return PactOutput.fromPortfolioPact(pp);
   }
 
-  @GetMapping(value = "/pact_by_alias")
+  @GetMapping(value = "/pact/alias")
   PactOutput getPortfolioPact(@RequestParam("alias") String alias) {
     Pact pp = ppService.getPactByAlias(alias).orElseThrow(
         () -> new ResponseStatusException(
@@ -120,7 +120,7 @@ public class PactController {
     ppService.deletePact(id);
   }
 
-  @DeleteMapping(value = "/pact_by_alias")
+  @DeleteMapping(value = "/pact/alias")
   void deletePortfolioPact(@RequestParam("alias") String alias) {
     ppService.deletePact(alias);
   }

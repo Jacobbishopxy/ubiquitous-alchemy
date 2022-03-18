@@ -18,6 +18,16 @@ public interface AdjustmentRecordRepository
 
   List<AdjustmentRecord> findByPactId(int portfolioPactId);
 
+  String queryDescSort = """
+      SELECT p
+      FROM AdjustmentRecord p
+      WHERE p.pact.id = ?1
+      ORDER BY p.adjustDate DESC, p.adjustVersion DESC
+      """;
+
+  @Query(value = queryDescSort)
+  List<AdjustmentRecord> findByPactIdDescSort(int pactId);
+
   String queryLatestAdjustDate = """
       SELECT p1
       FROM AdjustmentRecord p1

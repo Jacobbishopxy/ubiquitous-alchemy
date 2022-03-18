@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 
 @Entity
@@ -29,7 +28,6 @@ public class AdjustmentRecord {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "portfolio_pact_id")
-  @JsonIgnore
   private Pact pact;
 
   @JsonFormat(pattern = Constants.DATE_FORMAT)

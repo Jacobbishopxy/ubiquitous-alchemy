@@ -7,7 +7,6 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.FullAdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentRecordRepository;
 
@@ -40,6 +39,10 @@ public class AdjustmentRecordService {
     return arRepo.findByPactIdAndLatestAdjustDate(pactId);
   }
 
+  public List<AdjustmentRecord> getARSortDesc(int pactId) {
+    return arRepo.findByPactIdDescSort(pactId);
+  }
+
   // A powerful query.
   // Get all adjustment records at the latest date and latest version.
   public List<AdjustmentRecord> getARsAtLatestAdjustDateVersion(List<Integer> pactIds) {
@@ -55,17 +58,18 @@ public class AdjustmentRecordService {
 
   // Get the latest date's latest version AdjustmentRecord with `Pact`
   // explicitly included.
-  public Optional<FullAdjustmentRecord> getFullARAtLatestAdjustDateAndVersion(int pactId) {
+  public Optional<AdjustmentRecord> getFullARAtLatestAdjustDateAndVersion(int pactId) {
     return arRepo
         .findByPactIdAndLatestAdjustDate(pactId)
         .stream()
-        .findFirst()
-        .map(ar -> {
-          return FullAdjustmentRecord.fromAdjustmentRecord(ar);
-        });
+        .findFirst();
   }
 
   public Optional<AdjustmentRecord> getARById(int id) {
+    return arRepo.findById(id);
+  }
+
+  public Optional<AdjustmentRecord> getFullARById(int id) {
     return arRepo.findById(id);
   }
 
@@ -75,21 +79,21 @@ public class AdjustmentRecordService {
   // called by internal services
   // =======================================================================
 
-  public AdjustmentRecord createPAR(AdjustmentRecord par) {
-    return arRepo.save(par);
+  public AdjustmentRecord createAR(AdjustmentRecord adjustmentRecord) {
+    return arRepo.save(adjustmentRecord);
   }
 
-  public Optional<AdjustmentRecord> updatePAR(int id, AdjustmentRecord par) {
+  public Optional<AdjustmentRecord> updateAR(int id, AdjustmentRecord adjustmentRecord) {
     return arRepo.findById(id).map(
         record -> {
-          record.setPact(par.getPact());
-          record.setAdjustDate(par.getAdjustDate());
-          record.setAdjustVersion(par.getAdjustVersion());
+          record.setPact(adjustmentRecord.getPact());
+          record.setAdjustDate(adjustmentRecord.getAdjustDate());
+          record.setAdjustVersion(adjustmentRecord.getAdjustVersion());
           return arRepo.save(record);
         });
   }
 
-  public void deletePAR(int id) {
+  public void deleteAR(int id) {
     arRepo.deleteById(id);
   }
 }

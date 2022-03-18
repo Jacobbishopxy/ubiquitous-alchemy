@@ -5,7 +5,6 @@
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -62,14 +61,15 @@ public class Pact {
   @Schema(description = "Is the portfolio pact active?")
   private Boolean isActive;
 
-  @OneToMany(mappedBy = "pact", fetch = FetchType.EAGER)
-  private List<AdjustmentRecord> adjustmentRecords;
-
   // =======================================================================
   // Constructors
   // =======================================================================
 
   public Pact() {
+  }
+
+  public Pact(int id) {
+    this.id = id;
   }
 
   public Pact(
@@ -173,14 +173,6 @@ public class Pact {
 
   public void setIsActive(Boolean isActive) {
     this.isActive = isActive;
-  }
-
-  public List<AdjustmentRecord> getAdjustmentRecords() {
-    return adjustmentRecords;
-  }
-
-  public void setAdjustmentRecords(List<AdjustmentRecord> adjustmentRecords) {
-    this.adjustmentRecords = adjustmentRecords;
   }
 
 }

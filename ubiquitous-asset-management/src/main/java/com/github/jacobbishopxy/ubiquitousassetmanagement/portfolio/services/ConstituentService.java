@@ -127,6 +127,14 @@ public class ConstituentService {
   }
 
   @Transactional(rollbackFor = Exception.class)
+  public List<Constituent> updateConstituents(List<Constituent> constituents) {
+    // TODO:
+    // not implemented yet
+
+    return null;
+  }
+
+  @Transactional(rollbackFor = Exception.class)
   public void deleteConstituent(int id) {
     // 0. find constituent and get adjustmentRecordId
     Constituent c = cRepo
