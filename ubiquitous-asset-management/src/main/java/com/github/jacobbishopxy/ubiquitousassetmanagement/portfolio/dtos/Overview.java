@@ -6,20 +6,40 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos;
 
 import java.time.LocalDate;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public record Overview(
-		int pactId,
 		int adjustmentRecordId,
+		String industryName,
 		String promoterName,
+		String alias,
 		Float portfolioEarningsYield,
 		Float benchmarkEarningsYield,
 		Float alpha,
-		LocalDate adjustDate,
+		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
 		int adjustVersion) {
 
-	public static Overview fromPerformance(Performance performance) {
-		return null;
+	public static Overview fromPactAndPerformance(
+			Pact pact,
+			Performance performance) {
+
+		AdjustmentRecord ar = performance.getAdjustmentRecord();
+
+		return new Overview(
+				ar.getId(),
+				pact.getIndustryInfo().getName(),
+				pact.getPromoter().getNickname(),
+				pact.getAlias(),
+				performance.getPortfolioEarningsYield(),
+				performance.getBenchmarkEarningsYield(),
+				performance.getAlpha(),
+				ar.getAdjustDate(),
+				ar.getAdjustVersion());
 	}
 
 }

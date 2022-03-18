@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.FullAdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentRecordRepository;
 
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class AdjustmentRecordService {
 
   @Autowired
-  private AdjustmentRecordRepository parRepo;
+  private AdjustmentRecordRepository arRepo;
 
   // =======================================================================
   // Query methods
@@ -32,23 +33,40 @@ public class AdjustmentRecordService {
   // =======================================================================
 
   public List<AdjustmentRecord> getARByPactId(int pactId) {
-    return parRepo.findByPactId(pactId);
+    return arRepo.findByPactId(pactId);
   }
 
   public List<AdjustmentRecord> getARAtLatestAdjustDate(int pactId) {
-    return parRepo.findByPactIdAndLatestAdjustDate(pactId);
+    return arRepo.findByPactIdAndLatestAdjustDate(pactId);
   }
 
+  // A powerful query.
+  // Get all adjustment records at the latest date and latest version.
   public List<AdjustmentRecord> getARsAtLatestAdjustDateVersion(List<Integer> pactIds) {
-    return parRepo.findByPactIdsAndLatestAdjustDateVersion(pactIds);
+    return arRepo.findByPactIdsAndLatestAdjustDateVersion(pactIds);
   }
 
   public Optional<AdjustmentRecord> getARAtLatestAdjustDateAndVersion(int pactId) {
-    return parRepo.findByPactIdAndLatestAdjustDate(pactId).stream().findFirst();
+    return arRepo
+        .findByPactIdAndLatestAdjustDate(pactId)
+        .stream()
+        .findFirst();
+  }
+
+  // Get the latest date's latest version AdjustmentRecord with `Pact`
+  // explicitly included.
+  public Optional<FullAdjustmentRecord> getFullARAtLatestAdjustDateAndVersion(int pactId) {
+    return arRepo
+        .findByPactIdAndLatestAdjustDate(pactId)
+        .stream()
+        .findFirst()
+        .map(ar -> {
+          return FullAdjustmentRecord.fromAdjustmentRecord(ar);
+        });
   }
 
   public Optional<AdjustmentRecord> getARById(int id) {
-    return parRepo.findById(id);
+    return arRepo.findById(id);
   }
 
   // =======================================================================
@@ -58,20 +76,20 @@ public class AdjustmentRecordService {
   // =======================================================================
 
   public AdjustmentRecord createPAR(AdjustmentRecord par) {
-    return parRepo.save(par);
+    return arRepo.save(par);
   }
 
   public Optional<AdjustmentRecord> updatePAR(int id, AdjustmentRecord par) {
-    return parRepo.findById(id).map(
+    return arRepo.findById(id).map(
         record -> {
           record.setPact(par.getPact());
           record.setAdjustDate(par.getAdjustDate());
           record.setAdjustVersion(par.getAdjustVersion());
-          return parRepo.save(record);
+          return arRepo.save(record);
         });
   }
 
   public void deletePAR(int id) {
-    parRepo.deleteById(id);
+    arRepo.deleteById(id);
   }
 }

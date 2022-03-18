@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.controllers
 import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.FullAdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.AdjustmentRecordService;
 
@@ -38,10 +39,13 @@ public class AdjustmentRecordController {
   }
 
   @GetMapping(value = "/adjustment_record/latest_date_version")
-  AdjustmentRecord getLatestPortfolioAdjustmentRecord(
+  FullAdjustmentRecord getLatestPortfolioAdjustmentRecord(
       @RequestParam(value = "portfolioPactId", required = true) Integer portfolioPactId) {
     return parService
         .getARAtLatestAdjustDateAndVersion(portfolioPactId)
+        .map(ar -> {
+          return FullAdjustmentRecord.fromAdjustmentRecord(ar);
+        })
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND,
             String.format("PortfolioAdjustmentRecord for portfolioPactId: %s not found", portfolioPactId)));

@@ -31,6 +31,9 @@ public class PortfolioAdjustmentHelper {
     return difference;
   }
 
+  // IMPORTANT:
+  // If preCons and curCons are the same (same constituents with unchanged static
+  // weight), then AdjustmentInfos will be empty.
   public static List<AdjustmentInfo> adjust(
       List<Constituent> preCons,
       List<Constituent> curCons) {

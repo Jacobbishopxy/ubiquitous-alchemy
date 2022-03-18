@@ -39,6 +39,10 @@ public class PactController {
   @Autowired
   private IndustryInfoService iiService;
 
+  // =======================================================================
+  // Query methods
+  // =======================================================================
+
   @GetMapping(value = "/pact")
   List<PactOutput> getPortfolioPacts(
       @RequestParam(value = "isActive", required = false) Boolean isActive) {
@@ -63,6 +67,10 @@ public class PactController {
             HttpStatus.NOT_FOUND, String.format("PortfolioPact alias: %s not found", alias)));
     return PactOutput.fromPortfolioPact(pp);
   }
+
+  // =======================================================================
+  // Mutation methods
+  // =======================================================================
 
   @PostMapping(value = "/pact")
   PactOutput createPortfolioPact(@RequestBody PactInput dto) {

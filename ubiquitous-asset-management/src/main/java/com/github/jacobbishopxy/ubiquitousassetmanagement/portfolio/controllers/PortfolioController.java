@@ -9,7 +9,7 @@ import java.util.List;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.Overview;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioAdjust;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDto;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDetail;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioSettle;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.PortfolioService;
 
@@ -37,12 +37,12 @@ public class PortfolioController {
   }
 
   @GetMapping("/portfolio_by_pact_id")
-  PortfolioDto getPortfolioByPactId(@RequestParam("pactId") int pactId) {
+  PortfolioDetail getPortfolioByPactId(@RequestParam("pactId") int pactId) {
     return portfolioService.getPortfolioLatestAdjustDateAndVersion(pactId);
   }
 
   @GetMapping("/portfolio_by_adjustment_record_id")
-  PortfolioDto getPortfolioByAdjustmentRecordId(@RequestParam("adjustmentRecordId") int adjustmentRecordId) {
+  PortfolioDetail getPortfolioByAdjustmentRecordId(@RequestParam("adjustmentRecordId") int adjustmentRecordId) {
     return portfolioService.getPortfolioByAdjustmentRecordId(adjustmentRecordId);
   }
 
