@@ -11,9 +11,11 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Adjus
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public record Overview(
+@Schema(name = "PortfolioOverview", description = "Portfolio overview")
+public record PortfolioOverview(
 		int adjustmentRecordId,
 		String industryName,
 		String promoterName,
@@ -24,13 +26,13 @@ public record Overview(
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
 		int adjustVersion) {
 
-	public static Overview fromPactAndPerformance(
+	public static PortfolioOverview fromPactAndPerformance(
 			Pact pact,
 			Performance performance) {
 
 		AdjustmentRecord ar = performance.getAdjustmentRecord();
 
-		return new Overview(
+		return new PortfolioOverview(
 				ar.getId(),
 				pact.getIndustryInfo().getName(),
 				pact.getPromoter().getNickname(),

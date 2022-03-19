@@ -31,10 +31,6 @@ public class AdjustmentRecordService {
   // expose to controller
   // =======================================================================
 
-  public List<AdjustmentRecord> getARByPactId(int pactId) {
-    return arRepo.findByPactId(pactId);
-  }
-
   public List<AdjustmentRecord> getARAtLatestAdjustDate(int pactId) {
     return arRepo.findByPactIdAndLatestAdjustDate(pactId);
   }

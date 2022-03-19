@@ -32,10 +32,18 @@ public class ConstituentController {
   // Query methods
   // =======================================================================
 
-  @GetMapping("/constituent")
+  @GetMapping("/constituents")
   List<Constituent> getConstituentsByAdjustmentRecordId(
-      @RequestParam(value = "adjustmentRecordId", required = true) Integer adjustmentRecordId) {
-    return constituentService.getConstituentsByAdjustmentRecordId(adjustmentRecordId);
+      @RequestParam(value = "adjustment_record_id", required = true) Integer adjustmentRecordId,
+      @RequestParam(value = "adjustment_record_id", required = true) List<Integer> adjustmentRecordIds) {
+    if (adjustmentRecordId != null) {
+      return constituentService.getConstituentsByAdjustmentRecordId(adjustmentRecordId);
+    } else if (adjustmentRecordIds != null) {
+      return constituentService.getConstituentsByAdjustmentRecordIds(adjustmentRecordIds);
+    } else {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "adjustment_record_id or adjustment_record_ids is required");
+    }
   }
 
   @GetMapping("/constituent/{id}")
@@ -44,12 +52,6 @@ public class ConstituentController {
         .getConstituentById(id)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("Constituent for id: %s not found", id)));
-  }
-
-  @GetMapping("/constituents")
-  List<Constituent> getConstituentsByAdjustmentRecordIds(
-      @RequestParam(value = "adjustmentRecordIds", required = true) List<Integer> adjustmentRecordIds) {
-    return constituentService.getConstituentsByAdjustmentRecordIds(adjustmentRecordIds);
   }
 
   // =======================================================================
@@ -77,8 +79,7 @@ public class ConstituentController {
     return constituentService
         .updateConstituent(id, ConstituentInput.intoConstituent(dto))
         .orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND,
-            String.format("Constituent for id: %s not found", id)));
+            HttpStatus.NOT_FOUND, String.format("Constituent for id: %s not found", id)));
   }
 
   @PutMapping("/constituents")

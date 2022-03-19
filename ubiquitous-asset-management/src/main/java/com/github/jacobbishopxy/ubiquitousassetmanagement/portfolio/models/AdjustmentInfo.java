@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Entity
 @Table(name = "portfolio_adjustment_info")
 @TypeDef(name = "adjustment_operation_enum", typeClass = AdjustmentOperationPgEnum.class)
+@Schema(name = "PortfolioAdjustmentInfo", description = "Portfolio adjustment information")
 public class AdjustmentInfo {
   // =======================================================================
   // Fields

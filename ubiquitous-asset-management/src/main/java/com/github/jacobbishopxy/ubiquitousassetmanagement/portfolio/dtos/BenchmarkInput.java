@@ -9,8 +9,11 @@ import java.time.LocalDate;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+@Schema(name = "PortfolioBenchmarkInput", description = "Benchmark input")
 public record BenchmarkInput(
 		int adjustmentRecordId,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,

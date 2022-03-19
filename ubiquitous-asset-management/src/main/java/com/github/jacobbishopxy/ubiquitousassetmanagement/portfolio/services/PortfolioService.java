@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.Overview;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioOverview;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDetail;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
@@ -75,7 +75,7 @@ public class PortfolioService {
    * @param isActive
    * @return
    */
-  public List<Overview> getPortfolioOverviews(Boolean isActive) {
+  public List<PortfolioOverview> getPortfolioOverviews(Boolean isActive) {
     // get all activate(true)/inactivate(false)/all(null) portfolios' pacts
     List<Pact> pacts = pactService.getAllPacts(isActive);
     List<Integer> pactIds = pacts.stream().map(Pact::getId).collect(Collectors.toList());
@@ -89,7 +89,7 @@ public class PortfolioService {
         .stream()
         .map(p -> {
           Pact pact = p.getAdjustmentRecord().getPact();
-          return Overview.fromPactAndPerformance(pact, p);
+          return PortfolioOverview.fromPactAndPerformance(pact, p);
         })
         .collect(Collectors.toList());
   }
@@ -111,7 +111,7 @@ public class PortfolioService {
    * @param adjustmentRecordId: nullable. if null means latest adjustment record
    * @return
    */
-  public Optional<Overview> getPortfolioOverview(Integer adjustmentRecordId) {
+  public Optional<PortfolioOverview> getPortfolioOverview(Integer adjustmentRecordId) {
     return adjustmentRecordService
         .getARById(adjustmentRecordId)
         .flatMap(ar -> {
@@ -119,7 +119,7 @@ public class PortfolioService {
               .getPerformanceByAdjustmentRecordId(ar.getId())
               .map(p -> {
                 Pact pact = ar.getPact();
-                return Overview.fromPactAndPerformance(pact, p);
+                return PortfolioOverview.fromPactAndPerformance(pact, p);
               });
         });
   }

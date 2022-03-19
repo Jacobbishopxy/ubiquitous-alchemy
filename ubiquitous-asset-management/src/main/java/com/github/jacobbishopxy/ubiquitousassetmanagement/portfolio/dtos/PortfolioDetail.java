@@ -12,6 +12,9 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Bench
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(name = "PortfolioDetail", description = "Portfolio detail")
 public record PortfolioDetail(
 		AdjustmentRecord adjustmentRecord,
 		List<Constituent> constituents,

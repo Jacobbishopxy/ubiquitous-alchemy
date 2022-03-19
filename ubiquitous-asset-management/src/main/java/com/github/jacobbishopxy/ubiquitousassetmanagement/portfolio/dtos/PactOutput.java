@@ -6,11 +6,13 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos;
 
 import java.time.LocalDate;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+@Schema(name = "PortfolioPactOutput", description = "Pact output")
 public record PactOutput(String alias,
     String promoter,
     String industry,

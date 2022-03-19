@@ -7,10 +7,10 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.controllers
 import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.Overview;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioAdjust;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioOverview;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.portfolioActions.AdjustPortfolio;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.portfolioActions.SettlePortfolio;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDetail;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioSettle;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.PortfolioService;
 
@@ -35,13 +35,13 @@ public class PortfolioController {
   // =======================================================================
 
   @GetMapping("/portfolio_overviews")
-  List<Overview> getPortfolioOverviews(
-      @RequestParam(value = "isActivate", required = false) boolean isActivate) {
+  List<PortfolioOverview> getPortfolioOverviews(
+      @RequestParam(value = "is_activate", required = false) boolean isActivate) {
     return portfolioService.getPortfolioOverviews(isActivate);
   }
 
   @GetMapping("/portfolio_overview")
-  Overview getPortfolioOverview(@RequestParam("adjustmentRecordId") int adjustmentRecordId) {
+  PortfolioOverview getPortfolioOverview(@RequestParam("adjustment_record_id") int adjustmentRecordId) {
     return portfolioService
         .getPortfolioOverview(adjustmentRecordId)
         .orElseThrow(() -> new ResponseStatusException(
@@ -50,14 +50,14 @@ public class PortfolioController {
 
   @GetMapping("/portfolio_adjustment_records")
   List<AdjustmentRecord> getAdjustmentRecordsByPactId(
-      @RequestParam(value = "pactId", required = true) int pactId) {
+      @RequestParam(value = "pact_id", required = true) int pactId) {
     return portfolioService.getAdjustmentRecordsByPactId(pactId);
   }
 
   @GetMapping("/portfolio_detail")
   PortfolioDetail getPortfolioByPactId(
-      @RequestParam(value = "pactId", required = false) Integer pactId,
-      @RequestParam(value = "adjustmentRecordId", required = false) Integer adjustmentRecordId) {
+      @RequestParam(value = "pact_id", required = false) Integer pactId,
+      @RequestParam(value = "adjustment_record_id", required = false) Integer adjustmentRecordId) {
 
     if (pactId != null) {
       return portfolioService.getPortfolioLatestAdjustDateAndVersion(pactId);
@@ -65,7 +65,7 @@ public class PortfolioController {
       return portfolioService.getPortfolioByAdjustmentRecordId(adjustmentRecordId);
     } else {
       throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "pactId or adjustmentRecordId must be provided");
+          HttpStatus.BAD_REQUEST, "pact_id or adjustment_record_id is required");
     }
   }
 
@@ -73,23 +73,23 @@ public class PortfolioController {
   // Mutation methods
   // =======================================================================
 
-  @PostMapping("/portfolio_settle")
-  void settlePortfolio(@RequestBody PortfolioSettle portfolioSettle) {
+  @PostMapping("/portfolio/settle")
+  void settlePortfolio(@RequestBody SettlePortfolio portfolioSettle) {
     portfolioService.settle(
         portfolioSettle.pactId(),
         portfolioSettle.settlementDate());
   }
 
-  @DeleteMapping("/portfolio_settle")
-  void cancelSettlePortfolio(@RequestParam("pactId") int pactId) {
+  @DeleteMapping("/portfolio/settle")
+  void cancelSettlePortfolio(@RequestParam("pact_id") int pactId) {
     portfolioService.cancelSettle(pactId);
   }
 
   @Operation(description = "A powerful method to adjust portfolio. ")
-  @PostMapping("/portfolio_adjust")
+  @PostMapping("/portfolio/adjust")
   void adjustPortfolio(
-      @RequestParam("pactId") int pactId,
-      @RequestBody PortfolioAdjust portfolioAdjust) {
+      @RequestParam("pact_id") int pactId,
+      @RequestBody AdjustPortfolio portfolioAdjust) {
     portfolioService.adjust(
         pactId,
         portfolioAdjust.adjustDate(),

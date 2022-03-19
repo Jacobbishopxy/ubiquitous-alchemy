@@ -6,16 +6,20 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
 import java.time.LocalDate;
 
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+
+import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Table(name = "portfolio_adjustment_record", uniqueConstraints = {
     @UniqueConstraint(name = "unique_pact_id_adj_date_version", columnNames = { "portfolio_pact_id", "adjustDate",
         "adjustVersion" })
 })
+@Schema(name = "PortfolioAdjustmentRecord", description = "Portfolio adjustment record")
 public class AdjustmentRecord {
   // =======================================================================
   // Fields
@@ -28,6 +32,7 @@ public class AdjustmentRecord {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "portfolio_pact_id")
+  @JsonIgnore
   private Pact pact;
 
   @JsonFormat(pattern = Constants.DATE_FORMAT)

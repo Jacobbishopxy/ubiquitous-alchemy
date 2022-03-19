@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Table(name = "portfolio_benchmark")
+@Schema(name = "PortfolioBenchmark", description = "Portfolio benchmark")
 public class Benchmark {
   // =======================================================================
   // Fields

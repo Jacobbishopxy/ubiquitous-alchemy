@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table(name = "portfolio_pact", uniqueConstraints = {
     @UniqueConstraint(columnNames = { "promoter_email", "startDate" }) })
+@Schema(name = "PortfolioPact", description = "Portfolio meta information")
 public class Pact {
   // =======================================================================
   // Fields

@@ -16,8 +16,6 @@ import org.springframework.data.repository.query.Param;
 public interface AdjustmentRecordRepository
     extends JpaRepository<AdjustmentRecord, Integer>, JpaSpecificationExecutor<AdjustmentRecord> {
 
-  List<AdjustmentRecord> findByPactId(int portfolioPactId);
-
   String queryDescSort = """
       SELECT p
       FROM AdjustmentRecord p

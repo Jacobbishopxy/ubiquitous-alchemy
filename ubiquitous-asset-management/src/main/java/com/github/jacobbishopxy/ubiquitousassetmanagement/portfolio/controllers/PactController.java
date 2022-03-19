@@ -43,19 +43,20 @@ public class PactController {
   // Query methods
   // =======================================================================
 
-  @GetMapping(value = "/pact")
+  @GetMapping(value = "/pacts")
   List<PactOutput> getPortfolioPacts(
-      @RequestParam(value = "isActive", required = false) Boolean isActive) {
+      @RequestParam(value = "is_active", required = false) Boolean isActive) {
     return ppService.getAllPacts(isActive)
         .stream()
-        .map(pp -> PactOutput.fromPortfolioPact(pp))
+        .map(PactOutput::fromPortfolioPact)
         .toList();
   }
 
   @GetMapping(value = "/pact/{id}")
   PactOutput getPortfolioPact(@PathVariable("id") int id) {
-    Pact pp = ppService.getPactById(id).orElseThrow(
-        () -> new ResponseStatusException(
+    Pact pp = ppService
+        .getPactById(id)
+        .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PortfolioPact id: %s not found", id)));
     return PactOutput.fromPortfolioPact(pp);
   }
@@ -124,5 +125,4 @@ public class PactController {
   void deletePortfolioPact(@RequestParam("alias") String alias) {
     ppService.deletePact(alias);
   }
-
 }

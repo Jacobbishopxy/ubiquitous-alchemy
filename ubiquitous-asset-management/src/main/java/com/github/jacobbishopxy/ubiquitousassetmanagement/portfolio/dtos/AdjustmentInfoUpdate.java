@@ -8,10 +8,13 @@ import java.time.LocalTime;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public record AdjustmentInfoPatch(
-    @JsonFormat(pattern = Constants.TIME_FORMAT) LocalTime adjustTime,
-    String description) {
+@Schema(name = "PortfolioAdjustmentInfoUpdate", description = "Adjustment info update")
+public record AdjustmentInfoUpdate(
+		@JsonFormat(pattern = Constants.TIME_FORMAT) LocalTime adjustTime,
+		String description) {
 
 }

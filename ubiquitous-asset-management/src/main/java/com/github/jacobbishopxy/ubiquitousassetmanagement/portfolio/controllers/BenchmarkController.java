@@ -31,23 +31,26 @@ public class BenchmarkController {
   // Query methods
   // =======================================================================
 
-  @GetMapping("/benchmark")
+  @GetMapping("/benchmarks")
   List<Benchmark> getBenchmarksByAdjustmentRecordId(
-      @RequestParam(value = "adjustmentRecordId", required = true) Integer adjustmentRecordId) {
-    return benchmarkService.getBenchmarksByAdjustmentRecordId(adjustmentRecordId);
+      @RequestParam(value = "adjustment_record_id", required = false) Integer adjustmentRecordId,
+      @RequestParam(value = "adjustment_record_ids", required = false) List<Integer> adjustmentRecordIds) {
+    if (adjustmentRecordId != null) {
+      return benchmarkService.getBenchmarksByAdjustmentRecordId(adjustmentRecordId);
+    } else if (adjustmentRecordIds != null) {
+      return benchmarkService.getBenchmarksByAdjustmentRecordIds(adjustmentRecordIds);
+    } else {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "adjustment_record_id or adjustment_record_ids is required");
+    }
   }
 
   @GetMapping("/benchmark/{id}")
   Benchmark getBenchmarkById(@PathVariable("id") Integer id) {
-    return benchmarkService.getBenchmarkById(id).orElseThrow(
-        () -> new ResponseStatusException(
+    return benchmarkService
+        .getBenchmarkById(id)
+        .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("Benchmark for id: %s not found", id)));
-  }
-
-  @GetMapping("/benchmarks")
-  List<Benchmark> getBenchmarksByAdjustmentRecordIds(
-      @RequestParam(value = "adjustmentRecordIds", required = true) List<Integer> adjustmentRecordIds) {
-    return benchmarkService.getBenchmarksByAdjustmentRecordIds(adjustmentRecordIds);
   }
 
   // =======================================================================
