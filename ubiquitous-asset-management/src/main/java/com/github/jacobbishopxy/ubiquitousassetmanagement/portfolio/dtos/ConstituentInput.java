@@ -7,20 +7,55 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos;
 import java.time.LocalDate;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
-
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public record ConstituentInput(
-    int adjustmentRecordId,
-    @JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
-    String symbol,
-    String abbreviation,
-    Float adjustDatePrice,
-    Float currentPrice,
-    Float adjustDateFactor,
-    Float currentFactor,
-    Float weight,
-    Float pbpe,
-    Float marketValue) {
+		int adjustmentRecordId,
+		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
+		String symbol,
+		String abbreviation,
+		Float adjustDatePrice,
+		Float currentPrice,
+		Float adjustDateFactor,
+		Float currentFactor,
+		Float weight,
+		Float pbpe,
+		Float marketValue) {
+
+	public static Constituent intoConstituent(ConstituentInput dto) {
+		AdjustmentRecord ar = new AdjustmentRecord();
+		ar.setId(dto.adjustmentRecordId());
+
+		Float earningsYield = 0f;
+		Float pctChg = 0f;
+		if (dto.adjustDatePrice() != null &&
+				dto.currentPrice() != null &&
+				dto.adjustDateFactor() != null &&
+				dto.currentFactor() != null) {
+			Float adjChg = dto.currentFactor() / dto.adjustDateFactor();
+			pctChg = adjChg * dto.currentPrice() / dto.adjustDatePrice();
+			earningsYield = pctChg - 1;
+		}
+		// since we not yet have the totalPctChg, saving expansionRate in order to
+		// calculate the currentWeight afterwards
+		Float expansionRate = dto.weight() * pctChg;
+
+		return new Constituent(
+				ar,
+				dto.adjustDate(),
+				dto.symbol(),
+				dto.abbreviation(),
+				dto.adjustDatePrice(),
+				dto.currentPrice(),
+				dto.adjustDateFactor(),
+				dto.currentFactor(),
+				dto.weight(),
+				expansionRate, // currentWeight = expansionRate / sum of all expansionRates
+				dto.pbpe(),
+				dto.marketValue(),
+				earningsYield);
+	}
 
 }

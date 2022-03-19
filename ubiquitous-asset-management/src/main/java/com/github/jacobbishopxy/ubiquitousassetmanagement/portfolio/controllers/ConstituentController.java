@@ -5,8 +5,10 @@
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.ConstituentInput;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.ConstituentService;
 
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Portfolio")
@@ -53,22 +56,39 @@ public class ConstituentController {
   // Mutation methods
   // =======================================================================
 
-  // TODO:
-  // use ConstituentInput instead of Constituent
   @PostMapping("/constituent")
-  Constituent createConstituent(@RequestBody Constituent constituent) {
-    return constituentService.createConstituent(constituent);
+  Constituent createConstituent(@RequestBody ConstituentInput dto) {
+    return constituentService.createConstituent(ConstituentInput.intoConstituent(dto));
+  }
+
+  @PostMapping("/constituents")
+  List<Constituent> createConstituents(@RequestBody List<ConstituentInput> dto) {
+    List<Constituent> constituents = dto.stream()
+        .map(ConstituentInput::intoConstituent)
+        .collect(Collectors.toList());
+
+    return constituentService.createConstituents(constituents);
   }
 
   @PutMapping("/constituent/{id}")
   Constituent updateConstituent(
       @PathVariable("id") int id,
-      @RequestBody Constituent constituent) {
+      @RequestBody ConstituentInput dto) {
     return constituentService
-        .updateConstituent(id, constituent)
+        .updateConstituent(id, ConstituentInput.intoConstituent(dto))
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND,
             String.format("Constituent for id: %s not found", id)));
+  }
+
+  @PutMapping("/constituents")
+  List<Constituent> updateConstituents(@RequestBody List<ConstituentInput> dto) {
+    List<Constituent> constituents = dto
+        .stream()
+        .map(ConstituentInput::intoConstituent)
+        .collect(Collectors.toList());
+
+    return constituentService.updateConstituents(constituents);
   }
 
   @DeleteMapping("/constituent/{id}")

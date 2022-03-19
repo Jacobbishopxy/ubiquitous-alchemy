@@ -6,6 +6,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
@@ -15,6 +16,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.PerformanceRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioCalculationHelper;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioCalculationHelper.BenchmarksResult;
+import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +63,7 @@ public class BenchmarkService {
     }
 
     // 1. get adjustment record id
-    int adjustmentRecordId = benchmarks.get(0).getAdjustmentRecordId();
+    int adjustmentRecordId = benchmarks.get(0).getAdjRecordId();
 
     // 2. recalculate all benchmarks and their related performance
     BenchmarksResult res = PortfolioCalculationHelper
@@ -95,7 +97,7 @@ public class BenchmarkService {
     // 0. validate benchmark
     // IMPORTANT: benchmark's adjustmentRecord id cannot be null. In other words,
     // it must have an adjustmentRecord to create a benchmark.
-    int adjustmentRecordId = benchmark.getAdjustmentRecordId();
+    int adjustmentRecordId = benchmark.getAdjRecordId();
 
     // 1. save benchmark.
     Benchmark newB = bRepo.save(benchmark);
@@ -110,9 +112,30 @@ public class BenchmarkService {
   }
 
   @Transactional(rollbackFor = Exception.class)
+  public List<Benchmark> createBenchmarks(List<Benchmark> benchmarks) {
+    // 0. validate benchmarks
+    List<Integer> adjustmentRecordIds = benchmarks.stream()
+        .map(Benchmark::getAdjRecordId)
+        .collect(Collectors.toList());
+
+    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    if (uniqueARIds.size() != 1) {
+      throw new IllegalArgumentException("All benchmarks must have the same adjustment record id");
+    }
+
+    // 1. save benchmarks
+    List<Benchmark> newBs = bRepo.saveAll(benchmarks);
+
+    // 2. raw mutation
+    rawMutation(newBs);
+
+    return newBs;
+  }
+
+  @Transactional(rollbackFor = Exception.class)
   public Optional<Benchmark> updateBenchmark(int id, Benchmark portfolioBenchmark) {
     // 0. validate benchmark
-    int adjustmentRecordId = portfolioBenchmark.getAdjustmentRecordId();
+    int adjustmentRecordId = portfolioBenchmark.getAdjRecordId();
 
     // 1. update benchmark
     bRepo
@@ -169,7 +192,7 @@ public class BenchmarkService {
         .findById(id)
         .orElseThrow(() -> new RuntimeException(
             String.format("Benchmark %d not found", id)));
-    int adjustmentRecordId = b.getAdjustmentRecordId();
+    int adjustmentRecordId = b.getAdjRecordId();
 
     // 1. delete benchmark
     bRepo.deleteById(id);

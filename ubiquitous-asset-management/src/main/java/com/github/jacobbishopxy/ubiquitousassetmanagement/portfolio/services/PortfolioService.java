@@ -275,37 +275,38 @@ public class PortfolioService {
     // 1. check if adjustDate is the latest adjustDate
     PortfolioDetail sr = null;
     if (adjustDate != latestAr.getAdjustDate()) {
-      // make a copy of the latest data and bind them to a new adjustment record
+      // if not the latest adjustDate, make a copy of the latest data and bind them to
+      // a new adjustment record
+      sr = settle(pactId, adjustDate);
+      // update latest adjustment record
+      latestAr = sr.adjustmentRecord();
+    }
+
+    // 2. according to the latest adjustment record, create AdjustmentInfos by
+    // comparing the new constituents with the old ones
+    List<Constituent> latestCons = constituentService.getConstituentsByAdjustmentRecordId(latestAr.getId());
+    List<AdjustmentInfo> ais = PortfolioAdjustmentHelper.adjust(latestCons, constituents);
+
+    // 3. if adjustmentInfos is not empty, save them to the database
+    if (!ais.isEmpty()) {
+      adjustmentInfoService.createAdjustmentInfos(ais);
+      // in addition, this means the portfolio is adjusted, so we need to settle it
       sr = settle(pactId, adjustDate);
     } else {
+      // if no adjustmentInfos, simply regard it as a normal update
+      // update constituents
+      List<Constituent> cons = constituentService.updateConstituents(constituents);
+      // update benchmarks
+      List<Benchmark> bms = benchmarkService.updateBenchmarks(benchmarks);
+      // get performance
+      Performance pfm = performanceService.getPerformanceByAdjustmentRecordId(latestAr.getId()).get();
 
-      List<Constituent> latestCons = constituentService.getConstituentsByAdjustmentRecordId(latestAr.getId());
-
-      // 2. according to the latest adjustment record, create AdjustmentInfos by
-      // comparing the new constituents with the old ones
-      List<AdjustmentInfo> ais = PortfolioAdjustmentHelper.adjust(latestCons, constituents);
-
-      // 3. if adjustmentInfos is not empty, save them to the database
-      if (!ais.isEmpty()) {
-        adjustmentInfoService.createAdjustmentInfos(ais);
-        // in addition, this means the portfolio is adjusted, so we need to settle it
-        sr = settle(pactId, adjustDate);
-      } else {
-        // if no adjustmentInfos, simply regard it as a normal update
-        // update constituents
-        List<Constituent> cons = constituentService.updateConstituents(constituents);
-        // update benchmarks
-        List<Benchmark> bms = benchmarkService.updateBenchmarks(benchmarks);
-        // get performance
-        Performance pfm = performanceService.getPerformanceByAdjustmentRecordId(latestAr.getId()).get();
-
-        sr = new PortfolioDetail(
-            latestAr,
-            cons,
-            bms,
-            pfm,
-            List.of());
-      }
+      sr = new PortfolioDetail(
+          latestAr,
+          cons,
+          bms,
+          pfm,
+          List.of());
     }
 
     return sr;

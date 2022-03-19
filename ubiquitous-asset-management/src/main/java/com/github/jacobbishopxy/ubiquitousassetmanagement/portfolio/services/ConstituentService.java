@@ -6,6 +6,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
@@ -15,6 +16,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.PerformanceRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioCalculationHelper;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioCalculationHelper.ConstituentsResult;
+import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,7 +64,7 @@ public class ConstituentService {
     }
 
     // 1. get adjustment record id
-    int adjustmentRecordId = constituents.get(0).getAdjustmentRecordId();
+    int adjustmentRecordId = constituents.get(0).getAdjRecordId();
 
     // 2. recalculate all constituents and their related performance
     ConstituentsResult res = PortfolioCalculationHelper
@@ -96,7 +98,7 @@ public class ConstituentService {
     // 0. validate constituent
     // IMPORTANT: constituent's adjustmentRecord id cannot be null. In other words,
     // it must have an adjustmentRecord to create a constituent.
-    int adjustmentRecordId = constituent.getAdjustmentRecordId();
+    int adjustmentRecordId = constituent.getAdjRecordId();
 
     // 1. save constituent.
     Constituent newC = cRepo.save(constituent);
@@ -111,9 +113,32 @@ public class ConstituentService {
   }
 
   @Transactional(rollbackFor = Exception.class)
+  public List<Constituent> createConstituents(List<Constituent> constituents) {
+    // 0. validate constituents
+    // IMPORTANT: constituents' adjustmentRecord id cannot be null. In other words,
+    // they must have an adjustmentRecord to create constituents.
+    List<Integer> adjustmentRecordIds = constituents.stream()
+        .map(Constituent::getAdjRecordId)
+        .collect(Collectors.toList());
+
+    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    if (uniqueARIds.size() != 1) {
+      throw new IllegalArgumentException("Constituents must have the same adjustmentRecord id");
+    }
+
+    // 1. save constituents.
+    List<Constituent> newCs = cRepo.saveAll(constituents);
+
+    // 2. raw mutation
+    rawMutation(newCs);
+
+    return newCs;
+  }
+
+  @Transactional(rollbackFor = Exception.class)
   public Optional<Constituent> updateConstituent(int id, Constituent constituent) {
     // 0. validate constituent
-    int adjustmentRecordId = constituent.getAdjustmentRecordId();
+    int adjustmentRecordId = constituent.getAdjRecordId();
 
     // 1. update constituent
     cRepo
@@ -155,17 +180,18 @@ public class ConstituentService {
         .findAllById(ids)
         .stream()
         .map(c -> {
-          c.setAdjustDate(constituents.get(ids.indexOf(c.getId())).getAdjustDate());
-          c.setSymbol(constituents.get(ids.indexOf(c.getId())).getSymbol());
-          c.setAbbreviation(constituents.get(ids.indexOf(c.getId())).getAbbreviation());
-          c.setAdjustDatePrice(constituents.get(ids.indexOf(c.getId())).getAdjustDatePrice());
-          c.setCurrentPrice(constituents.get(ids.indexOf(c.getId())).getCurrentPrice());
-          c.setAdjustDateFactor(constituents.get(ids.indexOf(c.getId())).getAdjustDateFactor());
-          c.setCurrentFactor(constituents.get(ids.indexOf(c.getId())).getCurrentFactor());
-          c.setStaticWeight(constituents.get(ids.indexOf(c.getId())).getStaticWeight());
-          c.setPbpe(constituents.get(ids.indexOf(c.getId())).getPbpe());
-          c.setMarketValue(constituents.get(ids.indexOf(c.getId())).getMarketValue());
-          c.setEarningsYield(constituents.get(ids.indexOf(c.getId())).getEarningsYield());
+          int idx = ids.indexOf(c.getId());
+          c.setAdjustDate(constituents.get(idx).getAdjustDate());
+          c.setSymbol(constituents.get(idx).getSymbol());
+          c.setAbbreviation(constituents.get(idx).getAbbreviation());
+          c.setAdjustDatePrice(constituents.get(idx).getAdjustDatePrice());
+          c.setCurrentPrice(constituents.get(idx).getCurrentPrice());
+          c.setAdjustDateFactor(constituents.get(idx).getAdjustDateFactor());
+          c.setCurrentFactor(constituents.get(idx).getCurrentFactor());
+          c.setStaticWeight(constituents.get(idx).getStaticWeight());
+          c.setPbpe(constituents.get(idx).getPbpe());
+          c.setMarketValue(constituents.get(idx).getMarketValue());
+          c.setEarningsYield(constituents.get(idx).getEarningsYield());
           return c;
         })
         .collect(Collectors.toList());
@@ -183,7 +209,7 @@ public class ConstituentService {
         .findById(id)
         .orElseThrow(() -> new RuntimeException(
             String.format("Constituent %d not found", id)));
-    int adjustmentRecordId = c.getAdjustmentRecordId();
+    int adjustmentRecordId = c.getAdjRecordId();
 
     // 1. delete constituent. Since we've called findById, here can be sure that the
     // constituent is deleted.

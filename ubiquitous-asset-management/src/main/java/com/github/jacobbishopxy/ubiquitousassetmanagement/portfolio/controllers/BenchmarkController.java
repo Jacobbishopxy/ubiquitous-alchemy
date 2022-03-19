@@ -5,8 +5,10 @@
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.BenchmarkInput;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.BenchmarkService;
 
@@ -24,6 +26,10 @@ public class BenchmarkController {
 
   @Autowired
   private BenchmarkService benchmarkService;
+
+  // =======================================================================
+  // Query methods
+  // =======================================================================
 
   @GetMapping("/benchmark")
   List<Benchmark> getBenchmarksByAdjustmentRecordId(
@@ -44,9 +50,23 @@ public class BenchmarkController {
     return benchmarkService.getBenchmarksByAdjustmentRecordIds(adjustmentRecordIds);
   }
 
+  // =======================================================================
+  // Mutation methods
+  // =======================================================================
+
   @PostMapping("/benchmark")
-  Benchmark createBenchmark(@RequestBody Benchmark benchmark) {
-    return benchmarkService.createBenchmark(benchmark);
+  Benchmark createBenchmark(@RequestBody BenchmarkInput dto) {
+    return benchmarkService.createBenchmark(BenchmarkInput.intoBenchmark(dto));
+  }
+
+  @PostMapping("/benchmarks")
+  List<Benchmark> createBenchmarks(@RequestBody List<BenchmarkInput> dto) {
+    List<Benchmark> benchmarks = dto
+        .stream()
+        .map(BenchmarkInput::intoBenchmark)
+        .collect(Collectors.toList());
+
+    return benchmarkService.createBenchmarks(benchmarks);
   }
 
   @PutMapping("/benchmark/{id}")
@@ -58,6 +78,17 @@ public class BenchmarkController {
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND,
             String.format("Benchmark for id: %s not found", id)));
+  }
+
+  @PutMapping("/benchmarks")
+  List<Benchmark> updateBenchmarks(
+      @RequestBody List<BenchmarkInput> dto) {
+    List<Benchmark> benchmarks = dto
+        .stream()
+        .map(BenchmarkInput::intoBenchmark)
+        .collect(Collectors.toList());
+
+    return benchmarkService.updateBenchmarks(benchmarks);
   }
 
   @DeleteMapping("/benchmark/{id}")
