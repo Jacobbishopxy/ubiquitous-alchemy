@@ -25,28 +25,28 @@ public class PromotionPactController {
   @Autowired
   private PromotionPactService service;
 
-  @Operation(description = "Get all promotion pact.")
   @GetMapping("/pact")
+  @Operation(summary = "Get all promotion pact.")
   List<PromotionPact> getPromotionPacts() {
     return service.getAllPromotionPacts();
   }
 
-  @Operation(description = "Get a promotion pact by name.")
   @GetMapping("/pact/{name}")
+  @Operation(summary = "Get a promotion pact by name.")
   PromotionPact getPromotionPact(@PathVariable("name") String name) {
     return service.getPromotionPact(name).orElseThrow(
         () -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PromotionPact %s not found", name)));
   }
 
-  @Operation(description = "Create a promotion pact. Notice that `startDate` must be less than `endDate`")
   @PostMapping("/pact")
+  @Operation(summary = "Create a promotion pact.", description = "Notice that `startDate` must be less than `endDate`")
   PromotionPact createPromotionPact(@RequestBody PromotionPact promotionPact) {
     promotionPact.validate();
     return service.createPromotionPact(promotionPact);
   }
 
-  @Operation(description = "Update a promotion pact. Notice that `startDate` must be less than `endDate`")
+  @Operation(summary = "Update a promotion pact.", description = "Notice that `startDate` must be less than `endDate`")
   @PutMapping("/pact/{name}")
   PromotionPact updatePromotionPact(
       @PathVariable("name") String name,
@@ -54,12 +54,11 @@ public class PromotionPactController {
     promotionPact.validate();
     return service
         .updatePromotionPact(name, promotionPact)
-        .orElseThrow(
-            () -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, String.format("PromotionPact %s not found", name)));
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, String.format("PromotionPact %s not found", name)));
   }
 
-  @Operation(description = "Delete a promotion pact.")
+  @Operation(summary = "Delete a promotion pact.")
   @DeleteMapping("/pact/{name}")
   void deletePromotionPact(@PathVariable("name") String name) {
     service.deletePromotionPact(name);

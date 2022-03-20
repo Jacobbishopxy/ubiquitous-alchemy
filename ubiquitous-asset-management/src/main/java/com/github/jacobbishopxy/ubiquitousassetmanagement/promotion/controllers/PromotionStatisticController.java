@@ -38,14 +38,14 @@ public class PromotionStatisticController {
   @Autowired
   private PromoterService promoterService;
 
-  @Operation(description = "Count promotion statistics by promotion pact name.")
   @GetMapping("/statistic_count")
+  @Operation(description = "Count promotion statistics by promotion pact name.")
   Integer countPromotionStatistics(@RequestParam String promotionPactName) {
     return promotionStatisticService.countByPromotionPactName(promotionPactName);
   }
 
-  @Operation(description = "Get promotion statistics. `promotionPactName` and `promoterName` are optional, but they cannot exist at the same time.")
   @GetMapping("/statistic")
+  @Operation(summary = "Get promotion statistics.", description = "`promotionPactName` and `promoterName` are optional, but they cannot exist at the same time.")
   List<PromotionStatisticOutput> getPromotionStatistics(
       @RequestParam(required = false) String promotionPactName,
       @RequestParam(required = false) String promoterName) {
@@ -69,8 +69,8 @@ public class PromotionStatisticController {
     return ps.stream().map(s -> PromotionStatisticOutput.fromPromotionStatistic(s)).toList();
   }
 
-  @Operation(description = "Get promotion statistics by id.")
   @GetMapping("/statistic/{id}")
+  @Operation(summary = "Get promotion statistics by id.")
   PromotionStatisticOutput getPromotionStatisticById(@PathVariable Integer id) {
     PromotionStatistic ps = promotionStatisticService
         .getPromotionStatistic(id)

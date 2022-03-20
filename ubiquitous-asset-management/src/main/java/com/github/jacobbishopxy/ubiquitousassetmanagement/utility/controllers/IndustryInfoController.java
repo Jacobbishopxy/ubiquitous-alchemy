@@ -25,36 +25,36 @@ public class IndustryInfoController {
   @Autowired
   private IndustryInfoService service;
 
-  @Operation(description = "Get all industry info.")
   @GetMapping("/industry_info")
+  @Operation(summary = "Get all industry info.")
   List<IndustryInfo> getIndustryInfos() {
     return service.getIndustryInfos();
   }
 
-  @Operation(description = "Get an industry info by id.")
   @GetMapping("/industry_info/{id}")
+  @Operation(summary = "Get an industry info by id.")
   IndustryInfo getIndustryInfo(@PathVariable("id") Integer id) {
     return service.getIndustryInfo(id).orElseThrow(
         () -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("IndustryInfo %s not found", id)));
   }
 
-  @Operation(description = "Get an industry info by name.")
   @GetMapping("/industry_info_by_name")
+  @Operation(summary = "Get an industry info by name.")
   IndustryInfo getIndustryInfoByName(@RequestParam String name) {
     return service.getIndustryInfoByName(name).orElseThrow(
         () -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("IndustryInfo %s not found", name)));
   }
 
-  @Operation(description = "Create an industry info.")
   @PostMapping("/industry_info")
+  @Operation(summary = "Create an industry info.")
   IndustryInfo createIndustryInfo(@RequestBody IndustryInfo industryInfo) {
     return service.createIndustryInfo(industryInfo);
   }
 
-  @Operation(description = "Update an industry info.")
   @PutMapping("/industry_info/{id}")
+  @Operation(summary = "Update an industry info.")
   IndustryInfo updateIndustryInfo(
       @PathVariable("id") Integer id,
       @RequestBody IndustryInfo industryInfo) {
@@ -65,8 +65,8 @@ public class IndustryInfoController {
                 HttpStatus.NOT_FOUND, String.format("IndustryInfo %s not found", id)));
   }
 
-  @Operation(description = "Delete an industry info.")
   @DeleteMapping("/industry_info/{id}")
+  @Operation(summary = "Delete an industry info.")
   void deleteIndustryInfo(@PathVariable("id") Integer id) {
     service.deleteIndustryInfo(id);
   }

@@ -30,8 +30,8 @@ public class PromoterController {
   @Autowired
   private PromoterService service;
 
-  @Operation(description = "Get all promoters.")
   @GetMapping("/promoters")
+  @Operation(summary = "Get all promoters.")
   List<Promoter> getPromoters() {
     return service.getPromoters();
   }

@@ -42,14 +42,14 @@ public class PromotionRecordController {
   @Autowired
   private PromotionRecordService promotionRecordService;
 
-  @Operation(description = "Count promotion records by promotion pact name.")
   @GetMapping("/record_count")
+  @Operation(summary = "Count promotion records by promotion pact name.")
   long countPromotionRecords(@RequestParam String promotionPactName) {
     return promotionRecordService
         .countPromotionRecordsByPromotionPactName(promotionPactName);
   }
 
-  @Operation(description = "Get promotion records by page and size. Searching parameters are optional.")
+  @Operation(summary = "Get promotion records by page and size.", description = "Searching parameters are optional.")
   @GetMapping("/record")
   List<PromotionRecordOutput> getPromotionRecords(
       @RequestParam("page") int page,
@@ -59,26 +59,26 @@ public class PromotionRecordController {
       @RequestParam(value = "abbreviations", required = false) List<String> abbreviations,
       @RequestParam(value = "industries", required = false) List<String> industries,
       @RequestParam(value = "direction", required = false) TradeDirection direction,
-      @RequestParam(value = "openTimeRange", required = false) String openTimeRange,
-      @RequestParam(value = "openPriceRange", required = false) String openPriceRange,
-      @RequestParam(value = "closeTimeRange", required = false) String closeTimeRange,
-      @RequestParam(value = "closePriceRange", required = false) String closePriceRange,
-      @RequestParam(value = "earningsYieldRange", required = false) String earningsYieldRange,
-      @RequestParam(value = "scoreRange", required = false) String scoreRange,
-      @RequestParam(value = "promotionPactNames", required = false) List<String> promotionPactNames,
-      @RequestParam(value = "isArchived", required = false) Boolean isArchived,
-      @RequestParam(value = "createdAtRange", required = false) String createdAtRange,
-      @RequestParam(value = "updatedAtRange", required = false) String updatedAtRange,
-      @RequestParam(value = "promoterSort", required = false) String promoterSort,
-      @RequestParam(value = "symbolSort", required = false) String symbolSort,
-      @RequestParam(value = "industrySort", required = false) String industrySort,
-      @RequestParam(value = "directionSort", required = false) String directionSort,
-      @RequestParam(value = "openTimeSort", required = false) String openTimeSort,
-      @RequestParam(value = "closeTimeSort", required = false) String closeTimeSort,
-      @RequestParam(value = "earningsYieldSort", required = false) String earningsYieldSort,
-      @RequestParam(value = "scoreSort", required = false) String scoreSort,
-      @RequestParam(value = "createdAtSort", required = false) String createdAtSort,
-      @RequestParam(value = "updatedAtSort", required = false) String updatedAtSort)
+      @RequestParam(value = "open_time_range", required = false) String openTimeRange,
+      @RequestParam(value = "open_price_range", required = false) String openPriceRange,
+      @RequestParam(value = "close_time_range", required = false) String closeTimeRange,
+      @RequestParam(value = "close_price_range", required = false) String closePriceRange,
+      @RequestParam(value = "earnings_yield_range", required = false) String earningsYieldRange,
+      @RequestParam(value = "score_range", required = false) String scoreRange,
+      @RequestParam(value = "promotion_pact_names", required = false) List<String> promotionPactNames,
+      @RequestParam(value = "is_archived", required = false) Boolean isArchived,
+      @RequestParam(value = "created_at_range", required = false) String createdAtRange,
+      @RequestParam(value = "updated_at_range", required = false) String updatedAtRange,
+      @RequestParam(value = "promoter_sort", required = false) String promoterSort,
+      @RequestParam(value = "symbol_sort", required = false) String symbolSort,
+      @RequestParam(value = "industry_sort", required = false) String industrySort,
+      @RequestParam(value = "direction_sort", required = false) String directionSort,
+      @RequestParam(value = "open_time_sort", required = false) String openTimeSort,
+      @RequestParam(value = "close_time_sort", required = false) String closeTimeSort,
+      @RequestParam(value = "earnings_yield_sort", required = false) String earningsYieldSort,
+      @RequestParam(value = "score_sort", required = false) String scoreSort,
+      @RequestParam(value = "created_at_sort", required = false) String createdAtSort,
+      @RequestParam(value = "updated_at_sort", required = false) String updatedAtSort)
       throws ParseException {
 
     // TODO:
@@ -140,8 +140,8 @@ public class PromotionRecordController {
         .toList();
   }
 
-  @Operation(description = "Get promotion record by id.")
   @GetMapping("/record/{id}")
+  @Operation(summary = "Get promotion record by id.")
   PromotionRecordOutput getPromotionRecord(@PathVariable Integer id) {
     PromotionRecord pr = promotionRecordService
         .getPromotionRecord(id)
@@ -150,8 +150,8 @@ public class PromotionRecordController {
     return PromotionRecordOutput.fromPromotionRecord(pr);
   }
 
-  @Operation(description = "Create promotion record. Noticed that this method will also effect the promotion statistic automatically.")
   @PostMapping("/record")
+  @Operation(summary = "Create promotion record.", description = "Noticed that this method will also effect the promotion statistic automatically.")
   PromotionRecordOutput createPromotionRecord(@RequestBody PromotionRecordInput dto) {
     String email = promoterService
         .getEmailByNickname(dto.promoter())
@@ -171,8 +171,8 @@ public class PromotionRecordController {
     return PromotionRecordOutput.fromPromotionRecord(pr, pactName, dto.promoter());
   }
 
-  @Operation(description = "Update promotion record. Noticed that this method will also effect the promotion statistic automatically.")
   @PutMapping("/record/{id}")
+  @Operation(summary = "Update promotion record.", description = "Noticed that this method will also effect the promotion statistic automatically.")
   PromotionRecordOutput updatePromotionRecord(@PathVariable Integer id, @RequestBody PromotionRecordInput dto) {
     String email = promoterService.getEmailByNickname(dto.promoter())
         .orElseThrow(() -> new ResponseStatusException(
@@ -194,8 +194,8 @@ public class PromotionRecordController {
     return PromotionRecordOutput.fromPromotionRecord(pr, pactName, dto.promoter());
   }
 
-  @Operation(description = "Delete promotion record. Noticed that this method will also effect the promotion statistic automatically.")
   @DeleteMapping("/record/{id}")
+  @Operation(summary = "Delete promotion record.", description = "Noticed that this method will also effect the promotion statistic automatically.")
   void deletePromotionRecord(@PathVariable Integer id) {
     promotionRecordService.deletePromotionRecord(id);
   }
