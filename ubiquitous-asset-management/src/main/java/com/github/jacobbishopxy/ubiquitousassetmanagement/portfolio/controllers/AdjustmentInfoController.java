@@ -33,14 +33,14 @@ public class AdjustmentInfoController {
   // =======================================================================
 
   @GetMapping("/adjustment_infos")
-  @Operation(description = "Get all adjustment info.")
+  @Operation(summary = "Get all adjustment info.")
   List<AdjustmentInfo> getAdjustmentInfosByAdjustmentRecordId(
       @RequestParam(value = "adjustment_record_id", required = true) Integer adjustmentRecordId) {
     return aService.getAdjustmentInfosByAdjustmentRecordId(adjustmentRecordId);
   }
 
   @GetMapping("/adjustment_info/{id}")
-  @Operation(description = "Get an adjustment info by id.")
+  @Operation(summary = "Get an adjustment info by id.")
   AdjustmentInfo getAdjustmentInfoById(@PathVariable("id") Integer id) {
     return aService
         .getAdjustmentInfoById(id)
@@ -53,7 +53,7 @@ public class AdjustmentInfoController {
   // =======================================================================
 
   @PatchMapping("/adjustment_info/{id}")
-  @Operation(description = "Update an adjustment info's adjustTime or description.")
+  @Operation(summary = "Update an adjustment info's adjustTime or description.")
   AdjustmentInfo updateAdjustmentInfo(
       @PathVariable("id") int id,
       @RequestBody AdjustmentInfoUpdate dto) {

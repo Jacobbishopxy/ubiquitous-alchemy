@@ -160,12 +160,22 @@ public class BenchmarkService {
   @Transactional(rollbackFor = Exception.class)
   public List<Benchmark> updateBenchmarks(List<Benchmark> benchmarks) {
     // 0. make sure all benchmarks' id are valid
+    List<Integer> adjustmentRecordIds = benchmarks
+        .stream()
+        .map(Benchmark::getAdjRecordId)
+        .collect(Collectors.toList());
+
+    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    if (uniqueARIds.size() != 1) {
+      throw new IllegalArgumentException("All benchmarks must have the same adjustment record id");
+    }
+
+    // 1. only modify benchmarks that are in the database
     List<Integer> ids = benchmarks
         .stream()
         .map(Benchmark::getId)
         .collect(Collectors.toList());
 
-    // 1. only modify benchmarks that are in the database
     List<Benchmark> newBms = bRepo
         .findAllById(ids)
         .stream()
@@ -190,8 +200,7 @@ public class BenchmarkService {
     // 0. validate benchmark
     Benchmark b = bRepo
         .findById(id)
-        .orElseThrow(() -> new RuntimeException(
-            String.format("Benchmark %d not found", id)));
+        .orElseThrow(() -> new RuntimeException(String.format("Benchmark %d not found", id)));
     int adjustmentRecordId = b.getAdjRecordId();
 
     // 1. delete benchmark
@@ -199,6 +208,27 @@ public class BenchmarkService {
 
     // 2. common mutation
     commonMutation(adjustmentRecordId);
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteBenchmarks(List<Integer> ids) {
+    // 0. make sure all benchmarks' id are valid
+    List<Benchmark> bms = bRepo.findAllById(ids);
+    List<Integer> adjustmentRecordIds = bms
+        .stream()
+        .map(Benchmark::getAdjRecordId)
+        .collect(Collectors.toList());
+
+    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    if (uniqueARIds.size() != 1) {
+      throw new IllegalArgumentException("All benchmarks must have the same adjustment record id");
+    }
+
+    // 1. delete benchmarks
+    bRepo.deleteAll(bms);
+
+    // 2. common mutation
+    commonMutation(adjustmentRecordIds.get(0));
   }
 
   // delete all benchmarks in the portfolio

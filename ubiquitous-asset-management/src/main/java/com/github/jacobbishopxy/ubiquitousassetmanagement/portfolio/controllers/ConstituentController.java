@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -33,6 +34,7 @@ public class ConstituentController {
   // =======================================================================
 
   @GetMapping("/constituents")
+  @Operation(summary = "Get all constituents, either by adjustment record id or ids.")
   List<Constituent> getConstituentsByAdjustmentRecordId(
       @RequestParam(value = "adjustment_record_id", required = true) Integer adjustmentRecordId,
       @RequestParam(value = "adjustment_record_id", required = true) List<Integer> adjustmentRecordIds) {
@@ -47,6 +49,7 @@ public class ConstituentController {
   }
 
   @GetMapping("/constituent/{id}")
+  @Operation(summary = "Get constituent by id.")
   Constituent getConstituentById(@PathVariable("id") Integer id) {
     return constituentService
         .getConstituentById(id)
@@ -59,11 +62,13 @@ public class ConstituentController {
   // =======================================================================
 
   @PostMapping("/constituent")
+  @Operation(summary = "Create constituent.")
   Constituent createConstituent(@RequestBody ConstituentInput dto) {
     return constituentService.createConstituent(ConstituentInput.intoConstituent(dto));
   }
 
   @PostMapping("/constituents")
+  @Operation(summary = "Create multiple constituents.")
   List<Constituent> createConstituents(@RequestBody List<ConstituentInput> dto) {
     List<Constituent> constituents = dto.stream()
         .map(ConstituentInput::intoConstituent)
@@ -73,6 +78,7 @@ public class ConstituentController {
   }
 
   @PutMapping("/constituent/{id}")
+  @Operation(summary = "Update constituent.")
   Constituent updateConstituent(
       @PathVariable("id") int id,
       @RequestBody ConstituentInput dto) {
@@ -83,6 +89,7 @@ public class ConstituentController {
   }
 
   @PutMapping("/constituents")
+  @Operation(summary = "Update multiple constituents.")
   List<Constituent> updateConstituents(@RequestBody List<ConstituentInput> dto) {
     List<Constituent> constituents = dto
         .stream()
@@ -93,7 +100,14 @@ public class ConstituentController {
   }
 
   @DeleteMapping("/constituent/{id}")
+  @Operation(summary = "Delete constituent.")
   void deleteConstituent(@PathVariable("id") int id) {
     constituentService.deleteConstituent(id);
+  }
+
+  @DeleteMapping("/constituents")
+  @Operation(summary = "Delete multiple constituents.")
+  void deleteConstituents(@RequestBody List<Integer> ids) {
+    constituentService.deleteConstituents(ids);
   }
 }

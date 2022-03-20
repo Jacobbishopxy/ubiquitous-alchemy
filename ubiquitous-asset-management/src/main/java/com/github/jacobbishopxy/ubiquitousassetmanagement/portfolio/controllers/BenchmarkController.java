@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Portfolio")
@@ -32,6 +33,7 @@ public class BenchmarkController {
   // =======================================================================
 
   @GetMapping("/benchmarks")
+  @Operation(summary = "Get all benchmarks, either by adjustment record id or ids.")
   List<Benchmark> getBenchmarksByAdjustmentRecordId(
       @RequestParam(value = "adjustment_record_id", required = false) Integer adjustmentRecordId,
       @RequestParam(value = "adjustment_record_ids", required = false) List<Integer> adjustmentRecordIds) {
@@ -46,6 +48,7 @@ public class BenchmarkController {
   }
 
   @GetMapping("/benchmark/{id}")
+  @Operation(summary = "Get benchmark by id.")
   Benchmark getBenchmarkById(@PathVariable("id") Integer id) {
     return benchmarkService
         .getBenchmarkById(id)
@@ -58,11 +61,13 @@ public class BenchmarkController {
   // =======================================================================
 
   @PostMapping("/benchmark")
+  @Operation(summary = "Create benchmark.")
   Benchmark createBenchmark(@RequestBody BenchmarkInput dto) {
     return benchmarkService.createBenchmark(BenchmarkInput.intoBenchmark(dto));
   }
 
   @PostMapping("/benchmarks")
+  @Operation(summary = "Create multiple benchmarks.")
   List<Benchmark> createBenchmarks(@RequestBody List<BenchmarkInput> dto) {
     List<Benchmark> benchmarks = dto
         .stream()
@@ -73,6 +78,7 @@ public class BenchmarkController {
   }
 
   @PutMapping("/benchmark/{id}")
+  @Operation(summary = "Update benchmark.")
   Benchmark updateBenchmark(
       @PathVariable("id") int id,
       @RequestBody Benchmark benchmark) {
@@ -84,6 +90,7 @@ public class BenchmarkController {
   }
 
   @PutMapping("/benchmarks")
+  @Operation(summary = "Update multiple benchmarks.")
   List<Benchmark> updateBenchmarks(
       @RequestBody List<BenchmarkInput> dto) {
     List<Benchmark> benchmarks = dto
@@ -95,7 +102,15 @@ public class BenchmarkController {
   }
 
   @DeleteMapping("/benchmark/{id}")
+  @Operation(summary = "Delete benchmark.")
   void deleteBenchmark(@PathVariable("id") int id) {
     benchmarkService.deleteBenchmark(id);
   }
+
+  @DeleteMapping("/benchmarks")
+  @Operation(summary = "Delete multiple benchmarks.")
+  void deleteBenchmarks(@RequestParam("ids") List<Integer> ids) {
+    benchmarkService.deleteBenchmarks(ids);
+  }
+
 }

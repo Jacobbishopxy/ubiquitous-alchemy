@@ -170,12 +170,22 @@ public class ConstituentService {
   @Transactional(rollbackFor = Exception.class)
   public List<Constituent> updateConstituents(List<Constituent> constituents) {
     // 0. make sure all constituents' id are valid
+    List<Integer> adjustmentRecordIds = constituents
+        .stream()
+        .map(Constituent::getAdjRecordId)
+        .collect(Collectors.toList());
+
+    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    if (uniqueARIds.size() != 1) {
+      throw new IllegalArgumentException("All constituents must have the same adjustmentRecord id");
+    }
+
+    // 1. only modify constituents that are in the database
     List<Integer> ids = constituents
         .stream()
         .map(Constituent::getId)
         .collect(Collectors.toList());
 
-    // 1. only modify constituents that are in the database
     List<Constituent> newCons = cRepo
         .findAllById(ids)
         .stream()
@@ -217,6 +227,30 @@ public class ConstituentService {
 
     // 2. common mutation
     commonMutation(adjustmentRecordId);
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteConstituents(List<Integer> ids) {
+    // 0. find constituents and get adjustmentRecordId
+    List<Constituent> cs = cRepo.findAllById(ids);
+
+    List<Integer> adjustmentRecordIds = cs
+        .stream()
+        .map(Constituent::getAdjRecordId)
+        .collect(Collectors.toList());
+
+    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    if (uniqueARIds.size() != 1) {
+      throw new IllegalArgumentException("All constituents must have the same adjustmentRecord id");
+    }
+
+    // 1. delete constituents. Since we've called findAllById, here can be sure that
+    // the
+    // constituents are deleted.
+    cRepo.deleteAll(cs);
+
+    // 2. common mutation
+    commonMutation(adjustmentRecordIds.get(0));
   }
 
   // delete all constituents in the portfolio.

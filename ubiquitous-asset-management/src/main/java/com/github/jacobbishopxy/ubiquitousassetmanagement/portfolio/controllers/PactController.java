@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,7 @@ public class PactController {
   // =======================================================================
 
   @GetMapping(value = "/pacts")
+  @Operation(summary = "Get all pacts.")
   List<PactOutput> getPortfolioPacts(
       @RequestParam(value = "is_active", required = false) Boolean isActive) {
     return ppService.getAllPacts(isActive)
@@ -53,6 +55,7 @@ public class PactController {
   }
 
   @GetMapping(value = "/pact/{id}")
+  @Operation(summary = "Get pact by id.")
   PactOutput getPortfolioPact(@PathVariable("id") int id) {
     Pact pp = ppService
         .getPactById(id)
@@ -61,10 +64,12 @@ public class PactController {
     return PactOutput.fromPortfolioPact(pp);
   }
 
-  @GetMapping(value = "/pact/alias")
+  @GetMapping(value = "/pact_alias")
+  @Operation(summary = "Get pact by alias.")
   PactOutput getPortfolioPact(@RequestParam("alias") String alias) {
-    Pact pp = ppService.getPactByAlias(alias).orElseThrow(
-        () -> new ResponseStatusException(
+    Pact pp = ppService
+        .getPactByAlias(alias)
+        .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PortfolioPact alias: %s not found", alias)));
     return PactOutput.fromPortfolioPact(pp);
   }
@@ -74,6 +79,7 @@ public class PactController {
   // =======================================================================
 
   @PostMapping(value = "/pact")
+  @Operation(summary = "Create a new pact.")
   PactOutput createPortfolioPact(@RequestBody PactInput dto) {
     Promoter promoter = pService
         .getPromoterByNickname(dto.promoter())
@@ -93,6 +99,7 @@ public class PactController {
   }
 
   @PutMapping(value = "/pact/{id}")
+  @Operation(summary = "Update a pact.")
   PactOutput updatePortfolioPact(
       @PathVariable("id") int id,
       @RequestBody PactInput dto) {
@@ -117,11 +124,13 @@ public class PactController {
   }
 
   @DeleteMapping(value = "/pact/{id}")
+  @Operation(summary = "Delete a pact by id.")
   void deletePortfolioPact(@PathVariable("id") int id) {
     ppService.deletePact(id);
   }
 
-  @DeleteMapping(value = "/pact/alias")
+  @DeleteMapping(value = "/pact_alias")
+  @Operation(summary = "Delete a pact by alias.")
   void deletePortfolioPact(@RequestParam("alias") String alias) {
     ppService.deletePact(alias);
   }
