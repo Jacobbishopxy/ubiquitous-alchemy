@@ -7,17 +7,28 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentRecordRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.PactRepository;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.PerformanceRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PactService {
 
   @Autowired
   private PactRepository pRepo;
+
+  @Autowired
+  private AdjustmentRecordRepository arRepo;
+
+  @Autowired
+  private PerformanceRepository perfRepo;
 
   // =======================================================================
   // Query methods
@@ -43,6 +54,7 @@ public class PactService {
   // Mutation methods
   // =======================================================================
 
+  @Transactional(rollbackFor = Exception.class)
   public Pact createPact(Pact portfolioPact) {
     // if alias is not set, use promoter_nickname and start_date as alias
     if (portfolioPact.getAlias() == null) {
@@ -51,7 +63,23 @@ public class PactService {
           portfolioPact.getStartDate().toString();
       portfolioPact.setAlias(alias);
     }
-    return pRepo.save(portfolioPact);
+    // save new pact
+    Pact pact = pRepo.save(portfolioPact);
+    // auto create adjustment record
+    AdjustmentRecord adjustmentRecord = new AdjustmentRecord();
+    adjustmentRecord.setPact(pact);
+    adjustmentRecord.setAdjustDate(pact.getStartDate());
+    adjustmentRecord.setAdjustVersion(0);
+    adjustmentRecord = arRepo.save(adjustmentRecord);
+    // auto create performance
+    Performance performance = new Performance();
+    performance.setAdjustmentRecord(adjustmentRecord);
+    performance.setPortfolioEarningsYield(0f);
+    performance.setBenchmarkEarningsYield(0f);
+    performance.setAlpha(0f);
+    perfRepo.save(performance);
+
+    return pact;
   }
 
   public Optional<Pact> updatePact(int id, Pact portfolioPact) {
