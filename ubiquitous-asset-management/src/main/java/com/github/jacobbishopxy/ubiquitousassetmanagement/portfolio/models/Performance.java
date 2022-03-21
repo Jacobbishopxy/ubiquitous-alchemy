@@ -30,17 +30,17 @@ public class Performance {
   @Schema(description = "This portfolio record belongs to a specific portfolio pact's adjustment record.", required = true)
   private AdjustmentRecord adjustmentRecord;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   @NotEmpty
   @Schema(description = "The earnings yield of custom portfolio.", required = true)
   private Float portfolioEarningsYield;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   @NotEmpty
   @Schema(description = "The earnings yield of benchmark.", required = true)
   private Float benchmarkEarningsYield;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   @NotEmpty
   @Schema(description = "The difference between custom portfolio and benchmark.", required = true)
   private Float alpha;

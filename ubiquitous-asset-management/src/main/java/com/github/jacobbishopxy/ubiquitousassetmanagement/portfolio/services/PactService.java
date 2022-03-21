@@ -71,12 +71,9 @@ public class PactService {
     adjustmentRecord.setAdjustDate(pact.getStartDate());
     adjustmentRecord.setAdjustVersion(0);
     adjustmentRecord = arRepo.save(adjustmentRecord);
-    // auto create performance
+    // auto create performance, all other fields are null
     Performance performance = new Performance();
     performance.setAdjustmentRecord(adjustmentRecord);
-    performance.setPortfolioEarningsYield(0f);
-    performance.setBenchmarkEarningsYield(0f);
-    performance.setAlpha(0f);
     perfRepo.save(performance);
 
     return pact;

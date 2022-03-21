@@ -25,7 +25,7 @@ public class IndustryInfoController {
   @Autowired
   private IndustryInfoService service;
 
-  @GetMapping("/industry_info")
+  @GetMapping("/industry_infos")
   @Operation(summary = "Get all industry info.")
   List<IndustryInfo> getIndustryInfos() {
     return service.getIndustryInfos();
@@ -34,16 +34,18 @@ public class IndustryInfoController {
   @GetMapping("/industry_info/{id}")
   @Operation(summary = "Get an industry info by id.")
   IndustryInfo getIndustryInfo(@PathVariable("id") Integer id) {
-    return service.getIndustryInfo(id).orElseThrow(
-        () -> new ResponseStatusException(
+    return service
+        .getIndustryInfo(id)
+        .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("IndustryInfo %s not found", id)));
   }
 
-  @GetMapping("/industry_info_by_name")
+  @GetMapping("/industry_info")
   @Operation(summary = "Get an industry info by name.")
-  IndustryInfo getIndustryInfoByName(@RequestParam String name) {
-    return service.getIndustryInfoByName(name).orElseThrow(
-        () -> new ResponseStatusException(
+  IndustryInfo getIndustryInfoByName(@RequestParam(value = "name", required = true) String name) {
+    return service
+        .getIndustryInfoByName(name)
+        .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("IndustryInfo %s not found", name)));
   }
 
@@ -60,9 +62,8 @@ public class IndustryInfoController {
       @RequestBody IndustryInfo industryInfo) {
     return service
         .updateIndustryInfo(id, industryInfo)
-        .orElseThrow(
-            () -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, String.format("IndustryInfo %s not found", id)));
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, String.format("IndustryInfo %s not found", id)));
   }
 
   @DeleteMapping("/industry_info/{id}")
