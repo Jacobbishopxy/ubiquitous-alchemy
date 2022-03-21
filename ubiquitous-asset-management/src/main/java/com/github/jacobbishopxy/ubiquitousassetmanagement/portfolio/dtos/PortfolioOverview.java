@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Schema(name = "PortfolioOverview", description = "Portfolio overview")
 public record PortfolioOverview(
+		int pactId,
 		int adjustmentRecordId,
 		String industryName,
 		String promoterName,
@@ -33,6 +34,7 @@ public record PortfolioOverview(
 		AdjustmentRecord ar = performance.getAdjustmentRecord();
 
 		return new PortfolioOverview(
+				pact.getId(),
 				ar.getId(),
 				pact.getIndustryInfo().getName(),
 				pact.getPromoter().getNickname(),

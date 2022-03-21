@@ -25,23 +25,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * PortfolioService
- * 
+ *
  * Full commands:
- * 
+ *
  * 1. Settle an existing portfolio. AdjustmentRecord/Performance is created. The
  * actual operation is to get the latest adjustment record's date and version,
  * and according to its id, copy the related portfolio benchmarks and
  * constituents to a new date. And then, create a new adjustment record.
- * 
+ *
  * 2. Cancel a portfolio settle. AdjustmentRecord/Performance is deleted. The
  * actual operation is to get the latest adjustment record's date and version,
  * and according to its id, delete the related portfolio benchmarks and
  * constituents. And then delete the adjustment record.
- * 
+ *
  * 3. Adjust an existing portfolio, which needs to be settled first (check
  * AdjustmentRecord's date and version). This operation will call `settle`
  * method automatically.
- * 
+ *
  * 4. Cancel an adjustment. Unsettle portfolio.
  */
 @Service
@@ -71,7 +71,7 @@ public class PortfolioService {
 
   /**
    * Get a list of portfolios' overviews at latest date's latest version.
-   * 
+   *
    * @param isActive
    * @return
    */
@@ -96,7 +96,7 @@ public class PortfolioService {
 
   /**
    * Get a sorted list of adjustment records by pact id.
-   * 
+   *
    * @param pactId
    * @return
    */
@@ -107,7 +107,7 @@ public class PortfolioService {
   /**
    * Get an overview of a portfolio by given adjustmentRecord id (id list can be
    * found in Pact entity).
-   * 
+   *
    * @param adjustmentRecordId: nullable. if null means latest adjustment record
    * @return
    */
@@ -126,7 +126,7 @@ public class PortfolioService {
 
   /**
    * Get a portfolio detail
-   * 
+   *
    * @param pactId
    * @return
    */
@@ -168,7 +168,7 @@ public class PortfolioService {
 
   /**
    * Settle a portfolio.
-   * 
+   *
    * @param pactId
    * @param settleDate
    * @return
