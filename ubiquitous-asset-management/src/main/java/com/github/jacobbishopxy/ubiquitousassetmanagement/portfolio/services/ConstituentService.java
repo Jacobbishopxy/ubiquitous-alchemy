@@ -79,7 +79,9 @@ public class ConstituentService {
         .orElse(new Performance());
     performance.setAdjustmentRecord(new AdjustmentRecord(adjustmentRecordId));
     performance.setPortfolioEarningsYield(res.earningsYield());
-    performance.setAlpha(res.earningsYield() - performance.getBenchmarkEarningsYield());
+    if (res.earningsYield() != null && performance.getBenchmarkEarningsYield() != null) {
+      performance.setAlpha(res.earningsYield() - performance.getBenchmarkEarningsYield());
+    }
     pRepo.save(performance);
   }
 

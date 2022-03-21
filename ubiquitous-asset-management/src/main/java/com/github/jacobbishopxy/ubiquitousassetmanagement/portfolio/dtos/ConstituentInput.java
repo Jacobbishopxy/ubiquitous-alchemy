@@ -33,11 +33,13 @@ public record ConstituentInput(
 
 		Float earningsYield = 0f;
 		Float pctChg = 0f;
+
+		// temporary solution (under no automatic calculation situation)
+		Float adjDateFactor = dto.adjustDateFactor() == null ? 1f : dto.adjustDateFactor();
 		if (dto.adjustDatePrice() != null &&
 				dto.currentPrice() != null &&
-				dto.adjustDateFactor() != null &&
 				dto.currentFactor() != null) {
-			Float adjChg = dto.currentFactor() / dto.adjustDateFactor();
+			Float adjChg = dto.currentFactor() / adjDateFactor;
 			pctChg = adjChg * dto.currentPrice() / dto.adjustDatePrice();
 			earningsYield = pctChg - 1;
 		}
@@ -52,7 +54,7 @@ public record ConstituentInput(
 				dto.abbreviation(),
 				dto.adjustDatePrice(),
 				dto.currentPrice(),
-				dto.adjustDateFactor(),
+				adjDateFactor,
 				dto.currentFactor(),
 				dto.weight(),
 				expansionRate, // currentWeight = expansionRate / sum of all expansionRates

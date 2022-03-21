@@ -18,6 +18,7 @@ public record BenchmarkInput(
 		int adjustmentRecordId,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
 		String benchmarkName,
+		String symbol,
 		Float percentageChange,
 		Float weight) {
 
@@ -31,6 +32,7 @@ public record BenchmarkInput(
 				ar,
 				dto.adjustDate(),
 				dto.benchmarkName(),
+				dto.symbol(),
 				dto.percentageChange(),
 				dto.weight(),
 				expansionRate);

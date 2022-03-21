@@ -44,6 +44,10 @@ public class Benchmark {
 
   @Column(nullable = false)
   @NotEmpty
+  private String symbol;
+
+  @Column(nullable = false)
+  @NotEmpty
   private Float percentageChange;
 
   @Column(nullable = false)
@@ -67,6 +71,7 @@ public class Benchmark {
       AdjustmentRecord adjustmentRecord,
       LocalDate adjustDate,
       String benchmarkName,
+      String symbol,
       Float percentageChange,
       Float staticWeight,
       Float dynamicWeight) {
@@ -74,6 +79,7 @@ public class Benchmark {
     this.adjustmentRecord = adjustmentRecord;
     this.adjustDate = adjustDate;
     this.benchmarkName = benchmarkName;
+    this.symbol = symbol;
     this.percentageChange = percentageChange;
     this.staticWeight = staticWeight;
     this.dynamicWeight = dynamicWeight;
@@ -121,6 +127,14 @@ public class Benchmark {
 
   public void setBenchmarkName(String benchmarkName) {
     this.benchmarkName = benchmarkName;
+  }
+
+  public String getSymbol() {
+    return symbol;
+  }
+
+  public void setSymbol(String symbol) {
+    this.symbol = symbol;
   }
 
   public Float getPercentageChange() {
