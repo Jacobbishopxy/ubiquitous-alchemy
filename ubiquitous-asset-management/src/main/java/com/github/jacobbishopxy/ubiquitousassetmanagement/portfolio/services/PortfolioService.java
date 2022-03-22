@@ -253,6 +253,8 @@ public class PortfolioService {
           newC.setAbbreviation(c.getAbbreviation());
           newC.setAdjustDatePrice(c.getAdjustDatePrice());
           newC.setCurrentPrice(c.getCurrentPrice());
+          newC.setAdjustDateFactor(c.getAdjustDateFactor());
+          newC.setCurrentFactor(c.getCurrentFactor());
           newC.setStaticWeight(c.getStaticWeight());
           newC.setDynamicWeight(c.getDynamicWeight());
           newC.setPbpe(c.getPbpe());
