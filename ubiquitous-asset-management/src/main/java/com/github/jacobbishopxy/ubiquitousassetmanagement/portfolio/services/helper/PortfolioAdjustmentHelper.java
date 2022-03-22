@@ -38,25 +38,25 @@ public class PortfolioAdjustmentHelper {
       List<Constituent> preCons,
       List<Constituent> curCons) {
 
-    Map<Integer, Constituent> preConsMap = HashBiMap
+    Map<Long, Constituent> preConsMap = HashBiMap
         .create(preCons
             .stream()
             .collect(Collectors.toMap(Constituent::getId, c -> c)));
-    Map<Integer, Constituent> curConsMap = HashBiMap
+    Map<Long, Constituent> curConsMap = HashBiMap
         .create(curCons
             .stream()
             .collect(Collectors.toMap(Constituent::getId, c -> c)));
 
-    Set<Integer> preConsIds = Sets.newHashSet(preConsMap.keySet());
-    Set<Integer> curConsIds = Sets.newHashSet(curConsMap.keySet());
+    Set<Long> preConsIds = Sets.newHashSet(preConsMap.keySet());
+    Set<Long> curConsIds = Sets.newHashSet(curConsMap.keySet());
 
     // remaining: if the current static weight is less than the previous one, mark
     // the constituent as `Decrease`; otherwise, mark it as `Increase`.
-    Set<Integer> remainingIds = intersection(preConsIds, curConsIds);
+    Set<Long> remainingIds = intersection(preConsIds, curConsIds);
     // added: mark it as `Join`.
-    Set<Integer> addedIds = difference(curConsIds, preConsIds);
+    Set<Long> addedIds = difference(curConsIds, preConsIds);
     // popped: mark it as `Leave`.
-    Set<Integer> poppedIds = difference(preConsIds, curConsIds);
+    Set<Long> poppedIds = difference(preConsIds, curConsIds);
 
     List<AdjustmentInfo> aisRemaining = remainingIds
         .stream()

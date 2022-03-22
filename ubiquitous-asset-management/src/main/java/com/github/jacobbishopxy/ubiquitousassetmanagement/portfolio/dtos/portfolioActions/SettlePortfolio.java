@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Schema(name = "PortfolioActionSettle", description = "Settle portfolio")
 public record SettlePortfolio(
-		int pactId,
+		Long pactId,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate settlementDate) {
 
 }

@@ -13,7 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Schema(name = "PortfolioPactOutput", description = "Pact output")
-public record PactOutput(String alias,
+public record PactOutput(
+    String alias,
     String promoter,
     String industry,
     @JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate startDate,

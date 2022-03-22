@@ -31,21 +31,21 @@ public class AdjustmentRecordService {
   // expose to controller
   // =======================================================================
 
-  public List<AdjustmentRecord> getARAtLatestAdjustDate(int pactId) {
+  public List<AdjustmentRecord> getARAtLatestAdjustDate(Long pactId) {
     return arRepo.findByPactIdAndLatestAdjustDate(pactId);
   }
 
-  public List<AdjustmentRecord> getARSortDesc(int pactId) {
+  public List<AdjustmentRecord> getARSortDesc(Long pactId) {
     return arRepo.findByPactIdDescSort(pactId);
   }
 
   // A powerful query.
   // Get all adjustment records at the latest date and latest version.
-  public List<AdjustmentRecord> getARsAtLatestAdjustDateVersion(List<Integer> pactIds) {
+  public List<AdjustmentRecord> getARsAtLatestAdjustDateVersion(List<Long> pactIds) {
     return arRepo.findByPactIdsAndLatestAdjustDateVersion(pactIds);
   }
 
-  public Optional<AdjustmentRecord> getARAtLatestAdjustDateAndVersion(int pactId) {
+  public Optional<AdjustmentRecord> getARAtLatestAdjustDateAndVersion(Long pactId) {
     return arRepo
         .findByPactIdAndLatestAdjustDate(pactId)
         .stream()
@@ -54,18 +54,18 @@ public class AdjustmentRecordService {
 
   // Get the latest date's latest version AdjustmentRecord with `Pact`
   // explicitly included.
-  public Optional<AdjustmentRecord> getFullARAtLatestAdjustDateAndVersion(int pactId) {
+  public Optional<AdjustmentRecord> getFullARAtLatestAdjustDateAndVersion(Long pactId) {
     return arRepo
         .findByPactIdAndLatestAdjustDate(pactId)
         .stream()
         .findFirst();
   }
 
-  public Optional<AdjustmentRecord> getARById(int id) {
+  public Optional<AdjustmentRecord> getARById(Long id) {
     return arRepo.findById(id);
   }
 
-  public Optional<AdjustmentRecord> getFullARById(int id) {
+  public Optional<AdjustmentRecord> getFullARById(Long id) {
     return arRepo.findById(id);
   }
 
@@ -79,7 +79,7 @@ public class AdjustmentRecordService {
     return arRepo.save(adjustmentRecord);
   }
 
-  public Optional<AdjustmentRecord> updateAR(int id, AdjustmentRecord adjustmentRecord) {
+  public Optional<AdjustmentRecord> updateAR(Long id, AdjustmentRecord adjustmentRecord) {
     return arRepo.findById(id).map(
         record -> {
           record.setPact(adjustmentRecord.getPact());
@@ -89,7 +89,7 @@ public class AdjustmentRecordService {
         });
   }
 
-  public void deleteAR(int id) {
+  public void deleteAR(Long id) {
     arRepo.deleteById(id);
   }
 }

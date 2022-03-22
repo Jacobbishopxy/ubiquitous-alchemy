@@ -34,14 +34,14 @@ public class AdjustmentRecordController {
   @GetMapping("/adjustment_records")
   @Operation(summary = "Get all adjustment records by pact id with pagination.")
   List<AdjustmentRecord> getPortfolioAdjustmentRecords(
-      @RequestParam(value = "pactId", required = true) int pactId) {
+      @RequestParam(value = "pactId", required = true) Long pactId) {
 
     throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Not implemented yet");
   }
 
   @GetMapping(value = "/adjustment_record/item/{id}")
   @Operation(summary = "Get adjustment record by id.")
-  AdjustmentRecord getPortfolioAdjustmentRecord(@PathVariable("id") int id) {
+  AdjustmentRecord getPortfolioAdjustmentRecord(@PathVariable("id") Long id) {
     return parService
         .getARById(id)
         .orElseThrow(() -> new ResponseStatusException(
@@ -51,14 +51,14 @@ public class AdjustmentRecordController {
   @GetMapping(value = "/adjustment_records/latest_date")
   @Operation(summary = "Get the latest date of adjustment records by pact id.")
   List<AdjustmentRecord> getLatestPortfolioAdjustmentRecords(
-      @RequestParam(value = "pact_id", required = true) Integer pactId) {
+      @RequestParam(value = "pact_id", required = true) Long pactId) {
     return parService.getARAtLatestAdjustDate(pactId);
   }
 
   @GetMapping(value = "/adjustment_record/latest_date_version")
   @Operation(summary = "Get the latest date and version of adjustment record by pact id.")
   AdjustmentRecord getLatestPortfolioAdjustmentRecord(
-      @RequestParam(value = "pact_id", required = true) Integer pactId) {
+      @RequestParam(value = "pact_id", required = true) Long pactId) {
     return parService
         .getARAtLatestAdjustDateAndVersion(pactId)
         .orElseThrow(() -> new ResponseStatusException(
@@ -69,7 +69,7 @@ public class AdjustmentRecordController {
   @GetMapping(value = "/adjustment_records/latest_date_version")
   @Operation(summary = "Get the latest date and version of adjustment records by pact ids.")
   List<AdjustmentRecord> getLatestPortfolioAdjustmentRecords(
-      @RequestParam(value = "pact_ids", required = true) List<Integer> pactIds) {
+      @RequestParam(value = "pact_ids", required = true) List<Long> pactIds) {
     return parService.getARsAtLatestAdjustDateVersion(pactIds);
   }
 }

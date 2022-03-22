@@ -10,9 +10,9 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Adjus
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AdjustmentInfoRepository extends JpaRepository<AdjustmentInfo, Integer> {
+public interface AdjustmentInfoRepository extends JpaRepository<AdjustmentInfo, Long> {
 
-  List<AdjustmentInfo> findByAdjustmentRecordId(int adjustmentRecordId);
+  List<AdjustmentInfo> findByAdjustmentRecordId(Long adjustmentRecordId);
 
-  void deleteByAdjustmentRecordId(int adjustmentRecordId);
+  void deleteByAdjustmentRecordId(Long adjustmentRecordId);
 }

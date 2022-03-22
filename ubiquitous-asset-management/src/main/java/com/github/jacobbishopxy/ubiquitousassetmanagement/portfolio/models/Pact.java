@@ -29,7 +29,7 @@ public class Pact {
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  private Long id;
 
   @Column(nullable = false)
   @Schema(description = "The name alias of the portfolio pact.", required = true)
@@ -69,7 +69,7 @@ public class Pact {
   public Pact() {
   }
 
-  public Pact(int id) {
+  public Pact(Long id) {
     this.id = id;
   }
 
@@ -112,11 +112,11 @@ public class Pact {
         isActive);
   }
 
-  public Integer getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

@@ -29,11 +29,11 @@ public class AdjustmentInfoService {
   // expose to controller
   // =======================================================================
 
-  public List<AdjustmentInfo> getAdjustmentInfosByAdjustmentRecordId(int adjustmentRecordId) {
+  public List<AdjustmentInfo> getAdjustmentInfosByAdjustmentRecordId(Long adjustmentRecordId) {
     return aRepo.findByAdjustmentRecordId(adjustmentRecordId);
   }
 
-  public Optional<AdjustmentInfo> getAdjustmentInfoById(int id) {
+  public Optional<AdjustmentInfo> getAdjustmentInfoById(Long id) {
     return aRepo.findById(id);
   }
 
@@ -51,7 +51,7 @@ public class AdjustmentInfoService {
     return aRepo.saveAll(adjustmentInfos);
   }
 
-  public Optional<AdjustmentInfo> updateAdjustmentInfo(int id, AdjustmentInfo adjustmentInfo) {
+  public Optional<AdjustmentInfo> updateAdjustmentInfo(Long id, AdjustmentInfo adjustmentInfo) {
     return aRepo.findById(id).map(a -> {
       a.setAdjustTime(adjustmentInfo.getAdjustTime());
       a.setSymbol(adjustmentInfo.getSymbol());
@@ -64,7 +64,7 @@ public class AdjustmentInfoService {
   }
 
   // EXCEPTION: expose to controller
-  public Optional<AdjustmentInfo> modifyAdjustmentInfo(int id, LocalTime adjustTime, String description) {
+  public Optional<AdjustmentInfo> modifyAdjustmentInfo(Long id, LocalTime adjustTime, String description) {
     return aRepo.findById(id).map(a -> {
       if (adjustTime != null) {
         a.setAdjustTime(adjustTime);
@@ -77,7 +77,7 @@ public class AdjustmentInfoService {
     });
   }
 
-  public void deleteAdjustmentInfo(int id) {
+  public void deleteAdjustmentInfo(Long id) {
     aRepo.deleteById(id);
   }
 }

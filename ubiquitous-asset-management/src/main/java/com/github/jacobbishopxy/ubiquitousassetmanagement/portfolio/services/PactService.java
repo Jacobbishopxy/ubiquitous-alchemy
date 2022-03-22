@@ -42,7 +42,7 @@ public class PactService {
     }
   }
 
-  public Optional<Pact> getPactById(int id) {
+  public Optional<Pact> getPactById(Long id) {
     return pRepo.findById(id);
   }
 
@@ -79,7 +79,7 @@ public class PactService {
     return pact;
   }
 
-  public Optional<Pact> updatePact(int id, Pact portfolioPact) {
+  public Optional<Pact> updatePact(Long id, Pact portfolioPact) {
     return pRepo.findById(id).map(
         record -> {
           record.setAlias(portfolioPact.getAlias());
@@ -107,7 +107,7 @@ public class PactService {
         });
   }
 
-  public void deletePact(int id) {
+  public void deletePact(Long id) {
     pRepo.deleteById(id);
   }
 

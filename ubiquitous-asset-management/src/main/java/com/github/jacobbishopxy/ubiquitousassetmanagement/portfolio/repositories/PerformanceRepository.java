@@ -11,13 +11,13 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Perfo
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PerformanceRepository extends JpaRepository<Performance, Integer> {
+public interface PerformanceRepository extends JpaRepository<Performance, Long> {
 
-  Optional<Performance> findByAdjustmentRecordId(int adjustmentRecordId);
+  Optional<Performance> findByAdjustmentRecordId(Long adjustmentRecordId);
 
-  void deleteByAdjustmentRecordId(int adjustmentRecordId);
+  void deleteByAdjustmentRecordId(Long adjustmentRecordId);
 
-  List<Performance> findByAdjustmentRecordIdIn(List<Integer> adjustmentRecordIds);
+  List<Performance> findByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
 
-  void deleteByAdjustmentRecordIdIn(List<Integer> adjustmentRecordIds);
+  void deleteByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
 }

@@ -16,8 +16,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Schema(name = "PortfolioOverview", description = "Portfolio overview")
 public record PortfolioOverview(
-		int pactId,
-		int adjustmentRecordId,
+		Long pactId,
+		Long adjustmentRecordId,
 		String industryName,
 		String promoterName,
 		String alias,

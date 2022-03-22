@@ -12,13 +12,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface BenchmarkRepository
-    extends JpaRepository<Benchmark, Integer>, JpaSpecificationExecutor<Benchmark> {
+    extends JpaRepository<Benchmark, Long>, JpaSpecificationExecutor<Benchmark> {
 
-  List<Benchmark> findByAdjustmentRecordId(int adjustmentRecordId);
+  List<Benchmark> findByAdjustmentRecordId(Long adjustmentRecordId);
 
-  void deleteByAdjustmentRecordId(int adjustmentRecordId);
+  void deleteByAdjustmentRecordId(Long adjustmentRecordId);
 
-  List<Benchmark> findByAdjustmentRecordIdIn(List<Integer> adjustmentRecordIds);
+  List<Benchmark> findByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
 
-  void deleteByAdjustmentRecordIdIn(List<Integer> adjustmentRecordIds);
+  void deleteByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
 }

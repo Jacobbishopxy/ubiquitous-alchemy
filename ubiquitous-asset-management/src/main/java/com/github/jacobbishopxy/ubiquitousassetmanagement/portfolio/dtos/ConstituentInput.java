@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 // @Schema(name = "PortfolioConstituentInput", description = "Constituent input")
 public record ConstituentInput(
-		Integer adjustmentRecordId,
+		Long adjustmentRecordId,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
 		String symbol,
 		String abbreviation,

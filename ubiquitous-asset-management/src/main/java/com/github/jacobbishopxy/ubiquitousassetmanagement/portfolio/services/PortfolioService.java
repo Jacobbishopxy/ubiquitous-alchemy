@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioOverview;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.AdjustmentAvailable;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDetail;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
@@ -78,10 +79,10 @@ public class PortfolioService {
   public List<PortfolioOverview> getPortfolioOverviews(Boolean isActive) {
     // get all activate(true)/inactivate(false)/all(null) portfolios' pacts
     List<Pact> pacts = pactService.getAllPacts(isActive);
-    List<Integer> pactIds = pacts.stream().map(Pact::getId).collect(Collectors.toList());
+    List<Long> pactIds = pacts.stream().map(Pact::getId).collect(Collectors.toList());
 
     List<AdjustmentRecord> ars = adjustmentRecordService.getARsAtLatestAdjustDateVersion(pactIds);
-    List<Integer> arIds = ars.stream().map(AdjustmentRecord::getId).collect(Collectors.toList());
+    List<Long> arIds = ars.stream().map(AdjustmentRecord::getId).collect(Collectors.toList());
 
     List<Performance> pfm = performanceService.getPerformancesByAdjustmentRecordIds(arIds);
 
@@ -100,7 +101,7 @@ public class PortfolioService {
    * @param pactId
    * @return
    */
-  public List<AdjustmentRecord> getAdjustmentRecordsByPactId(Integer pactId) {
+  public List<AdjustmentRecord> getAdjustmentRecordsByPactId(Long pactId) {
     return adjustmentRecordService.getARSortDesc(pactId);
   }
 
@@ -111,7 +112,7 @@ public class PortfolioService {
    * @param adjustmentRecordId: nullable. if null means latest adjustment record
    * @return
    */
-  public Optional<PortfolioOverview> getPortfolioOverview(Integer adjustmentRecordId) {
+  public Optional<PortfolioOverview> getPortfolioOverview(Long adjustmentRecordId) {
     return adjustmentRecordService
         .getARById(adjustmentRecordId)
         .flatMap(ar -> {
@@ -130,12 +131,12 @@ public class PortfolioService {
    * @param pactId
    * @return
    */
-  public PortfolioDetail getPortfolioLatestAdjustDateAndVersion(int pactId) {
+  public PortfolioDetail getPortfolioLatestAdjustDateAndVersion(Long pactId) {
     AdjustmentRecord ar = adjustmentRecordService
         .getARAtLatestAdjustDateAndVersion(pactId)
         .orElseThrow(() -> new RuntimeException(
             "No latest adjustment record found for pactId: " + pactId));
-    int arId = ar.getId();
+    Long arId = ar.getId();
 
     List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
     List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
@@ -146,12 +147,12 @@ public class PortfolioService {
     return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos);
   }
 
-  public PortfolioDetail getPortfolioByAdjustmentRecordId(int adjustmentRecordId) {
+  public PortfolioDetail getPortfolioByAdjustmentRecordId(Long adjustmentRecordId) {
     AdjustmentRecord ar = adjustmentRecordService
         .getARById(adjustmentRecordId)
         .orElseThrow(() -> new RuntimeException(
             "No adjustment record found for id: " + adjustmentRecordId));
-    int arId = ar.getId();
+    Long arId = ar.getId();
 
     List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
     List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
@@ -174,7 +175,7 @@ public class PortfolioService {
    * @return
    */
   @Transactional(rollbackFor = Exception.class)
-  public PortfolioDetail settle(int pactId, LocalDate settleDate) {
+  public PortfolioDetail settle(Long pactId, LocalDate settleDate) {
     // get pact
     Pact pact = pactService
         .getPactById(pactId)
@@ -188,7 +189,7 @@ public class PortfolioService {
     // create a new adjustment record
     AdjustmentRecord localAr = new AdjustmentRecord();
     localAr.setPact(pact);
-    localAr.setAdjustDate(preAr.getAdjustDate());
+    localAr.setAdjustDate(settleDate);
     if (settleDate.equals(preAr.getAdjustDate())) {
       localAr.setAdjustVersion(preAr.getAdjustVersion() + 1);
     } else {
@@ -227,7 +228,7 @@ public class PortfolioService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void cancelSettle(int pactId) {
+  public void cancelSettle(Long pactId) {
     AdjustmentRecord ar = adjustmentRecordService
         .getARAtLatestAdjustDateAndVersion(pactId)
         .orElseThrow(() -> new RuntimeException(
@@ -251,7 +252,7 @@ public class PortfolioService {
   // 2. adjust -> AdjustmentInfo
   // 3. settle
   public PortfolioDetail adjust(
-      int pactId,
+      Long pactId,
       LocalDate adjustDate,
       List<Constituent> constituents,
       List<Benchmark> benchmarks) {
@@ -261,7 +262,8 @@ public class PortfolioService {
     AdjustmentRecord latestAr = adjustmentRecordService
         .getARAtLatestAdjustDateAndVersion(pactId)
         .orElseGet(() -> {
-          // double check if pact exists
+          // double check if pact exists. This situation should not happen, since every
+          // time we create a new pact, a new adjustment record is created.
           Pact pact = pactService
               .getPactById(pactId)
               .orElseThrow(() -> new RuntimeException("No pact found for id: " + pactId));
@@ -310,6 +312,21 @@ public class PortfolioService {
     }
 
     return sr;
+  }
+
+  public AdjustmentAvailable checkAdjustmentAvailable(Long pactId, LocalDate adjustDate) {
+    // Here use strict `.get()` means we don't need to worry about null pointer
+    // exception (see line 265).
+    AdjustmentRecord latestAr = adjustmentRecordService.getARAtLatestAdjustDateAndVersion(pactId).get();
+
+    Boolean isAvailable = false;
+    // Simply regard adjustment is available if the adjustDate is the same as latest
+    // adjustDate
+    if (adjustDate.equals(latestAr.getAdjustDate())) {
+      isAvailable = true;
+    }
+
+    return new AdjustmentAvailable(isAvailable, adjustDate, latestAr.getAdjustDate(), latestAr.getAdjustVersion());
   }
 
 }

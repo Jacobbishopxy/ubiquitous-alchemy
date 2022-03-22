@@ -37,15 +37,15 @@ public class ConstituentService {
   // expose to controller
   // =======================================================================
 
-  public List<Constituent> getConstituentsByAdjustmentRecordId(int adjustmentRecordId) {
+  public List<Constituent> getConstituentsByAdjustmentRecordId(Long adjustmentRecordId) {
     return cRepo.findByAdjustmentRecordId(adjustmentRecordId);
   }
 
-  public List<Constituent> getConstituentsByAdjustmentRecordIds(List<Integer> adjustmentRecordIds) {
+  public List<Constituent> getConstituentsByAdjustmentRecordIds(List<Long> adjustmentRecordIds) {
     return cRepo.findByAdjustmentRecordIdIn(adjustmentRecordIds);
   }
 
-  public Optional<Constituent> getConstituentById(int id) {
+  public Optional<Constituent> getConstituentById(Long id) {
     return cRepo.findById(id);
   }
 
@@ -64,7 +64,7 @@ public class ConstituentService {
     }
 
     // 1. get adjustment record id
-    int adjustmentRecordId = constituents.get(0).getAdjRecordId();
+    Long adjustmentRecordId = constituents.get(0).getAdjRecordId();
 
     // 2. recalculate all constituents and their related performance
     ConstituentsResult res = PortfolioCalculationHelper
@@ -88,7 +88,7 @@ public class ConstituentService {
   // common mutations is a wrapper of raw mutation, which only needs adjustment
   // record id as input
   @Transactional(rollbackFor = Exception.class)
-  private void commonMutation(int adjustmentRecordId) {
+  private void commonMutation(Long adjustmentRecordId) {
     // find all constituents in the portfolio
     List<Constituent> constituents = getConstituentsByAdjustmentRecordId(adjustmentRecordId);
 
@@ -100,7 +100,7 @@ public class ConstituentService {
     // 0. validate constituent
     // IMPORTANT: constituent's adjustmentRecord id cannot be null. In other words,
     // it must have an adjustmentRecord to create a constituent.
-    int adjustmentRecordId = constituent.getAdjRecordId();
+    Long adjustmentRecordId = constituent.getAdjRecordId();
 
     // 1. save constituent.
     Constituent newC = cRepo.save(constituent);
@@ -119,11 +119,11 @@ public class ConstituentService {
     // 0. validate constituents
     // IMPORTANT: constituents' adjustmentRecord id cannot be null. In other words,
     // they must have an adjustmentRecord to create constituents.
-    List<Integer> adjustmentRecordIds = constituents.stream()
+    List<Long> adjustmentRecordIds = constituents.stream()
         .map(Constituent::getAdjRecordId)
         .collect(Collectors.toList());
 
-    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    Set<Long> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("Constituents must have the same adjustmentRecord id");
     }
@@ -138,9 +138,9 @@ public class ConstituentService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public Optional<Constituent> updateConstituent(int id, Constituent constituent) {
+  public Optional<Constituent> updateConstituent(Long id, Constituent constituent) {
     // 0. validate constituent
-    int adjustmentRecordId = constituent.getAdjRecordId();
+    Long adjustmentRecordId = constituent.getAdjRecordId();
 
     // 1. update constituent
     cRepo
@@ -172,18 +172,18 @@ public class ConstituentService {
   @Transactional(rollbackFor = Exception.class)
   public List<Constituent> updateConstituents(List<Constituent> constituents) {
     // 0. make sure all constituents' id are valid
-    List<Integer> adjustmentRecordIds = constituents
+    List<Long> adjustmentRecordIds = constituents
         .stream()
         .map(Constituent::getAdjRecordId)
         .collect(Collectors.toList());
 
-    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    Set<Long> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("All constituents must have the same adjustmentRecord id");
     }
 
     // 1. only modify constituents that are in the database
-    List<Integer> ids = constituents
+    List<Long> ids = constituents
         .stream()
         .map(Constituent::getId)
         .collect(Collectors.toList());
@@ -215,13 +215,13 @@ public class ConstituentService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void deleteConstituent(int id) {
+  public void deleteConstituent(Long id) {
     // 0. find constituent and get adjustmentRecordId
     Constituent c = cRepo
         .findById(id)
         .orElseThrow(() -> new RuntimeException(
             String.format("Constituent %d not found", id)));
-    int adjustmentRecordId = c.getAdjRecordId();
+    Long adjustmentRecordId = c.getAdjRecordId();
 
     // 1. delete constituent. Since we've called findById, here can be sure that the
     // constituent is deleted.
@@ -232,16 +232,16 @@ public class ConstituentService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void deleteConstituents(List<Integer> ids) {
+  public void deleteConstituents(List<Long> ids) {
     // 0. find constituents and get adjustmentRecordId
     List<Constituent> cs = cRepo.findAllById(ids);
 
-    List<Integer> adjustmentRecordIds = cs
+    List<Long> adjustmentRecordIds = cs
         .stream()
         .map(Constituent::getAdjRecordId)
         .collect(Collectors.toList());
 
-    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    Set<Long> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("All constituents must have the same adjustmentRecord id");
     }
@@ -258,14 +258,14 @@ public class ConstituentService {
   // delete all constituents in the portfolio.
   // IMPORTANT: adjustRecord is not deleted
   @Transactional(rollbackFor = Exception.class)
-  public void deleteConstituentsByAdjustmentRecordId(int adjustmentRecordId) {
+  public void deleteConstituentsByAdjustmentRecordId(Long adjustmentRecordId) {
     cRepo.deleteByAdjustmentRecordId(adjustmentRecordId);
 
     pRepo.deleteByAdjustmentRecordId(adjustmentRecordId);
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void deleteConstituentsByAdjustmentRecordIds(List<Integer> adjustmentRecordIds) {
+  public void deleteConstituentsByAdjustmentRecordIds(List<Long> adjustmentRecordIds) {
     cRepo.deleteByAdjustmentRecordIdIn(adjustmentRecordIds);
 
     pRepo.deleteByAdjustmentRecordIdIn(adjustmentRecordIds);

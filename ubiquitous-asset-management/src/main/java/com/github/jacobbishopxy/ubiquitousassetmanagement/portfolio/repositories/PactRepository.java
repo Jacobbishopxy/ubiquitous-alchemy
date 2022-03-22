@@ -11,7 +11,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PactRepository extends JpaRepository<Pact, Integer> {
+public interface PactRepository extends JpaRepository<Pact, Long> {
 
   Optional<Pact> findByAlias(String alias);
 

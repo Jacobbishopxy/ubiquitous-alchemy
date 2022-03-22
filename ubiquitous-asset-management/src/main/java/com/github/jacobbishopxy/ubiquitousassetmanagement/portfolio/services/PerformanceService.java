@@ -25,11 +25,11 @@ public class PerformanceService {
   // expose to controller
   // =======================================================================
 
-  public Optional<Performance> getPerformanceByAdjustmentRecordId(int adjustmentRecordId) {
+  public Optional<Performance> getPerformanceByAdjustmentRecordId(Long adjustmentRecordId) {
     return pRepo.findByAdjustmentRecordId(adjustmentRecordId);
   }
 
-  public List<Performance> getPerformancesByAdjustmentRecordIds(List<Integer> adjustmentRecordIds) {
+  public List<Performance> getPerformancesByAdjustmentRecordIds(List<Long> adjustmentRecordIds) {
     return pRepo.findByAdjustmentRecordIdIn(adjustmentRecordIds);
   }
 
@@ -43,7 +43,7 @@ public class PerformanceService {
     return pRepo.save(performance);
   }
 
-  public Optional<Performance> updatePerformance(int id, Performance performance) {
+  public Optional<Performance> updatePerformance(Long id, Performance performance) {
     return pRepo.findById(id).map(
         p -> {
           p.setBenchmarkEarningsYield(performance.getBenchmarkEarningsYield());
@@ -53,11 +53,11 @@ public class PerformanceService {
         });
   }
 
-  public void deletePerformance(int id) {
+  public void deletePerformance(Long id) {
     pRepo.deleteById(id);
   }
 
-  public void deletePerformanceByAdjustmentRecordId(int adjustmentRecordId) {
+  public void deletePerformanceByAdjustmentRecordId(Long adjustmentRecordId) {
     pRepo.deleteByAdjustmentRecordId(adjustmentRecordId);
   }
 

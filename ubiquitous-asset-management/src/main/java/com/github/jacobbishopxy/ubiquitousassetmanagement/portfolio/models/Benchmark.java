@@ -24,7 +24,7 @@ public class Benchmark {
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  private Long id;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "portfolio_adjustment_record_id")
@@ -89,19 +89,19 @@ public class Benchmark {
   // Accessors
   // =======================================================================
 
-  public int getAdjRecordId() {
-    Integer id = adjustmentRecord.getId();
+  public Long getAdjRecordId() {
+    Long id = adjustmentRecord.getId();
     if (id == null) {
       throw new IllegalStateException("The adjustment record id cannot be null.");
     }
     return id;
   }
 
-  public Integer getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

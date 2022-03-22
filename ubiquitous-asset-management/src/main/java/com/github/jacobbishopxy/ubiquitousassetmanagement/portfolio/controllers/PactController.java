@@ -56,7 +56,7 @@ public class PactController {
 
   @GetMapping(value = "/pact/{id}")
   @Operation(summary = "Get pact by id.")
-  PactOutput getPortfolioPact(@PathVariable("id") int id) {
+  PactOutput getPortfolioPact(@PathVariable("id") Long id) {
     Pact pp = ppService
         .getPactById(id)
         .orElseThrow(() -> new ResponseStatusException(
@@ -101,7 +101,7 @@ public class PactController {
   @PutMapping(value = "/pact/{id}")
   @Operation(summary = "Update a pact.")
   PactOutput updatePortfolioPact(
-      @PathVariable("id") int id,
+      @PathVariable("id") Long id,
       @RequestBody PactInput dto) {
     Promoter promoter = pService
         .getPromoterByNickname(dto.promoter())
@@ -125,7 +125,7 @@ public class PactController {
 
   @DeleteMapping(value = "/pact/{id}")
   @Operation(summary = "Delete a pact by id.")
-  void deletePortfolioPact(@PathVariable("id") int id) {
+  void deletePortfolioPact(@PathVariable("id") Long id) {
     ppService.deletePact(id);
   }
 

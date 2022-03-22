@@ -12,13 +12,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface ConstituentRepository
-    extends JpaRepository<Constituent, Integer>, JpaSpecificationExecutor<Constituent> {
+    extends JpaRepository<Constituent, Long>, JpaSpecificationExecutor<Constituent> {
 
-  List<Constituent> findByAdjustmentRecordId(int adjustmentRecordId);
+  List<Constituent> findByAdjustmentRecordId(Long adjustmentRecordId);
 
-  void deleteByAdjustmentRecordId(int adjustmentRecordId);
+  void deleteByAdjustmentRecordId(Long adjustmentRecordId);
 
-  List<Constituent> findByAdjustmentRecordIdIn(List<Integer> adjustmentRecordIds);
+  List<Constituent> findByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
 
-  void deleteByAdjustmentRecordIdIn(List<Integer> adjustmentRecordIds);
+  void deleteByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
 }

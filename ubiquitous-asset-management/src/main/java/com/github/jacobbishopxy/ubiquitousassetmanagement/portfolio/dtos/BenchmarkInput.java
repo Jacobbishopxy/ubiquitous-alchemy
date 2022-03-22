@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Schema(name = "PortfolioBenchmarkInput", description = "Benchmark input")
 public record BenchmarkInput(
-		int adjustmentRecordId,
+		Long adjustmentRecordId,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
 		String benchmarkName,
 		String symbol,

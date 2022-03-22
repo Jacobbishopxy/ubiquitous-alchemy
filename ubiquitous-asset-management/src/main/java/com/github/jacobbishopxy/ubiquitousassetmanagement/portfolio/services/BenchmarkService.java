@@ -37,15 +37,15 @@ public class BenchmarkService {
   // expose to controller
   // =======================================================================
 
-  public List<Benchmark> getBenchmarksByAdjustmentRecordId(int adjustmentRecordId) {
+  public List<Benchmark> getBenchmarksByAdjustmentRecordId(Long adjustmentRecordId) {
     return bRepo.findByAdjustmentRecordId(adjustmentRecordId);
   }
 
-  public List<Benchmark> getBenchmarksByAdjustmentRecordIds(List<Integer> adjustmentRecordIds) {
+  public List<Benchmark> getBenchmarksByAdjustmentRecordIds(List<Long> adjustmentRecordIds) {
     return bRepo.findByAdjustmentRecordIdIn(adjustmentRecordIds);
   }
 
-  public Optional<Benchmark> getBenchmarkById(int id) {
+  public Optional<Benchmark> getBenchmarkById(Long id) {
     return bRepo.findById(id);
   }
 
@@ -63,7 +63,7 @@ public class BenchmarkService {
     }
 
     // 1. get adjustment record id
-    int adjustmentRecordId = benchmarks.get(0).getAdjRecordId();
+    Long adjustmentRecordId = benchmarks.get(0).getAdjRecordId();
 
     // 2. recalculate all benchmarks and their related performance
     BenchmarksResult res = PortfolioCalculationHelper
@@ -85,7 +85,7 @@ public class BenchmarkService {
   // common mutations is a wrapper of raw mutation, which only needs adjustment
   // record id as input
   @Transactional(rollbackFor = Exception.class)
-  private void commonMutation(int adjustmentRecordId) {
+  private void commonMutation(Long adjustmentRecordId) {
     // find all benchmarks in the portfolio
     List<Benchmark> benchmarks = getBenchmarksByAdjustmentRecordId(adjustmentRecordId);
 
@@ -97,7 +97,7 @@ public class BenchmarkService {
     // 0. validate benchmark
     // IMPORTANT: benchmark's adjustmentRecord id cannot be null. In other words,
     // it must have an adjustmentRecord to create a benchmark.
-    int adjustmentRecordId = benchmark.getAdjRecordId();
+    Long adjustmentRecordId = benchmark.getAdjRecordId();
 
     // 1. save benchmark.
     Benchmark newB = bRepo.save(benchmark);
@@ -114,11 +114,11 @@ public class BenchmarkService {
   @Transactional(rollbackFor = Exception.class)
   public List<Benchmark> createBenchmarks(List<Benchmark> benchmarks) {
     // 0. validate benchmarks
-    List<Integer> adjustmentRecordIds = benchmarks.stream()
+    List<Long> adjustmentRecordIds = benchmarks.stream()
         .map(Benchmark::getAdjRecordId)
         .collect(Collectors.toList());
 
-    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    Set<Long> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("All benchmarks must have the same adjustment record id");
     }
@@ -133,9 +133,9 @@ public class BenchmarkService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public Optional<Benchmark> updateBenchmark(int id, Benchmark portfolioBenchmark) {
+  public Optional<Benchmark> updateBenchmark(Long id, Benchmark portfolioBenchmark) {
     // 0. validate benchmark
-    int adjustmentRecordId = portfolioBenchmark.getAdjRecordId();
+    Long adjustmentRecordId = portfolioBenchmark.getAdjRecordId();
 
     // 1. update benchmark
     bRepo
@@ -160,18 +160,18 @@ public class BenchmarkService {
   @Transactional(rollbackFor = Exception.class)
   public List<Benchmark> updateBenchmarks(List<Benchmark> benchmarks) {
     // 0. make sure all benchmarks' id are valid
-    List<Integer> adjustmentRecordIds = benchmarks
+    List<Long> adjustmentRecordIds = benchmarks
         .stream()
         .map(Benchmark::getAdjRecordId)
         .collect(Collectors.toList());
 
-    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    Set<Long> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("All benchmarks must have the same adjustment record id");
     }
 
     // 1. only modify benchmarks that are in the database
-    List<Integer> ids = benchmarks
+    List<Long> ids = benchmarks
         .stream()
         .map(Benchmark::getId)
         .collect(Collectors.toList());
@@ -196,12 +196,12 @@ public class BenchmarkService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void deleteBenchmark(int id) {
+  public void deleteBenchmark(Long id) {
     // 0. validate benchmark
     Benchmark b = bRepo
         .findById(id)
         .orElseThrow(() -> new RuntimeException(String.format("Benchmark %d not found", id)));
-    int adjustmentRecordId = b.getAdjRecordId();
+    Long adjustmentRecordId = b.getAdjRecordId();
 
     // 1. delete benchmark
     bRepo.deleteById(id);
@@ -211,15 +211,15 @@ public class BenchmarkService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void deleteBenchmarks(List<Integer> ids) {
+  public void deleteBenchmarks(List<Long> ids) {
     // 0. make sure all benchmarks' id are valid
     List<Benchmark> bms = bRepo.findAllById(ids);
-    List<Integer> adjustmentRecordIds = bms
+    List<Long> adjustmentRecordIds = bms
         .stream()
         .map(Benchmark::getAdjRecordId)
         .collect(Collectors.toList());
 
-    Set<Integer> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
+    Set<Long> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("All benchmarks must have the same adjustment record id");
     }
@@ -234,14 +234,14 @@ public class BenchmarkService {
   // delete all benchmarks in the portfolio
   // IMPORTANT: adjustRecord is not deleted
   @Transactional(rollbackFor = Exception.class)
-  public void deleteBenchmarksByAdjustmentRecordId(int adjustmentRecordId) {
+  public void deleteBenchmarksByAdjustmentRecordId(Long adjustmentRecordId) {
     bRepo.deleteByAdjustmentRecordId(adjustmentRecordId);
 
     pRepo.deleteByAdjustmentRecordId(adjustmentRecordId);
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void deleteBenchmarksByAdjustmentRecordIds(List<Integer> adjustmentRecordIds) {
+  public void deleteBenchmarksByAdjustmentRecordIds(List<Long> adjustmentRecordIds) {
     bRepo.deleteByAdjustmentRecordIdIn(adjustmentRecordIds);
 
     pRepo.deleteByAdjustmentRecordIdIn(adjustmentRecordIds);

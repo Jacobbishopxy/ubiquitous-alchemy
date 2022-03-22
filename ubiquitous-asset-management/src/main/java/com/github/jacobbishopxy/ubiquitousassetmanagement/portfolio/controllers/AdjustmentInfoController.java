@@ -35,13 +35,13 @@ public class AdjustmentInfoController {
   @GetMapping("/adjustment_infos")
   @Operation(summary = "Get all adjustment info.")
   List<AdjustmentInfo> getAdjustmentInfosByAdjustmentRecordId(
-      @RequestParam(value = "adjustment_record_id", required = true) Integer adjustmentRecordId) {
+      @RequestParam(value = "adjustment_record_id", required = true) Long adjustmentRecordId) {
     return aService.getAdjustmentInfosByAdjustmentRecordId(adjustmentRecordId);
   }
 
   @GetMapping("/adjustment_info/{id}")
   @Operation(summary = "Get an adjustment info by id.")
-  AdjustmentInfo getAdjustmentInfoById(@PathVariable("id") Integer id) {
+  AdjustmentInfo getAdjustmentInfoById(@PathVariable("id") Long id) {
     return aService
         .getAdjustmentInfoById(id)
         .orElseThrow(() -> new ResponseStatusException(
@@ -55,7 +55,7 @@ public class AdjustmentInfoController {
   @PatchMapping("/adjustment_info/{id}")
   @Operation(summary = "Update an adjustment info's adjustTime or description.")
   AdjustmentInfo updateAdjustmentInfo(
-      @PathVariable("id") int id,
+      @PathVariable("id") Long id,
       @RequestBody AdjustmentInfoUpdate dto) {
 
     LocalTime adjustTime = dto.adjustTime();

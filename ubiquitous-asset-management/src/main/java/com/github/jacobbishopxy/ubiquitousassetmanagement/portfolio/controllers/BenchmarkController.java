@@ -35,8 +35,8 @@ public class BenchmarkController {
   @GetMapping("/benchmarks")
   @Operation(summary = "Get all benchmarks, either by adjustment record id or ids.")
   List<Benchmark> getBenchmarksByAdjustmentRecordId(
-      @RequestParam(value = "adjustment_record_id", required = false) Integer adjustmentRecordId,
-      @RequestParam(value = "adjustment_record_ids", required = false) List<Integer> adjustmentRecordIds) {
+      @RequestParam(value = "adjustment_record_id", required = false) Long adjustmentRecordId,
+      @RequestParam(value = "adjustment_record_ids", required = false) List<Long> adjustmentRecordIds) {
     if (adjustmentRecordId != null) {
       return benchmarkService.getBenchmarksByAdjustmentRecordId(adjustmentRecordId);
     } else if (adjustmentRecordIds != null) {
@@ -49,7 +49,7 @@ public class BenchmarkController {
 
   @GetMapping("/benchmark/{id}")
   @Operation(summary = "Get benchmark by id.")
-  Benchmark getBenchmarkById(@PathVariable("id") Integer id) {
+  Benchmark getBenchmarkById(@PathVariable("id") Long id) {
     return benchmarkService
         .getBenchmarkById(id)
         .orElseThrow(() -> new ResponseStatusException(
@@ -80,7 +80,7 @@ public class BenchmarkController {
   @PutMapping("/benchmark/{id}")
   @Operation(summary = "Update benchmark.")
   Benchmark updateBenchmark(
-      @PathVariable("id") int id,
+      @PathVariable("id") Long id,
       @RequestBody Benchmark benchmark) {
     return benchmarkService
         .updateBenchmark(id, benchmark)
@@ -103,13 +103,13 @@ public class BenchmarkController {
 
   @DeleteMapping("/benchmark/{id}")
   @Operation(summary = "Delete benchmark.")
-  void deleteBenchmark(@PathVariable("id") int id) {
+  void deleteBenchmark(@PathVariable("id") Long id) {
     benchmarkService.deleteBenchmark(id);
   }
 
   @DeleteMapping("/benchmarks")
   @Operation(summary = "Delete multiple benchmarks.")
-  void deleteBenchmarks(@RequestParam("ids") List<Integer> ids) {
+  void deleteBenchmarks(@RequestParam("ids") List<Long> ids) {
     benchmarkService.deleteBenchmarks(ids);
   }
 

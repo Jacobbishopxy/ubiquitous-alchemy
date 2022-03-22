@@ -35,8 +35,8 @@ public class ConstituentController {
   @GetMapping("/constituents")
   @Operation(summary = "Get all constituents, either by adjustment record id or ids.")
   List<Constituent> getConstituentsByAdjustmentRecordId(
-      @RequestParam(value = "adjustment_record_id", required = true) Integer adjustmentRecordId,
-      @RequestParam(value = "adjustment_record_id", required = true) List<Integer> adjustmentRecordIds) {
+      @RequestParam(value = "adjustment_record_id", required = true) Long adjustmentRecordId,
+      @RequestParam(value = "adjustment_record_id", required = true) List<Long> adjustmentRecordIds) {
     if (adjustmentRecordId != null) {
       return constituentService.getConstituentsByAdjustmentRecordId(adjustmentRecordId);
     } else if (adjustmentRecordIds != null) {
@@ -49,7 +49,7 @@ public class ConstituentController {
 
   @GetMapping("/constituent/{id}")
   @Operation(summary = "Get constituent by id.")
-  Constituent getConstituentById(@PathVariable("id") Integer id) {
+  Constituent getConstituentById(@PathVariable("id") Long id) {
     return constituentService
         .getConstituentById(id)
         .orElseThrow(() -> new ResponseStatusException(
@@ -79,7 +79,7 @@ public class ConstituentController {
   @PutMapping("/constituent/{id}")
   @Operation(summary = "Update constituent.")
   Constituent updateConstituent(
-      @PathVariable("id") int id,
+      @PathVariable("id") Long id,
       @RequestBody ConstituentInput dto) {
     return constituentService
         .updateConstituent(id, ConstituentInput.intoConstituent(dto))
@@ -100,13 +100,13 @@ public class ConstituentController {
 
   @DeleteMapping("/constituent/{id}")
   @Operation(summary = "Delete constituent.")
-  void deleteConstituent(@PathVariable("id") int id) {
+  void deleteConstituent(@PathVariable("id") Long id) {
     constituentService.deleteConstituent(id);
   }
 
   @DeleteMapping("/constituents")
   @Operation(summary = "Delete multiple constituents.")
-  void deleteConstituents(@RequestBody List<Integer> ids) {
+  void deleteConstituents(@RequestBody List<Long> ids) {
     constituentService.deleteConstituents(ids);
   }
 }

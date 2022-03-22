@@ -28,7 +28,7 @@ public class AdjustmentRecord {
   @Id
   @Column(columnDefinition = "serial")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "portfolio_pact_id")
@@ -49,7 +49,7 @@ public class AdjustmentRecord {
   public AdjustmentRecord() {
   }
 
-  public AdjustmentRecord(int id) {
+  public AdjustmentRecord(Long id) {
     this.id = id;
   }
 
@@ -67,11 +67,11 @@ public class AdjustmentRecord {
   // Accessors
   // =======================================================================
 
-  public Integer getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

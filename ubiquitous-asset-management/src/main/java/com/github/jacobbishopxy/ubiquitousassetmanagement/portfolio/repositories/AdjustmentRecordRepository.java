@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface AdjustmentRecordRepository
-    extends JpaRepository<AdjustmentRecord, Integer>, JpaSpecificationExecutor<AdjustmentRecord> {
+    extends JpaRepository<AdjustmentRecord, Long>, JpaSpecificationExecutor<AdjustmentRecord> {
 
   String queryDescSort = """
       SELECT p
@@ -24,7 +24,7 @@ public interface AdjustmentRecordRepository
       """;
 
   @Query(value = queryDescSort)
-  List<AdjustmentRecord> findByPactIdDescSort(int pactId);
+  List<AdjustmentRecord> findByPactIdDescSort(Long pactId);
 
   String queryLatestAdjustDate = """
       SELECT p1
@@ -38,7 +38,7 @@ public interface AdjustmentRecordRepository
       """;
 
   @Query(queryLatestAdjustDate)
-  List<AdjustmentRecord> findByPactIdAndLatestAdjustDate(int pactId);
+  List<AdjustmentRecord> findByPactIdAndLatestAdjustDate(Long pactId);
 
   String queryActiveLatestAdjustDateVersion = """
       SELECT p.*
@@ -63,6 +63,6 @@ public interface AdjustmentRecordRepository
       """;
 
   @Query(value = queryActiveLatestAdjustDateVersion, nativeQuery = true)
-  List<AdjustmentRecord> findByPactIdsAndLatestAdjustDateVersion(@Param("pactIds") List<Integer> pactIds);
+  List<AdjustmentRecord> findByPactIdsAndLatestAdjustDateVersion(@Param("pactIds") List<Long> pactIds);
 
 }

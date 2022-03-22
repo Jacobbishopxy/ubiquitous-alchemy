@@ -9,7 +9,6 @@ import java.time.LocalTime;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Schema(name = "PortfolioAdjustmentInfoUpdate", description = "Adjustment info update")
