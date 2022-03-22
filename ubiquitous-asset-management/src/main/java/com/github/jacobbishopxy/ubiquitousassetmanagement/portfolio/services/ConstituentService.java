@@ -58,6 +58,9 @@ public class ConstituentService {
   // raw mutation is called when create/update/delete a constituent
   @Transactional(rollbackFor = Exception.class)
   private void rawMutation(List<Constituent> constituents) {
+    // TODO:
+    // if all constituents are deleted, delete the adjustment record?
+
     // 0. constituents cannot be empty
     if (constituents.isEmpty()) {
       throw new IllegalArgumentException("Constituents cannot be empty");

@@ -18,6 +18,8 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Bench
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.BenchmarkRepository;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.ConstituentRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioAdjustmentHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +60,13 @@ public class PortfolioService {
   private AdjustmentInfoService adjustmentInfoService;
 
   @Autowired
+  private BenchmarkRepository benchmarkRepository;
+
+  @Autowired
   private BenchmarkService benchmarkService;
+
+  @Autowired
+  private ConstituentRepository constituentRepository;
 
   @Autowired
   private ConstituentService constituentService;
@@ -186,8 +194,19 @@ public class PortfolioService {
         .getARAtLatestAdjustDateAndVersion(pactId)
         .orElseThrow(() -> new RuntimeException("No latest adjustment record found for pactId: " + pactId));
 
+    // prohibit settle if the settle date is before the latest adjustment record's
+    // date
+    if (settleDate.isBefore(preAr.getAdjustDate())) {
+      throw new RuntimeException(
+          String.format(
+              "Settle date: %s is before latest adjustment record's date: %s",
+              settleDate,
+              preAr.getAdjustDate()));
+    }
+
     // create a new adjustment record
     AdjustmentRecord localAr = new AdjustmentRecord();
+    localAr.setId(null);
     localAr.setPact(pact);
     localAr.setAdjustDate(settleDate);
     if (settleDate.equals(preAr.getAdjustDate())) {
@@ -196,32 +215,38 @@ public class PortfolioService {
       localAr.setAdjustVersion(1);
     }
 
-    // newAr with Id returned by database
+    // create new adjustment record and save
     AdjustmentRecord newAr = adjustmentRecordService.createAR(localAr);
 
-    // copy benchmarks
+    // copy benchmarks and save
     List<Benchmark> bms = benchmarkService.getBenchmarksByAdjustmentRecordId(preAr.getId());
     bms.stream().map(bm -> {
       bm.setId(null);
       bm.setAdjustmentRecord(newAr);
       bm.setAdjustDate(settleDate);
-      return benchmarkService.createBenchmark(bm);
+      // IMPORTANT: instead of using use benchmarkService here, we use
+      // benchmarkRepository, because the former method will cause additional effect
+      return benchmarkRepository.save(bm);
     });
 
-    // copy constituents
+    // copy constituents and save
     List<Constituent> cons = constituentService.getConstituentsByAdjustmentRecordId(preAr.getId());
     cons.stream().map(c -> {
       c.setId(null);
       c.setAdjustmentRecord(newAr);
       c.setAdjustDate(settleDate);
-      return constituentService.createConstituent(c);
+      // IMPORTANT: instead of using use performanceService here, we use
+      // constituentRepository, because the former method will cause additional effect
+      return constituentRepository.save(c);
     });
 
-    // copy performance
+    // copy performance and save
     Performance pfm = performanceService
         .getPerformanceByAdjustmentRecordId(preAr.getId())
         .orElse(new Performance());
+    pfm.setId(null);
     pfm.setAdjustmentRecord(newAr);
+    // No side effect, simply use performanceService
     performanceService.createPerformance(pfm);
 
     return new PortfolioDetail(newAr, cons, bms, pfm, null);
@@ -273,6 +298,16 @@ public class PortfolioService {
           ar.setAdjustVersion(1);
           return adjustmentRecordService.createAR(ar);
         });
+
+    // prohibit settle if the settle date is before the latest adjustment record's
+    // date
+    if (adjustDate.isBefore(latestAr.getAdjustDate())) {
+      throw new RuntimeException(
+          String.format(
+              "Adjust date: %s is before latest adjustment record's date: %s",
+              adjustDate,
+              latestAr.getAdjustDate()));
+    }
 
     // 1. check if adjustDate is the latest adjustDate
     PortfolioDetail sr = null;

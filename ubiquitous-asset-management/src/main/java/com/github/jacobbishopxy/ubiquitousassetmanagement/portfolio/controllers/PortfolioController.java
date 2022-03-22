@@ -46,7 +46,8 @@ public class PortfolioController {
 
   @GetMapping("/portfolio_overview")
   @Operation(summary = "Get portfolio overview by id.")
-  PortfolioOverview getPortfolioOverview(@RequestParam("adjustment_record_id") Long adjustmentRecordId) {
+  PortfolioOverview getPortfolioOverview(
+      @RequestParam(value = "adjustment_record_id", required = true) Long adjustmentRecordId) {
     return portfolioService
         .getPortfolioOverview(adjustmentRecordId)
         .orElseThrow(() -> new ResponseStatusException(
