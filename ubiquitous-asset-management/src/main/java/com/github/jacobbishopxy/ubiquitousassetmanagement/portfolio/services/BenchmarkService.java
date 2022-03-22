@@ -144,6 +144,7 @@ public class BenchmarkService {
             record -> {
               record.setAdjustDate(portfolioBenchmark.getAdjustDate());
               record.setBenchmarkName(portfolioBenchmark.getBenchmarkName());
+              record.setSymbol(portfolioBenchmark.getSymbol());
               record.setPercentageChange(portfolioBenchmark.getPercentageChange());
               record.setStaticWeight(portfolioBenchmark.getStaticWeight());
               return bRepo.save(record);

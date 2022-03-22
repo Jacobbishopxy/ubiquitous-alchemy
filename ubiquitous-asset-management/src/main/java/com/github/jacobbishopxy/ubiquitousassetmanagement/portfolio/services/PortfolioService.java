@@ -218,36 +218,68 @@ public class PortfolioService {
     // create new adjustment record and save
     AdjustmentRecord newAr = adjustmentRecordService.createAR(localAr);
 
+    // TODO:
+    // all the copy operations should be simplified.
+
     // copy benchmarks and save
-    List<Benchmark> bms = benchmarkService.getBenchmarksByAdjustmentRecordId(preAr.getId());
-    bms.stream().map(bm -> {
-      bm.setId(null);
-      bm.setAdjustmentRecord(newAr);
-      bm.setAdjustDate(settleDate);
-      // IMPORTANT: instead of using use benchmarkService here, we use
-      // benchmarkRepository, because the former method will cause additional effect
-      return benchmarkRepository.save(bm);
-    });
+    List<Benchmark> bms = benchmarkService
+        .getBenchmarksByAdjustmentRecordId(preAr.getId())
+        .stream()
+        .map(bm -> {
+          Benchmark newBm = new Benchmark();
+          newBm.setAdjustmentRecord(newAr);
+          newBm.setAdjustDate(bm.getAdjustDate());
+          newBm.setBenchmarkName(bm.getBenchmarkName());
+          newBm.setSymbol(bm.getSymbol());
+          newBm.setPercentageChange(bm.getPercentageChange());
+          newBm.setStaticWeight(bm.getStaticWeight());
+          newBm.setDynamicWeight(bm.getDynamicWeight());
+          return newBm;
+        })
+        .collect(Collectors.toList());
+    // IMPORTANT: instead of using use benchmarkService here, we use
+    // benchmarkRepository, because the former method will cause additional effect
+    bms = benchmarkRepository.saveAll(bms);
 
     // copy constituents and save
-    List<Constituent> cons = constituentService.getConstituentsByAdjustmentRecordId(preAr.getId());
-    cons.stream().map(c -> {
-      c.setId(null);
-      c.setAdjustmentRecord(newAr);
-      c.setAdjustDate(settleDate);
-      // IMPORTANT: instead of using use performanceService here, we use
-      // constituentRepository, because the former method will cause additional effect
-      return constituentRepository.save(c);
-    });
+    List<Constituent> cons = constituentService
+        .getConstituentsByAdjustmentRecordId(preAr.getId())
+        .stream()
+        .map(c -> {
+          Constituent newC = new Constituent();
+          newC.setAdjustmentRecord(newAr);
+          newC.setAdjustDate(c.getAdjustDate());
+          newC.setSymbol(c.getSymbol());
+          newC.setAbbreviation(c.getAbbreviation());
+          newC.setAdjustDatePrice(c.getAdjustDatePrice());
+          newC.setCurrentPrice(c.getCurrentPrice());
+          newC.setStaticWeight(c.getStaticWeight());
+          newC.setDynamicWeight(c.getDynamicWeight());
+          newC.setPbpe(c.getPbpe());
+          newC.setMarketValue(c.getMarketValue());
+          newC.setEarningsYield(c.getEarningsYield());
+          return newC;
+        })
+        .collect(Collectors.toList());
+    // IMPORTANT: instead of using use performanceService here, we use
+    // constituentRepository, because the former method will cause additional effect
+    cons = constituentRepository.saveAll(cons);
 
     // copy performance and save
     Performance pfm = performanceService
         .getPerformanceByAdjustmentRecordId(preAr.getId())
-        .orElse(new Performance());
-    pfm.setId(null);
-    pfm.setAdjustmentRecord(newAr);
-    // No side effect, simply use performanceService
-    performanceService.createPerformance(pfm);
+        .orElseGet(() -> {
+          Performance p = new Performance();
+          p.setAdjustmentRecord(newAr);
+          return p;
+        });
+    Performance newPfm = new Performance();
+    newPfm.setAdjustmentRecord(newAr);
+    newPfm.setPortfolioEarningsYield(pfm.getPortfolioEarningsYield());
+    newPfm.setBenchmarkEarningsYield(pfm.getBenchmarkEarningsYield());
+    newPfm.setAlpha(pfm.getAlpha());
+    // No other side effect, simply use performanceService
+    performanceService.createPerformance(newPfm);
 
     return new PortfolioDetail(newAr, cons, bms, pfm, null);
   }

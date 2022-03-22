@@ -69,7 +69,7 @@ public class PactService {
     AdjustmentRecord adjustmentRecord = new AdjustmentRecord();
     adjustmentRecord.setPact(pact);
     adjustmentRecord.setAdjustDate(pact.getStartDate());
-    adjustmentRecord.setAdjustVersion(0);
+    adjustmentRecord.setAdjustVersion(1);
     adjustmentRecord = arRepo.save(adjustmentRecord);
     // auto create performance, all other fields are null
     Performance performance = new Performance();
