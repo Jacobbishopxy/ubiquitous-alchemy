@@ -63,6 +63,15 @@ public class Performance {
     this.alpha = PortfolioCalculationHelper.calculateAlpha(portfolioEarningsYield, benchmarkEarningsYield);
   }
 
+  // deep copy constructor
+  public Performance(Performance source) {
+    this.id = source.id;
+    this.adjustmentRecord = source.adjustmentRecord;
+    this.portfolioEarningsYield = source.portfolioEarningsYield;
+    this.benchmarkEarningsYield = source.benchmarkEarningsYield;
+    this.alpha = source.alpha;
+  }
+
   // =======================================================================
   // Accessors
   // =======================================================================

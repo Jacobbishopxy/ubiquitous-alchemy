@@ -65,11 +65,11 @@ public class PactService {
     }
     // save new pact
     Pact pact = pRepo.save(portfolioPact);
-    // auto create adjustment record
+    // auto create adjustment record. notice that the adjust date and adjust version
+    // are not set, this means the portfolio is under an unsettled status.
     AdjustmentRecord adjustmentRecord = new AdjustmentRecord();
     adjustmentRecord.setPact(pact);
-    adjustmentRecord.setAdjustDate(pact.getStartDate());
-    adjustmentRecord.setAdjustVersion(1);
+    adjustmentRecord.setIsUnsettled(true);
     adjustmentRecord = arRepo.save(adjustmentRecord);
     // auto create performance, all other fields are null
     Performance performance = new Performance();

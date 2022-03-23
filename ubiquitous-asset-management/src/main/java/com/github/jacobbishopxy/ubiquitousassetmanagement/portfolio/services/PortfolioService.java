@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioOverview;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.AdjustmentAvailable;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDetail;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
@@ -18,6 +17,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Bench
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentRecordRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.BenchmarkRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.ConstituentRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioAdjustmentHelper;
@@ -41,361 +41,290 @@ import org.springframework.transaction.annotation.Transactional;
  * and according to its id, delete the related portfolio benchmarks and
  * constituents. And then delete the adjustment record.
  *
- * 3. Adjust an existing portfolio, which needs to be settled first (check
- * AdjustmentRecord's date and version). This operation will call `settle`
- * method automatically.
- *
- * 4. Cancel an adjustment. Unsettle portfolio.
  */
 @Service
 public class PortfolioService {
 
-  @Autowired
-  private PactService pactService;
+	@Autowired
+	private PactService pactService;
 
-  @Autowired
-  private AdjustmentRecordService adjustmentRecordService;
+	@Autowired
+	private AdjustmentRecordRepository adjustmentRecordRepository;
 
-  @Autowired
-  private AdjustmentInfoService adjustmentInfoService;
+	@Autowired
+	private AdjustmentRecordService adjustmentRecordService;
 
-  @Autowired
-  private BenchmarkRepository benchmarkRepository;
+	@Autowired
+	private AdjustmentInfoService adjustmentInfoService;
 
-  @Autowired
-  private BenchmarkService benchmarkService;
+	@Autowired
+	private BenchmarkRepository benchmarkRepository;
 
-  @Autowired
-  private ConstituentRepository constituentRepository;
+	@Autowired
+	private BenchmarkService benchmarkService;
 
-  @Autowired
-  private ConstituentService constituentService;
+	@Autowired
+	private ConstituentRepository constituentRepository;
 
-  @Autowired
-  private PerformanceService performanceService;
+	@Autowired
+	private ConstituentService constituentService;
 
-  // =======================================================================
-  // Query methods
-  // =======================================================================
+	@Autowired
+	private PerformanceService performanceService;
 
-  /**
-   * Get a list of portfolios' overviews at latest date's latest version.
-   *
-   * @param isActive
-   * @return
-   */
-  public List<PortfolioOverview> getPortfolioOverviews(Boolean isActive) {
-    // get all activate(true)/inactivate(false)/all(null) portfolios' pacts
-    List<Pact> pacts = pactService.getAllPacts(isActive);
-    List<Long> pactIds = pacts.stream().map(Pact::getId).collect(Collectors.toList());
+	// =======================================================================
+	// Query methods
+	// =======================================================================
 
-    List<AdjustmentRecord> ars = adjustmentRecordService.getARsAtLatestAdjustDateVersion(pactIds);
-    List<Long> arIds = ars.stream().map(AdjustmentRecord::getId).collect(Collectors.toList());
+	/**
+	 * Get a list of portfolios' overviews at latest date's latest version.
+	 *
+	 * @param isActive
+	 * @return
+	 */
+	public List<PortfolioOverview> getPortfolioOverviews(Boolean isActive) {
+		// get all activate(true)/inactivate(false)/all(null) portfolios' pacts
+		List<Pact> pacts = pactService.getAllPacts(isActive);
+		List<Long> pactIds = pacts.stream().map(Pact::getId).collect(Collectors.toList());
 
-    List<Performance> pfm = performanceService.getPerformancesByAdjustmentRecordIds(arIds);
+		// IMPORTANT: get all unsettled adjustment records, we assume that each pact has
+		// only one unsettled adjustment record
+		List<AdjustmentRecord> ars = adjustmentRecordService.getUnsettledARs(pactIds);
+		List<Long> arIds = ars.stream().map(AdjustmentRecord::getId).collect(Collectors.toList());
 
-    return pfm
-        .stream()
-        .map(p -> {
-          Pact pact = p.getAdjustmentRecord().getPact();
-          return PortfolioOverview.fromPactAndPerformance(pact, p);
-        })
-        .collect(Collectors.toList());
-  }
+		List<Performance> pfm = performanceService.getPerformancesByAdjustmentRecordIds(arIds);
 
-  /**
-   * Get a sorted list of adjustment records by pact id.
-   *
-   * @param pactId
-   * @return
-   */
-  public List<AdjustmentRecord> getAdjustmentRecordsByPactId(Long pactId) {
-    return adjustmentRecordService.getARSortDesc(pactId);
-  }
+		return pfm
+				.stream()
+				.map(p -> {
+					Pact pact = p.getAdjustmentRecord().getPact();
+					return PortfolioOverview.fromPactAndPerformance(pact, p);
+				})
+				.collect(Collectors.toList());
+	}
 
-  /**
-   * Get an overview of a portfolio by given adjustmentRecord id (id list can be
-   * found in Pact entity).
-   *
-   * @param adjustmentRecordId: nullable. if null means latest adjustment record
-   * @return
-   */
-  public Optional<PortfolioOverview> getPortfolioOverview(Long adjustmentRecordId) {
-    return adjustmentRecordService
-        .getARById(adjustmentRecordId)
-        .flatMap(ar -> {
-          return performanceService
-              .getPerformanceByAdjustmentRecordId(ar.getId())
-              .map(p -> {
-                Pact pact = ar.getPact();
-                return PortfolioOverview.fromPactAndPerformance(pact, p);
-              });
-        });
-  }
+	/**
+	 * Get a sorted list of adjustment records by pact id, including unsettled and
+	 * settled. And unsettled record is always on the top.
+	 *
+	 * @param pactId
+	 * @return
+	 */
+	public List<AdjustmentRecord> getAdjustmentRecordsByPactId(Long pactId) {
+		return adjustmentRecordService.getARSortDesc(pactId);
+	}
 
-  /**
-   * Get a portfolio detail
-   *
-   * @param pactId
-   * @return
-   */
-  public PortfolioDetail getPortfolioLatestAdjustDateAndVersion(Long pactId) {
-    AdjustmentRecord ar = adjustmentRecordService
-        .getARAtLatestAdjustDateAndVersion(pactId)
-        .orElseThrow(() -> new RuntimeException(
-            "No latest adjustment record found for pactId: " + pactId));
-    Long arId = ar.getId();
+	/**
+	 * Get an overview of a portfolio by given adjustmentRecord id (id list can be
+	 * found in Pact entity).
+	 *
+	 * @param adjustmentRecordId: nullable. if null means latest adjustment record
+	 * @return
+	 */
+	public Optional<PortfolioOverview> getPortfolioOverview(Long adjustmentRecordId) {
+		return adjustmentRecordService
+				.getARById(adjustmentRecordId)
+				.flatMap(ar -> {
+					return performanceService
+							.getPerformanceByAdjustmentRecordId(ar.getId())
+							.map(p -> {
+								Pact pact = ar.getPact();
+								return PortfolioOverview.fromPactAndPerformance(pact, p);
+							});
+				});
+	}
 
-    List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
-    List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
-    // if performance is null, return empty performance
-    Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
-    List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
+	/**
+	 * Get an unsettled portfolio detail.
+	 *
+	 * @param pactId
+	 * @return
+	 */
+	public PortfolioDetail getUnsettledPortfolioDetail(Long pactId) {
+		AdjustmentRecord ar = adjustmentRecordService
+				.getUnsettledAR(pactId)
+				.orElseThrow(() -> new RuntimeException(
+						"No unsettled adjustment record found for pact id: " + pactId));
+		Long arId = ar.getId();
 
-    return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos);
-  }
+		List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
+		List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
+		// if performance is null, return empty performance
+		Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
+		List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
 
-  public PortfolioDetail getPortfolioByAdjustmentRecordId(Long adjustmentRecordId) {
-    AdjustmentRecord ar = adjustmentRecordService
-        .getARById(adjustmentRecordId)
-        .orElseThrow(() -> new RuntimeException(
-            "No adjustment record found for id: " + adjustmentRecordId));
-    Long arId = ar.getId();
+		return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos);
+	}
 
-    List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
-    List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
-    // if performance is null, return empty performance
-    Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
-    List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
+	/**
+	 * Get a portfolio detail at latest date's latest version.
+	 *
+	 * @param pactId
+	 * @return
+	 */
+	public PortfolioDetail getLatestSettledPortfolioDetail(Long pactId) {
+		AdjustmentRecord ar = adjustmentRecordService
+				.getLatestSettledAR(pactId)
+				.orElseThrow(() -> new RuntimeException(
+						"No latest adjustment record found for pactId: " + pactId));
+		Long arId = ar.getId();
 
-    return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos);
-  }
+		List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
+		List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
+		// if performance is null, return empty performance
+		Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
+		List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
 
-  // =======================================================================
-  // Mutation methods
-  // =======================================================================
+		return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos);
+	}
 
-  /**
-   * Settle a portfolio.
-   *
-   * @param pactId
-   * @param settleDate
-   * @return
-   */
-  @Transactional(rollbackFor = Exception.class)
-  public PortfolioDetail settle(Long pactId, LocalDate settleDate) {
-    // get pact
-    Pact pact = pactService
-        .getPactById(pactId)
-        .orElseThrow(() -> new RuntimeException("No pact found for id: " + pactId));
+	/**
+	 * Get a portfolio detail by adjustment record id. Used for searching history.
+	 *
+	 * @param adjustmentRecordId
+	 * @return
+	 */
+	public PortfolioDetail getPortfolioDetailByARId(Long adjustmentRecordId) {
+		AdjustmentRecord ar = adjustmentRecordService
+				.getARById(adjustmentRecordId)
+				.orElseThrow(() -> new RuntimeException(
+						"No adjustment record found for id: " + adjustmentRecordId));
+		Long arId = ar.getId();
 
-    // get latest adjustment record
-    AdjustmentRecord preAr = adjustmentRecordService
-        .getARAtLatestAdjustDateAndVersion(pactId)
-        .orElseThrow(() -> new RuntimeException("No latest adjustment record found for pactId: " + pactId));
+		List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
+		List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
+		// if performance is null, return empty performance
+		Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
+		List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
 
-    // prohibit settle if the settle date is before the latest adjustment record's
-    // date
-    if (settleDate.isBefore(preAr.getAdjustDate())) {
-      throw new RuntimeException(
-          String.format(
-              "Settle date: %s is before latest adjustment record's date: %s",
-              settleDate,
-              preAr.getAdjustDate()));
-    }
+		return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos);
+	}
 
-    // create a new adjustment record
-    AdjustmentRecord localAr = new AdjustmentRecord();
-    localAr.setId(null);
-    localAr.setPact(pact);
-    localAr.setAdjustDate(settleDate);
-    if (settleDate.equals(preAr.getAdjustDate())) {
-      localAr.setAdjustVersion(preAr.getAdjustVersion() + 1);
-    } else {
-      localAr.setAdjustVersion(1);
-    }
+	// =======================================================================
+	// Mutation methods
+	// =======================================================================
 
-    // create new adjustment record and save
-    AdjustmentRecord newAr = adjustmentRecordService.createAR(localAr);
+	/**
+	 * Settle a portfolio.
+	 *
+	 * @param pactId
+	 * @param settleDate
+	 * @return
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public PortfolioDetail settle(Long pactId, LocalDate settleDate) {
+		// get pact, validation check
+		Pact pact = pactService
+				.getPactById(pactId)
+				.orElseThrow(() -> new RuntimeException("No pact found for id: " + pactId));
 
-    // TODO:
-    // all the copy operations should be simplified.
+		// get unsettled adjustment record
+		AdjustmentRecord unsettledAr = adjustmentRecordService
+				.getUnsettledAR(pactId)
+				.orElseThrow(() -> new RuntimeException("No unsettled adjustment record found for pactId: " + pactId));
+		Long unsettledArId = unsettledAr.getId();
 
-    // copy benchmarks and save
-    List<Benchmark> bms = benchmarkService
-        .getBenchmarksByAdjustmentRecordId(preAr.getId())
-        .stream()
-        .map(bm -> {
-          Benchmark newBm = new Benchmark();
-          newBm.setAdjustmentRecord(newAr);
-          newBm.setAdjustDate(bm.getAdjustDate());
-          newBm.setBenchmarkName(bm.getBenchmarkName());
-          newBm.setSymbol(bm.getSymbol());
-          newBm.setPercentageChange(bm.getPercentageChange());
-          newBm.setStaticWeight(bm.getStaticWeight());
-          newBm.setDynamicWeight(bm.getDynamicWeight());
-          return newBm;
-        })
-        .collect(Collectors.toList());
-    // IMPORTANT: instead of using use benchmarkService here, we use
-    // benchmarkRepository, because the former method will cause additional effect
-    bms = benchmarkRepository.saveAll(bms);
+		// get all unsettled data
+		List<Constituent> unsettledCons = constituentService
+				.getConstituentsByAdjustmentRecordId(unsettledArId);
 
-    // copy constituents and save
-    List<Constituent> cons = constituentService
-        .getConstituentsByAdjustmentRecordId(preAr.getId())
-        .stream()
-        .map(c -> {
-          Constituent newC = new Constituent();
-          newC.setAdjustmentRecord(newAr);
-          newC.setAdjustDate(c.getAdjustDate());
-          newC.setSymbol(c.getSymbol());
-          newC.setAbbreviation(c.getAbbreviation());
-          newC.setAdjustDatePrice(c.getAdjustDatePrice());
-          newC.setCurrentPrice(c.getCurrentPrice());
-          newC.setAdjustDateFactor(c.getAdjustDateFactor());
-          newC.setCurrentFactor(c.getCurrentFactor());
-          newC.setStaticWeight(c.getStaticWeight());
-          newC.setDynamicWeight(c.getDynamicWeight());
-          newC.setPbpe(c.getPbpe());
-          newC.setMarketValue(c.getMarketValue());
-          newC.setEarningsYield(c.getEarningsYield());
-          return newC;
-        })
-        .collect(Collectors.toList());
-    // IMPORTANT: instead of using use performanceService here, we use
-    // constituentRepository, because the former method will cause additional effect
-    cons = constituentRepository.saveAll(cons);
+		// if latest adjustment exists, calculate adjustmentInfos
+		List<AdjustmentInfo> ais = adjustmentRecordService
+				.getLatestSettledAR(pactId)
+				.map(latestSettledAr -> {
+					LocalDate latestSettledDate = latestSettledAr.getAdjustDate();
+					// settle date should be later than the latest settled date
+					if (settleDate.isBefore(latestSettledDate)) {
+						throw new RuntimeException(
+								String.format(
+										"Settle date: %s is before latest settled adjustment record's date: %s",
+										settleDate,
+										latestSettledDate));
+					}
 
-    // copy performance and save
-    Performance pfm = performanceService
-        .getPerformanceByAdjustmentRecordId(preAr.getId())
-        .orElseGet(() -> {
-          Performance p = new Performance();
-          p.setAdjustmentRecord(newAr);
-          return p;
-        });
-    Performance newPfm = new Performance();
-    newPfm.setAdjustmentRecord(newAr);
-    newPfm.setPortfolioEarningsYield(pfm.getPortfolioEarningsYield());
-    newPfm.setBenchmarkEarningsYield(pfm.getBenchmarkEarningsYield());
-    newPfm.setAlpha(pfm.getAlpha());
-    // No other side effect, simply use performanceService
-    performanceService.createPerformance(newPfm);
+					// modify unsettled record
+					if (latestSettledDate.equals(settleDate)) {
+						unsettledAr.setAdjustVersion(latestSettledAr.getAdjustVersion() + 1);
+					} else {
+						unsettledAr.setAdjustVersion(1);
+					}
 
-    return new PortfolioDetail(newAr, cons, bms, pfm, null);
-  }
+					List<Constituent> latestSettledCons = constituentService
+							.getConstituentsByAdjustmentRecordId(latestSettledAr.getId());
 
-  @Transactional(rollbackFor = Exception.class)
-  public void cancelSettle(Long pactId) {
-    AdjustmentRecord ar = adjustmentRecordService
-        .getARAtLatestAdjustDateAndVersion(pactId)
-        .orElseThrow(() -> new RuntimeException(
-            "No latest adjustment record found for pactId: " + pactId));
+					return PortfolioAdjustmentHelper.adjust(latestSettledCons, unsettledCons);
+				})
+				.orElseGet(() -> {
+					// this will only happen once when setting up a new pact
+					unsettledAr.setAdjustVersion(1);
+					return List.of();
+				});
 
-    // delete the latest adjustment record
-    adjustmentRecordService.deleteAR(ar.getId());
+		// turn unsettled AR to settled AR and save it
+		unsettledAr.setAdjustDate(settleDate);
+		unsettledAr.setIsUnsettled(null);
+		adjustmentRecordRepository.saveAndFlush(unsettledAr);
 
-    // delete benchmarks
-    benchmarkService.deleteBenchmarksByAdjustmentRecordId(ar.getId());
+		// create a new adjustment record
+		AdjustmentRecord tmpAr = new AdjustmentRecord();
+		tmpAr.setPact(pact);
+		tmpAr.setIsUnsettled(true);
+		final AdjustmentRecord newAr = adjustmentRecordRepository.save(tmpAr);
 
-    // delete constituents
-    constituentService.deleteConstituentsByAdjustmentRecordId(ar.getId());
+		// copy constituents, bind to new adjustment record and save
+		List<Constituent> newCons = unsettledCons
+				.stream()
+				.map(c -> {
+					Constituent newC = new Constituent(c);
+					newC.setId(null);
+					newC.setAdjustmentRecord(newAr);
+					return newC;
+				})
+				.collect(Collectors.toList());
+		newCons = constituentRepository.saveAll(newCons);
 
-    // delete performance
-    performanceService.deletePerformanceByAdjustmentRecordId(ar.getId());
-  }
+		// copy benchmarks, bind to new adjustment record and save
+		List<Benchmark> newBms = benchmarkService
+				.getBenchmarksByAdjustmentRecordId(unsettledArId)
+				.stream()
+				.map(b -> {
+					Benchmark newB = new Benchmark(b);
+					newB.setId(null);
+					newB.setAdjustmentRecord(newAr);
+					return newB;
+				})
+				.collect(Collectors.toList());
+		newBms = benchmarkRepository.saveAll(newBms);
 
-  // automation process:
-  // 1. settle
-  // 2. adjust -> AdjustmentInfo
-  // 3. settle
-  public PortfolioDetail adjust(
-      Long pactId,
-      LocalDate adjustDate,
-      List<Constituent> constituents,
-      List<Benchmark> benchmarks) {
+		// copy performance, bind to new adjustment record and save
+		Performance unsettledPfm = performanceService
+				.getPerformanceByAdjustmentRecordId(unsettledArId).get();
+		Performance newPfm = new Performance(unsettledPfm);
+		newPfm.setId(null);
+		newPfm.setAdjustmentRecord(newAr);
+		newPfm = performanceService.createPerformance(newPfm);
 
-    // 0. Find the latest adjustment record, if not found, create a new one. This
-    // situation should only happen when the first time a portfolio is created.
-    AdjustmentRecord latestAr = adjustmentRecordService
-        .getARAtLatestAdjustDateAndVersion(pactId)
-        .orElseGet(() -> {
-          // double check if pact exists. This situation should not happen, since every
-          // time we create a new pact, a new adjustment record is created.
-          Pact pact = pactService
-              .getPactById(pactId)
-              .orElseThrow(() -> new RuntimeException("No pact found for id: " + pactId));
-          AdjustmentRecord ar = new AdjustmentRecord();
-          ar.setPact(pact);
-          ar.setAdjustDate(adjustDate);
-          ar.setAdjustVersion(1);
-          return adjustmentRecordService.createAR(ar);
-        });
+		return new PortfolioDetail(newAr, newCons, newBms, newPfm, ais);
+	}
 
-    // prohibit settle if the settle date is before the latest adjustment record's
-    // date
-    if (adjustDate.isBefore(latestAr.getAdjustDate())) {
-      throw new RuntimeException(
-          String.format(
-              "Adjust date: %s is before latest adjustment record's date: %s",
-              adjustDate,
-              latestAr.getAdjustDate()));
-    }
+	@Transactional(rollbackFor = Exception.class)
+	public void cancelSettle(Long pactId) {
+		AdjustmentRecord ar = adjustmentRecordService
+				.getLatestSettledAR(pactId)
+				.orElseThrow(() -> new RuntimeException(
+						"No latest adjustment record found for pactId: " + pactId));
 
-    // 1. check if adjustDate is the latest adjustDate
-    PortfolioDetail sr = null;
-    if (adjustDate != latestAr.getAdjustDate()) {
-      // if not the latest adjustDate, make a copy of the latest data and bind them to
-      // a new adjustment record
-      sr = settle(pactId, adjustDate);
-      // update latest adjustment record
-      latestAr = sr.adjustmentRecord();
-    }
+		// delete the latest adjustment record
+		adjustmentRecordService.deleteAR(ar.getId());
 
-    // 2. according to the latest adjustment record, create AdjustmentInfos by
-    // comparing the new constituents with the old ones
-    List<Constituent> latestCons = constituentService.getConstituentsByAdjustmentRecordId(latestAr.getId());
-    List<AdjustmentInfo> ais = PortfolioAdjustmentHelper.adjust(latestCons, constituents);
+		// delete benchmarks
+		benchmarkService.deleteBenchmarksByAdjustmentRecordId(ar.getId());
 
-    // 3. if adjustmentInfos is not empty, save them to the database
-    if (!ais.isEmpty()) {
-      adjustmentInfoService.createAdjustmentInfos(ais);
-      // in addition, this means the portfolio is adjusted, so we need to settle it
-      sr = settle(pactId, adjustDate);
-    } else {
-      // if no adjustmentInfos, simply regard it as a normal update
-      // update constituents
-      List<Constituent> cons = constituentService.updateConstituents(constituents);
-      // update benchmarks
-      List<Benchmark> bms = benchmarkService.updateBenchmarks(benchmarks);
-      // get performance
-      Performance pfm = performanceService.getPerformanceByAdjustmentRecordId(latestAr.getId()).get();
+		// delete constituents
+		constituentService.deleteConstituentsByAdjustmentRecordId(ar.getId());
 
-      sr = new PortfolioDetail(
-          latestAr,
-          cons,
-          bms,
-          pfm,
-          List.of());
-    }
-
-    return sr;
-  }
-
-  public AdjustmentAvailable checkAdjustmentAvailable(Long pactId, LocalDate adjustDate) {
-    // Here use strict `.get()` means we don't need to worry about null pointer
-    // exception (see line 265).
-    AdjustmentRecord latestAr = adjustmentRecordService.getARAtLatestAdjustDateAndVersion(pactId).get();
-
-    Boolean isAvailable = false;
-    // Simply regard adjustment is available if the adjustDate is the same as latest
-    // adjustDate
-    if (adjustDate.equals(latestAr.getAdjustDate())) {
-      isAvailable = true;
-    }
-
-    return new AdjustmentAvailable(isAvailable, adjustDate, latestAr.getAdjustDate(), latestAr.getAdjustVersion());
-  }
+		// delete performance
+		performanceService.deletePerformanceByAdjustmentRecordId(ar.getId());
+	}
 
 }

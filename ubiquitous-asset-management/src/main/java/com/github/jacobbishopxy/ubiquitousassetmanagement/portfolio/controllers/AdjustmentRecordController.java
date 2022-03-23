@@ -39,7 +39,7 @@ public class AdjustmentRecordController {
     throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Not implemented yet");
   }
 
-  @GetMapping(value = "/adjustment_record/item/{id}")
+  @GetMapping("/adjustment_record/item/{id}")
   @Operation(summary = "Get adjustment record by id.")
   AdjustmentRecord getPortfolioAdjustmentRecord(@PathVariable("id") Long id) {
     return parService
@@ -48,28 +48,46 @@ public class AdjustmentRecordController {
             HttpStatus.NOT_FOUND, String.format("AdjustmentRecord for id: %s not found", id)));
   }
 
-  @GetMapping(value = "/adjustment_records/latest_date")
+  @GetMapping("/adjustment_record/unsettled")
+  @Operation(summary = "Get unsettled adjustment record by pact id.")
+  AdjustmentRecord getUnsettledAdjustmentRecord(
+      @RequestParam(value = "pactId", required = true) Long pactId) {
+    return parService
+        .getUnsettledAR(pactId)
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            String.format("Unsettled adjustment record for pact id: %s not found", pactId)));
+  }
+
+  @GetMapping("/adjustment_records/unsettled")
+  @Operation(summary = "Get unsettled adjustment records by pact ids.")
+  List<AdjustmentRecord> getUnsettledAdjustmentRecords(
+      @RequestParam(value = "pactIds", required = true) List<Long> pactIds) {
+    return parService.getUnsettledARs(pactIds);
+  }
+
+  @GetMapping("/adjustment_records/latest_date")
   @Operation(summary = "Get the latest date of adjustment records by pact id.")
   List<AdjustmentRecord> getLatestPortfolioAdjustmentRecords(
       @RequestParam(value = "pact_id", required = true) Long pactId) {
-    return parService.getARAtLatestAdjustDate(pactId);
+    return parService.getARLatestAdjustDate(pactId);
   }
 
-  @GetMapping(value = "/adjustment_record/latest_date_version")
+  @GetMapping("/adjustment_record/latest_date_version")
   @Operation(summary = "Get the latest date and version of adjustment record by pact id.")
   AdjustmentRecord getLatestPortfolioAdjustmentRecord(
       @RequestParam(value = "pact_id", required = true) Long pactId) {
     return parService
-        .getARAtLatestAdjustDateAndVersion(pactId)
+        .getLatestSettledAR(pactId)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND,
             String.format("PortfolioAdjustmentRecord for portfolioPactId: %s not found", pactId)));
   }
 
-  @GetMapping(value = "/adjustment_records/latest_date_version")
+  @GetMapping("/adjustment_records/latest_date_version")
   @Operation(summary = "Get the latest date and version of adjustment records by pact ids.")
   List<AdjustmentRecord> getLatestPortfolioAdjustmentRecords(
       @RequestParam(value = "pact_ids", required = true) List<Long> pactIds) {
-    return parService.getARsAtLatestAdjustDateVersion(pactIds);
+    return parService.getLatestSettledARs(pactIds);
   }
 }

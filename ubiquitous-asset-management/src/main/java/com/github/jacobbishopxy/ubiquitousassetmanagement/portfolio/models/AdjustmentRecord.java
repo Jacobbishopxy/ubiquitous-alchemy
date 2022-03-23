@@ -17,9 +17,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Entity
 @Table(name = "portfolio_adjustment_record", uniqueConstraints = {
     @UniqueConstraint(name = "unique_pact_id_adj_date_version", columnNames = { "portfolio_pact_id", "adjustDate",
-        "adjustVersion" })
+        "adjustVersion" }),
+    @UniqueConstraint(name = "unique_pact_id_is_unsettled", columnNames = { "portfolio_pact_id", "isUnsettled" })
 })
-@Schema(name = "PortfolioAdjustmentRecord", description = "Portfolio adjustment record")
+@Schema(name = "PortfolioAdjustmentRecord", description = "Portfolio adjustment record. Used to record each settlement or current unsettled status (adjustVersion = 0) of a portfolio.")
 public class AdjustmentRecord {
   // =======================================================================
   // Fields
@@ -36,11 +37,14 @@ public class AdjustmentRecord {
   private Pact pact;
 
   @JsonFormat(pattern = Constants.DATE_FORMAT)
-  @Column(nullable = false, columnDefinition = "DATE")
+  @Column(nullable = true, columnDefinition = "DATE")
   private LocalDate adjustDate;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private Integer adjustVersion;
+
+  @Column(nullable = true)
+  private Boolean isUnsettled;
 
   // =======================================================================
   // Constructors
@@ -56,11 +60,13 @@ public class AdjustmentRecord {
   public AdjustmentRecord(
       Pact pact,
       LocalDate adjustDate,
-      Integer adjustVersion) {
+      Integer adjustVersion,
+      Boolean isUnsettled) {
     super();
     this.pact = pact;
     this.adjustDate = adjustDate;
     this.adjustVersion = adjustVersion;
+    this.isUnsettled = isUnsettled;
   }
 
   // =======================================================================
@@ -97,6 +103,14 @@ public class AdjustmentRecord {
 
   public void setAdjustVersion(Integer adjustVersion) {
     this.adjustVersion = adjustVersion;
+  }
+
+  public Boolean getIsUnsettled() {
+    return isUnsettled;
+  }
+
+  public void setIsUnsettled(Boolean isUnsettled) {
+    this.isUnsettled = isUnsettled;
   }
 
 }

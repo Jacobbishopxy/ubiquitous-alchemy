@@ -31,30 +31,29 @@ public class AdjustmentRecordService {
   // expose to controller
   // =======================================================================
 
-  public List<AdjustmentRecord> getARAtLatestAdjustDate(Long pactId) {
+  public List<AdjustmentRecord> getARLatestAdjustDate(Long pactId) {
     return arRepo.findByPactIdAndLatestAdjustDate(pactId);
+  }
+
+  public Optional<AdjustmentRecord> getUnsettledAR(Long pactId) {
+    return arRepo.findUnsettledByPactId(pactId);
   }
 
   public List<AdjustmentRecord> getARSortDesc(Long pactId) {
     return arRepo.findByPactIdDescSort(pactId);
   }
 
+  public List<AdjustmentRecord> getUnsettledARs(List<Long> pactIds) {
+    return arRepo.findUnsettledByPactIds(pactIds);
+  }
+
   // A powerful query.
-  // Get all adjustment records at the latest date and latest version.
-  public List<AdjustmentRecord> getARsAtLatestAdjustDateVersion(List<Long> pactIds) {
+  // Get all adjustment records at the latest date's latest version.
+  public List<AdjustmentRecord> getLatestSettledARs(List<Long> pactIds) {
     return arRepo.findByPactIdsAndLatestAdjustDateVersion(pactIds);
   }
 
-  public Optional<AdjustmentRecord> getARAtLatestAdjustDateAndVersion(Long pactId) {
-    return arRepo
-        .findByPactIdAndLatestAdjustDate(pactId)
-        .stream()
-        .findFirst();
-  }
-
-  // Get the latest date's latest version AdjustmentRecord with `Pact`
-  // explicitly included.
-  public Optional<AdjustmentRecord> getFullARAtLatestAdjustDateAndVersion(Long pactId) {
+  public Optional<AdjustmentRecord> getLatestSettledAR(Long pactId) {
     return arRepo
         .findByPactIdAndLatestAdjustDate(pactId)
         .stream()

@@ -85,6 +85,18 @@ public class Benchmark {
     this.dynamicWeight = dynamicWeight;
   }
 
+  // deep copy constructor
+  public Benchmark(Benchmark source) {
+    this.id = source.id;
+    this.adjustmentRecord = source.adjustmentRecord;
+    this.adjustDate = source.adjustDate;
+    this.benchmarkName = source.benchmarkName;
+    this.symbol = source.symbol;
+    this.percentageChange = source.percentageChange;
+    this.staticWeight = source.staticWeight;
+    this.dynamicWeight = source.dynamicWeight;
+  }
+
   // =======================================================================
   // Accessors
   // =======================================================================

@@ -4,20 +4,16 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.controllers;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioOverview;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.portfolioActions.AdjustPortfolio;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.portfolioActions.SettlePortfolio;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.AdjustmentAvailable;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDetail;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.PortfolioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -61,28 +57,26 @@ public class PortfolioController {
     return portfolioService.getAdjustmentRecordsByPactId(pactId);
   }
 
-  @GetMapping("/portfolio_detail")
-  @Operation(summary = "Get portfolio detail by either pact id or adjustment record id.")
-  PortfolioDetail getPortfolioByPactId(
-      @RequestParam(value = "pact_id", required = false) Long pactId,
-      @RequestParam(value = "adjustment_record_id", required = false) Long adjustmentRecordId) {
-
-    if (pactId != null) {
-      return portfolioService.getPortfolioLatestAdjustDateAndVersion(pactId);
-    } else if (adjustmentRecordId != null) {
-      return portfolioService.getPortfolioByAdjustmentRecordId(adjustmentRecordId);
-    } else {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "pact_id or adjustment_record_id is required");
-    }
+  @GetMapping("/portfolio_detail/unsettled")
+  @Operation(summary = "Get unsettled portfolio detail by pact id.")
+  PortfolioDetail getUnsettledPortfolioDetail(
+      @RequestParam(value = "pact_id", required = true) Long pactId) {
+    return portfolioService.getUnsettledPortfolioDetail(pactId);
   }
 
-  @GetMapping("/portfolio_action/check_adjust_available")
-  @Operation(summary = "Check if the portfolio can be adjusted.")
-  AdjustmentAvailable checkAdjustmentAvailable(
-      @RequestParam(value = "pact_id", required = true) Long pactId,
-      @RequestParam(value = "adjust_date", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate adjustDate) {
-    return portfolioService.checkAdjustmentAvailable(pactId, adjustDate);
+  @GetMapping("/portfolio_detail/latest_settled")
+  @Operation(summary = "Get latest settled portfolio detail by pact id.")
+  PortfolioDetail getLatestSettledPortfolioByPactId(
+      @RequestParam(value = "pact_id", required = true) Long pactId) {
+    return portfolioService.getLatestSettledPortfolioDetail(pactId);
+  }
+
+  @GetMapping("/portfolio_detail/adjustment_record")
+  @Operation(summary = "Get portfolio detail by adjustment record id.")
+  PortfolioDetail getPortfolioByPactId(
+      @RequestParam(value = "adjustment_record_id", required = false) Long adjustmentRecordId) {
+    return portfolioService.getPortfolioDetailByARId(adjustmentRecordId);
+
   }
 
   // =======================================================================
@@ -91,8 +85,8 @@ public class PortfolioController {
 
   @PostMapping("/portfolio_action/settle")
   @Operation(summary = "Settle a portfolio.")
-  void settlePortfolio(@RequestBody SettlePortfolio portfolioSettle) {
-    portfolioService.settle(
+  PortfolioDetail settlePortfolio(@RequestBody SettlePortfolio portfolioSettle) {
+    return portfolioService.settle(
         portfolioSettle.pactId(),
         portfolioSettle.settlementDate());
   }
@@ -103,21 +97,4 @@ public class PortfolioController {
     portfolioService.cancelSettle(pactId);
   }
 
-  @PostMapping("/portfolio_action/adjust")
-  @Operation(summary = "Adjust a portfolio.")
-  void adjustPortfolio(
-      @RequestParam("pact_id") Long pactId,
-      @RequestBody AdjustPortfolio portfolioAdjust) {
-    portfolioService.adjust(
-        pactId,
-        portfolioAdjust.adjustDate(),
-        portfolioAdjust.constituents(),
-        portfolioAdjust.benchmarks());
-  }
-
-  @DeleteMapping("/portfolio_action/adjust")
-  @Operation(summary = "Cancel a portfolio adjustment.")
-  void cancelAdjustPortfolio(@RequestParam("pact_id") Long pactId) {
-    portfolioService.cancelSettle(pactId);
-  }
 }

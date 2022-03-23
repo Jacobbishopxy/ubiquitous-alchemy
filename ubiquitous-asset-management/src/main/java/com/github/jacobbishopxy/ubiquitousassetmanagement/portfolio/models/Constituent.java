@@ -100,8 +100,8 @@ public class Constituent {
       Float currentPrice,
       Float adjustDateFactor,
       Float currentFactor,
-      Float adjustDateWeight,
-      Float currentWeight,
+      Float staticWeight,
+      Float dynamicWeight,
       Float pbpe,
       Float marketValue,
       Float earningsYield) {
@@ -114,11 +114,29 @@ public class Constituent {
     this.currentPrice = currentPrice;
     this.adjustDateFactor = adjustDateFactor;
     this.currentFactor = currentFactor;
-    this.staticWeight = adjustDateWeight;
-    this.dynamicWeight = currentWeight;
+    this.staticWeight = staticWeight;
+    this.dynamicWeight = dynamicWeight;
     this.pbpe = pbpe;
     this.marketValue = marketValue;
     this.earningsYield = earningsYield;
+  }
+
+  // deep copy constructor
+  public Constituent(Constituent source) {
+    this.id = source.id;
+    this.adjustmentRecord = source.adjustmentRecord;
+    this.adjustDate = source.adjustDate;
+    this.symbol = source.symbol;
+    this.abbreviation = source.abbreviation;
+    this.adjustDatePrice = source.adjustDatePrice;
+    this.currentPrice = source.currentPrice;
+    this.adjustDateFactor = source.adjustDateFactor;
+    this.currentFactor = source.currentFactor;
+    this.staticWeight = source.staticWeight;
+    this.dynamicWeight = source.dynamicWeight;
+    this.pbpe = source.pbpe;
+    this.marketValue = source.marketValue;
+    this.earningsYield = source.earningsYield;
   }
 
   // =======================================================================
