@@ -142,7 +142,6 @@ public class BenchmarkService {
         .findById(id)
         .map(
             record -> {
-              record.setAdjustDate(portfolioBenchmark.getAdjustDate());
               record.setBenchmarkName(portfolioBenchmark.getBenchmarkName());
               record.setSymbol(portfolioBenchmark.getSymbol());
               record.setPercentageChange(portfolioBenchmark.getPercentageChange());
@@ -182,7 +181,6 @@ public class BenchmarkService {
         .stream()
         .map(b -> {
           // update benchmark
-          b.setAdjustDate(benchmarks.get(ids.indexOf(b.getId())).getAdjustDate());
           b.setBenchmarkName(benchmarks.get(ids.indexOf(b.getId())).getBenchmarkName());
           b.setPercentageChange(benchmarks.get(ids.indexOf(b.getId())).getPercentageChange());
           b.setStaticWeight(benchmarks.get(ids.indexOf(b.getId())).getStaticWeight());

@@ -4,13 +4,8 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
-import java.time.LocalDate;
-
-import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
@@ -31,12 +26,6 @@ public class Benchmark {
   @NotEmpty
   @Schema(description = "This portfolio record belongs to a specific portfolio pact's adjustment record.", required = true)
   private AdjustmentRecord adjustmentRecord;
-
-  @JsonFormat(pattern = Constants.DATE_FORMAT)
-  @Column(nullable = false, columnDefinition = "DATE")
-  @NotEmpty
-  @Schema(description = "The date of adjustment.", required = true)
-  private LocalDate adjustDate;
 
   @Column(nullable = false)
   @NotEmpty
@@ -69,7 +58,6 @@ public class Benchmark {
 
   public Benchmark(
       AdjustmentRecord adjustmentRecord,
-      LocalDate adjustDate,
       String benchmarkName,
       String symbol,
       Float percentageChange,
@@ -77,7 +65,6 @@ public class Benchmark {
       Float dynamicWeight) {
     super();
     this.adjustmentRecord = adjustmentRecord;
-    this.adjustDate = adjustDate;
     this.benchmarkName = benchmarkName;
     this.symbol = symbol;
     this.percentageChange = percentageChange;
@@ -89,7 +76,6 @@ public class Benchmark {
   public Benchmark(Benchmark source) {
     this.id = source.id;
     this.adjustmentRecord = source.adjustmentRecord;
-    this.adjustDate = source.adjustDate;
     this.benchmarkName = source.benchmarkName;
     this.symbol = source.symbol;
     this.percentageChange = source.percentageChange;
@@ -123,14 +109,6 @@ public class Benchmark {
 
   public void setAdjustmentRecord(AdjustmentRecord adjustmentRecord) {
     this.adjustmentRecord = adjustmentRecord;
-  }
-
-  public LocalDate getAdjustDate() {
-    return adjustDate;
-  }
-
-  public void setAdjustDate(LocalDate adjustDate) {
-    this.adjustDate = adjustDate;
   }
 
   public String getBenchmarkName() {
