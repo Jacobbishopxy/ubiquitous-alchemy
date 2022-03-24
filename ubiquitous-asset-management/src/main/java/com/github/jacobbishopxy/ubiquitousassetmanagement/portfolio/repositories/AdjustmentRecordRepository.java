@@ -9,16 +9,14 @@ import java.util.Optional;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
 public interface AdjustmentRecordRepository
 		extends JpaRepository<AdjustmentRecord, Long>, JpaSpecificationExecutor<AdjustmentRecord> {
 
 	// sort by adjust_date desc and adjust_version desc
-	String queryDescSort = """
+	final String queryDescSort = """
 			SELECT p
 			FROM AdjustmentRecord p
 			WHERE p.pact.id = ?1
@@ -28,7 +26,7 @@ public interface AdjustmentRecordRepository
 	@Query(value = queryDescSort)
 	List<AdjustmentRecord> findByPactIdDescSort(Long pactId);
 
-	String queryUnsettledByPactId = """
+	final String queryUnsettledByPactId = """
 			SELECT p
 			FROM AdjustmentRecord p
 			WHERE p.pact.id = ?1
@@ -38,7 +36,7 @@ public interface AdjustmentRecordRepository
 	@Query(value = queryUnsettledByPactId)
 	Optional<AdjustmentRecord> findUnsettledByPactId(Long pactId);
 
-	String queryLatestAdjustDate = """
+	final String queryLatestAdjustDate = """
 			SELECT p1
 			FROM AdjustmentRecord p1
 			WHERE p1.pact.id = ?1
@@ -52,7 +50,7 @@ public interface AdjustmentRecordRepository
 	@Query(queryLatestAdjustDate)
 	List<AdjustmentRecord> findByPactIdAndLatestAdjustDate(Long pactId);
 
-	String queryUnsettledByPactIds = """
+	final String queryUnsettledByPactIds = """
 			SELECT p
 			FROM AdjustmentRecord p
 			WHERE p.pact.id IN ?1
@@ -62,7 +60,7 @@ public interface AdjustmentRecordRepository
 	@Query(value = queryUnsettledByPactIds)
 	List<AdjustmentRecord> findUnsettledByPactIds(List<Long> pactIds);
 
-	String queryActiveLatestAdjustDateVersion = """
+	final String queryActiveLatestAdjustDateVersion = """
 			SELECT p.*
 			FROM portfolio_adjustment_record p
 			INNER JOIN (
@@ -87,4 +85,18 @@ public interface AdjustmentRecordRepository
 	@Query(value = queryActiveLatestAdjustDateVersion, nativeQuery = true)
 	List<AdjustmentRecord> findByPactIdsAndLatestAdjustDateVersion(@Param("pactIds") List<Long> pactIds);
 
+	final String findAllRecordIdsByPactId = """
+			SELECT ar.id FROM AdjustmentRecord ar WHERE ar.pact.id = ?1
+			""";
+
+	@Query(value = findAllRecordIdsByPactId)
+	List<Long> findAllRecordIdsByPactId(Long pactId);
+
+	final String deleteAllRecordsByPactId = """
+			DELETE AdjustmentRecord ar WHERE ar.pact.id = :pactId
+			""";
+
+	@Modifying
+	@Query(deleteAllRecordsByPactId)
+	void deleteAllRecordsByPactId(@Param("pactId") Long pactId);
 }

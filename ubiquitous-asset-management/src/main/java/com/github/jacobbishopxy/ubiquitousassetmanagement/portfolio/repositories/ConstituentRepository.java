@@ -8,8 +8,8 @@ import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 
 public interface ConstituentRepository
     extends JpaRepository<Constituent, Long>, JpaSpecificationExecutor<Constituent> {
@@ -21,4 +21,12 @@ public interface ConstituentRepository
   List<Constituent> findByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
 
   void deleteByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
+
+  final String deleteAllRecordsByARIds = """
+      DELETE Constituent c WHERE c.adjustmentRecord.id in :arIds
+      """;
+
+  @Modifying
+  @Query(deleteAllRecordsByARIds)
+  void deleteAllRecordsByARIds(@Param("arIds") List<Long> arIds);
 }

@@ -9,7 +9,8 @@ import java.util.Optional;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 
 public interface PerformanceRepository extends JpaRepository<Performance, Long> {
 
@@ -20,4 +21,12 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
   List<Performance> findByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
 
   void deleteByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
+
+  final String deleteAllRecordsByARIds = """
+      DELETE Performance p WHERE p.adjustmentRecord.id in :arIds
+      """;
+
+  @Modifying
+  @Query(deleteAllRecordsByARIds)
+  void deleteAllRecordsByARIds(@Param("arIds") List<Long> arIds);
 }

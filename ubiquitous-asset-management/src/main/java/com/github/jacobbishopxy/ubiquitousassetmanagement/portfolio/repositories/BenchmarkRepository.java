@@ -8,8 +8,8 @@ import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 
 public interface BenchmarkRepository
     extends JpaRepository<Benchmark, Long>, JpaSpecificationExecutor<Benchmark> {
@@ -21,4 +21,12 @@ public interface BenchmarkRepository
   List<Benchmark> findByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
 
   void deleteByAdjustmentRecordIdIn(List<Long> adjustmentRecordIds);
+
+  final String deleteAllRecordsByPactId = """
+      DELETE Benchmark b WHERE b.adjustmentRecord.id in :arIds
+      """;
+
+  @Modifying
+  @Query(deleteAllRecordsByPactId)
+  void deleteAllRecordsByARIds(@Param("arIds") List<Long> arIds);
 }

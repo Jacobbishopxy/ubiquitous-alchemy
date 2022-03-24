@@ -10,7 +10,10 @@ import java.util.Optional;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentInfoRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentRecordRepository;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.BenchmarkRepository;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.ConstituentRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.PactRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.PerformanceRepository;
 
@@ -26,6 +29,15 @@ public class PactService {
 
   @Autowired
   private AdjustmentRecordRepository arRepo;
+
+  @Autowired
+  private AdjustmentInfoRepository aiRepo;
+
+  @Autowired
+  private ConstituentRepository cRepo;
+
+  @Autowired
+  private BenchmarkRepository bRepo;
 
   @Autowired
   private PerformanceRepository perfRepo;
@@ -107,7 +119,37 @@ public class PactService {
         });
   }
 
+  /**
+   * Delete a pact.
+   *
+   * IMPORTANT: Be very careful when deleting a pact, because it will also delete
+   * all adjustment records and their related
+   * constituents/benchmarks/performances.
+   *
+   * @param id
+   */
+  @Transactional(rollbackFor = Exception.class)
   public void deletePact(Long id) {
+
+    // find all related adjustment records ids
+    List<Long> arIds = arRepo.findAllRecordIdsByPactId(id);
+
+    // delete all adjustment infos
+    aiRepo.deleteAllRecordsByPactId(arIds);
+
+    // delete all performances
+    perfRepo.deleteAllRecordsByARIds(arIds);
+
+    // delete all constituents
+    cRepo.deleteAllRecordsByARIds(arIds);
+
+    // delete all benchmarks
+    bRepo.deleteAllRecordsByARIds(arIds);
+
+    // delete all adjustment records
+    arRepo.deleteAllRecordsByPactId(id);
+
+    // delete the pact
     pRepo.deleteById(id);
   }
 
