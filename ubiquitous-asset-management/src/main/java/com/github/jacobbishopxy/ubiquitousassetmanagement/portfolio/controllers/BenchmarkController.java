@@ -81,9 +81,9 @@ public class BenchmarkController {
   @Operation(summary = "Update benchmark.")
   Benchmark updateBenchmark(
       @PathVariable("id") Long id,
-      @RequestBody Benchmark benchmark) {
+      @RequestBody BenchmarkInput dto) {
     return benchmarkService
-        .updateBenchmark(id, benchmark)
+        .updateBenchmark(id, BenchmarkInput.intoBenchmark(dto))
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND,
             String.format("Benchmark for id: %s not found", id)));

@@ -114,7 +114,8 @@ public class BenchmarkService {
   @Transactional(rollbackFor = Exception.class)
   public List<Benchmark> createBenchmarks(List<Benchmark> benchmarks) {
     // 0. validate benchmarks
-    List<Long> adjustmentRecordIds = benchmarks.stream()
+    List<Long> adjustmentRecordIds = benchmarks
+        .stream()
         .map(Benchmark::getAdjRecordId)
         .collect(Collectors.toList());
 
@@ -133,19 +134,19 @@ public class BenchmarkService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public Optional<Benchmark> updateBenchmark(Long id, Benchmark portfolioBenchmark) {
+  public Optional<Benchmark> updateBenchmark(Long id, Benchmark benchmark) {
     // 0. validate benchmark
-    Long adjustmentRecordId = portfolioBenchmark.getAdjRecordId();
+    Long adjustmentRecordId = benchmark.getAdjRecordId();
 
     // 1. update benchmark
     bRepo
         .findById(id)
         .map(
             record -> {
-              record.setBenchmarkName(portfolioBenchmark.getBenchmarkName());
-              record.setSymbol(portfolioBenchmark.getSymbol());
-              record.setPercentageChange(portfolioBenchmark.getPercentageChange());
-              record.setStaticWeight(portfolioBenchmark.getStaticWeight());
+              record.setBenchmarkName(benchmark.getBenchmarkName());
+              record.setSymbol(benchmark.getSymbol());
+              record.setPercentageChange(benchmark.getPercentageChange());
+              record.setStaticWeight(benchmark.getStaticWeight());
               return bRepo.save(record);
             })
         .orElseThrow(() -> new RuntimeException(
