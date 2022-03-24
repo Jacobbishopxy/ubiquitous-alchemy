@@ -25,7 +25,7 @@ public record PortfolioOverview(
 		Float benchmarkEarningsYield,
 		Float alpha,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
-		int adjustVersion) {
+		Integer adjustVersion) {
 
 	public static PortfolioOverview fromPactAndPerformance(
 			Pact pact,

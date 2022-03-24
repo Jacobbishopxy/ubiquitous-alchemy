@@ -71,10 +71,10 @@ public class PortfolioController {
     return portfolioService.getLatestSettledPortfolioDetail(pactId);
   }
 
-  @GetMapping("/portfolio_detail/adjustment_record")
+  @GetMapping("/portfolio_detail/history")
   @Operation(summary = "Get portfolio detail by adjustment record id.")
   PortfolioDetail getPortfolioByPactId(
-      @RequestParam(value = "adjustment_record_id", required = false) Long adjustmentRecordId) {
+      @RequestParam(value = "adjustment_record_id", required = true) Long adjustmentRecordId) {
     return portfolioService.getPortfolioDetailByARId(adjustmentRecordId);
 
   }
