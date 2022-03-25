@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.ConstituentInput;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.ConstituentUpdate;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.ConstituentService;
 
@@ -96,6 +97,17 @@ public class ConstituentController {
         .collect(Collectors.toList());
 
     return constituentService.updateConstituents(constituents);
+  }
+
+  @PatchMapping("/constituent/{id}")
+  @Operation(summary = "Update a constituent's price and related fields.")
+  Constituent modifyConstituent(
+      @PathVariable("id") Long id,
+      @RequestBody ConstituentUpdate dto) {
+    return constituentService
+        .modifyConstituent(id, dto)
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, String.format("Constituent for id: %s not found", id)));
   }
 
   @DeleteMapping("/constituent/{id}")

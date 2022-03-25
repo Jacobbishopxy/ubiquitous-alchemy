@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.BenchmarkUpdate;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
@@ -193,6 +194,17 @@ public class BenchmarkService {
     rawMutation(newBms);
 
     return newBms;
+  }
+
+  public Optional<Benchmark> modifyBenchmark(Long id, BenchmarkUpdate dto) {
+    return bRepo
+        .findById(id)
+        .map(b -> {
+          if (dto.percentageChange() != null) {
+            b.setPercentageChange(dto.percentageChange());
+          }
+          return bRepo.save(b);
+        });
   }
 
   @Transactional(rollbackFor = Exception.class)

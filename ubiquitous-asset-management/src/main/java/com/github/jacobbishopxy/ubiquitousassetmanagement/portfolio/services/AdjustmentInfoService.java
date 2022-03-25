@@ -4,10 +4,10 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.AdjustmentInfoUpdate;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentInfoRepository;
 
@@ -64,17 +64,19 @@ public class AdjustmentInfoService {
   }
 
   // EXCEPTION: expose to controller
-  public Optional<AdjustmentInfo> modifyAdjustmentInfo(Long id, LocalTime adjustTime, String description) {
-    return aRepo.findById(id).map(a -> {
-      if (adjustTime != null) {
-        a.setAdjustTime(adjustTime);
-      }
-      if (description != null) {
-        a.setDescription(description);
-      }
+  public Optional<AdjustmentInfo> modifyAdjustmentInfo(Long id, AdjustmentInfoUpdate dto) {
+    return aRepo
+        .findById(id)
+        .map(a -> {
+          if (dto.adjustTime() != null) {
+            a.setAdjustTime(dto.adjustTime());
+          }
+          if (dto.description() != null) {
+            a.setDescription(dto.description());
+          }
 
-      return aRepo.save(a);
-    });
+          return aRepo.save(a);
+        });
   }
 
   public void deleteAdjustmentInfo(Long id) {

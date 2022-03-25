@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.ConstituentUpdate;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
@@ -215,6 +216,28 @@ public class ConstituentService {
     rawMutation(newCons);
 
     return newCons;
+  }
+
+  public Optional<Constituent> modifyConstituent(Long id, ConstituentUpdate dto) {
+    return cRepo
+        .findById(id)
+        .map(c -> {
+          if (dto.currentFactor() != null) {
+            c.setCurrentFactor(dto.currentFactor());
+          }
+          if (dto.currentPrice() != null) {
+            c.setCurrentPrice(dto.currentPrice());
+          }
+          if (dto.pbpe() != null) {
+            c.setPbpe(dto.pbpe());
+          }
+          if (dto.marketValue() != null) {
+            c.setMarketValue(dto.marketValue());
+          }
+
+          return cRepo.save(c);
+        });
+
   }
 
   @Transactional(rollbackFor = Exception.class)

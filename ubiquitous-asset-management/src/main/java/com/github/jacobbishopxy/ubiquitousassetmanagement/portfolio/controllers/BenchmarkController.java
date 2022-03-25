@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.BenchmarkInput;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.BenchmarkUpdate;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.BenchmarkService;
 
@@ -99,6 +100,18 @@ public class BenchmarkController {
         .collect(Collectors.toList());
 
     return benchmarkService.updateBenchmarks(benchmarks);
+  }
+
+  @PatchMapping("/benchmark/{id}")
+  @Operation(summary = "Update a benchmark's percentage change.")
+  Benchmark modifyBenchmark(
+      @PathVariable("id") Long id,
+      @RequestBody BenchmarkUpdate dto) {
+    return benchmarkService
+        .modifyBenchmark(id, dto)
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            String.format("Benchmark for id: %s not found", id)));
   }
 
   @DeleteMapping("/benchmark/{id}")

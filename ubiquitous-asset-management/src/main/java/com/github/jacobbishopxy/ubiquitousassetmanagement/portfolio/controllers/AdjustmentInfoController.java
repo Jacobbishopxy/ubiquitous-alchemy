@@ -4,7 +4,6 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.controllers;
 
-import java.time.LocalTime;
 import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
@@ -57,12 +56,8 @@ public class AdjustmentInfoController {
   AdjustmentInfo updateAdjustmentInfo(
       @PathVariable("id") Long id,
       @RequestBody AdjustmentInfoUpdate dto) {
-
-    LocalTime adjustTime = dto.adjustTime();
-    String description = dto.description();
-
     return aService
-        .modifyAdjustmentInfo(id, adjustTime, description)
+        .modifyAdjustmentInfo(id, dto)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND,
             String.format("AdjustmentInfo for id: %s not found", id)));
