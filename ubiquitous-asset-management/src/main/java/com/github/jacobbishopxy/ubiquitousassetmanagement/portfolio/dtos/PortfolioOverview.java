@@ -28,7 +28,8 @@ public record PortfolioOverview(
 		Float benchmarkEarningsYield,
 		Float alpha,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
-		Integer adjustVersion) {
+		Integer adjustVersion,
+		Boolean isAdjusted) {
 
 	public static PortfolioOverview fromPactAndPerformance(
 			Pact pact,
@@ -49,7 +50,8 @@ public record PortfolioOverview(
 				performance.getBenchmarkEarningsYield(),
 				performance.getAlpha(),
 				ar.getAdjustDate(),
-				ar.getAdjustVersion());
+				ar.getAdjustVersion(),
+				ar.getIsAdjusted());
 	}
 
 }

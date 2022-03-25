@@ -17,6 +17,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Bench
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentInfoRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentRecordRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.BenchmarkRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.ConstituentRepository;
@@ -53,6 +54,9 @@ public class PortfolioService {
 
 	@Autowired
 	private AdjustmentRecordService adjustmentRecordService;
+
+	@Autowired
+	private AdjustmentInfoRepository adjustmentInfoRepository;
 
 	@Autowired
 	private AdjustmentInfoService adjustmentInfoService;
@@ -207,6 +211,9 @@ public class PortfolioService {
 	/**
 	 * Settle a portfolio.
 	 *
+	 * A powerful method which automatically distinguishes between normal (members
+	 * unchanged) settlement and adjustment.
+	 *
 	 * @param pactId
 	 * @param settleDate
 	 * @return
@@ -224,12 +231,8 @@ public class PortfolioService {
 				.orElseThrow(() -> new RuntimeException("No unsettled adjustment record found for pactId: " + pactId));
 		Long unsettledArId = unsettledAr.getId();
 
-		// get all unsettled data
-		List<Constituent> unsettledCons = constituentService
-				.getConstituentsByAdjustmentRecordId(unsettledArId);
-
 		// if latest adjustment exists, calculate adjustmentInfos
-		List<AdjustmentInfo> ais = adjustmentRecordService
+		List<Constituent> latestSettledCons = adjustmentRecordService
 				.getLatestSettledAR(pactId)
 				.map(latestSettledAr -> {
 					LocalDate latestSettledDate = latestSettledAr.getAdjustDate();
@@ -249,10 +252,8 @@ public class PortfolioService {
 						unsettledAr.setAdjustVersion(1);
 					}
 
-					List<Constituent> latestSettledCons = constituentService
+					return constituentService
 							.getConstituentsByAdjustmentRecordId(latestSettledAr.getId());
-
-					return PortfolioAdjustmentHelper.adjust(latestSettledCons, unsettledCons);
 				})
 				.orElseGet(() -> {
 					// this will only happen once when setting up a new pact
@@ -260,15 +261,32 @@ public class PortfolioService {
 					return List.of();
 				});
 
+		// get all unsettled data
+		List<Constituent> unsettledCons = constituentService
+				.getConstituentsByAdjustmentRecordId(unsettledArId);
+
+		// get adjustment info
+		List<AdjustmentInfo> ais = PortfolioAdjustmentHelper.adjust(latestSettledCons, unsettledCons);
+
+		// is adjustment date
+		final boolean isAdjusted = !ais.isEmpty();
+
+		// if adjustment infos is not empty, save them
+		if (isAdjusted) {
+			adjustmentInfoRepository.saveAll(ais);
+		}
+
 		// turn unsettled AR to settled AR and save it
 		unsettledAr.setAdjustDate(settleDate);
 		unsettledAr.setIsUnsettled(null);
+		unsettledAr.setIsAdjusted(isAdjusted);
 		adjustmentRecordRepository.saveAndFlush(unsettledAr);
 
 		// create a new adjustment record
 		AdjustmentRecord tmpAr = new AdjustmentRecord();
 		tmpAr.setPact(pact);
 		tmpAr.setIsUnsettled(true);
+		tmpAr.setIsAdjusted(isAdjusted);
 		final AdjustmentRecord newAr = adjustmentRecordRepository.save(tmpAr);
 
 		// copy constituents, bind to new adjustment record and save
@@ -278,6 +296,9 @@ public class PortfolioService {
 					Constituent newC = new Constituent(c);
 					newC.setId(null);
 					newC.setAdjustmentRecord(newAr);
+					if (isAdjusted) {
+						newC.setAdjustDate(settleDate);
+					}
 					return newC;
 				})
 				.collect(Collectors.toList());
@@ -291,6 +312,9 @@ public class PortfolioService {
 					Benchmark newB = new Benchmark(b);
 					newB.setId(null);
 					newB.setAdjustmentRecord(newAr);
+					if (isAdjusted) {
+						newB.setAdjustDate(settleDate);
+					}
 					return newB;
 				})
 				.collect(Collectors.toList());

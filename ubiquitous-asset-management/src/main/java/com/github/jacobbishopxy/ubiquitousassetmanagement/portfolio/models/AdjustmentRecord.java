@@ -46,6 +46,9 @@ public class AdjustmentRecord {
   @Column(nullable = true)
   private Boolean isUnsettled;
 
+  @Column(nullable = false)
+  private Boolean isAdjusted;
+
   // =======================================================================
   // Constructors
   // =======================================================================
@@ -61,12 +64,14 @@ public class AdjustmentRecord {
       Pact pact,
       LocalDate adjustDate,
       Integer adjustVersion,
-      Boolean isUnsettled) {
+      Boolean isUnsettled,
+      Boolean isAdjusted) {
     super();
     this.pact = pact;
     this.adjustDate = adjustDate;
     this.adjustVersion = adjustVersion;
     this.isUnsettled = isUnsettled;
+    this.isAdjusted = isAdjusted;
   }
 
   // =======================================================================
@@ -111,6 +116,14 @@ public class AdjustmentRecord {
 
   public void setIsUnsettled(Boolean isUnsettled) {
     this.isUnsettled = isUnsettled;
+  }
+
+  public Boolean getIsAdjusted() {
+    return isAdjusted;
+  }
+
+  public void setIsAdjusted(Boolean isAdjusted) {
+    this.isAdjusted = isAdjusted;
   }
 
 }

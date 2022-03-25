@@ -10,10 +10,10 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 
-// import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-// @Schema(name = "PortfolioConstituentInput", description = "Constituent input")
+@Schema(name = "PortfolioConstituentInput", description = "Constituent input")
 public record ConstituentInput(
 		Long adjustmentRecordId,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
