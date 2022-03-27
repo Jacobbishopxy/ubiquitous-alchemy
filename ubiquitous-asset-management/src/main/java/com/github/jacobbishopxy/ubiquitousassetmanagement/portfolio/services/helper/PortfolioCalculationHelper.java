@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
 
 public class PortfolioCalculationHelper {
 
@@ -77,5 +78,45 @@ public class PortfolioCalculationHelper {
       Float portfolioEarningsYield,
       Float benchmarkEarningsYield) {
     return portfolioEarningsYield - benchmarkEarningsYield;
+  }
+
+  public record AccumulatedPerformanceResult(
+      Float portfolioEarningsYield,
+      Float benchmarkEarningsYield,
+      Float alpha) {
+  }
+
+  public static AccumulatedPerformanceResult calculateAccumulatedPerformance(List<Performance> performances) {
+
+    Float accumulatedPortfolioEarningsYield = performances
+        .stream()
+        .map(Performance::getPortfolioEarningsYield)
+        .reduce(0f, (subtotal, ele) -> {
+          if (ele == null) {
+            ele = 0f;
+          }
+          return subtotal * (1 + ele);
+        });
+    accumulatedPortfolioEarningsYield -= 1;
+
+    Float accumulatedBenchmarkEarningsYield = performances
+        .stream()
+        .map(Performance::getBenchmarkEarningsYield)
+        .reduce(0f, (subtotal, ele) -> {
+          if (ele == null) {
+            ele = 0f;
+          }
+          return subtotal * (1 + ele);
+        });
+    accumulatedBenchmarkEarningsYield -= 1;
+
+    Float accumulatedAlpha = calculateAlpha(
+        accumulatedPortfolioEarningsYield,
+        accumulatedBenchmarkEarningsYield);
+
+    return new AccumulatedPerformanceResult(
+        accumulatedPortfolioEarningsYield,
+        accumulatedBenchmarkEarningsYield,
+        accumulatedAlpha);
   }
 }

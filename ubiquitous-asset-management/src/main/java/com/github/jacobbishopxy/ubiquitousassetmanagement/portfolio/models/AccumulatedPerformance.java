@@ -1,5 +1,5 @@
 /**
- * Created by Jacob Xie on 2/27/2022.
+ * Created by Jacob Xie on 3/26/2022.
  */
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
@@ -7,14 +7,13 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioCalculationHelper;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
-@Table(name = "portfolio_performance")
-@Schema(name = "PortfolioPerformance", description = "Portfolio performance")
-public class Performance {
+@Table(name = "portfolio_accumulated_performance", uniqueConstraints = {
+    @UniqueConstraint(name = "unique_pact_id", columnNames = { "portfolio_pact_id" })
+})
+public class AccumulatedPerformance {
   // =======================================================================
   // Fields
   // =======================================================================
@@ -25,10 +24,10 @@ public class Performance {
   private Long id;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "portfolio_adjustment_record_id")
+  @JoinColumn(name = "portfolio_pact_id")
   @NotEmpty
-  @Schema(description = "This portfolio record belongs to a specific portfolio pact's adjustment record.", required = true)
-  private AdjustmentRecord adjustmentRecord;
+  @Schema(description = "This portfolio accumulated performance belongs to a specific portfolio pact.", required = true)
+  private Pact pact;
 
   @Column(nullable = true)
   @Schema(description = "The earnings yield of custom portfolio.", required = true)
@@ -42,31 +41,29 @@ public class Performance {
   @Schema(description = "The difference between custom portfolio and benchmark.", required = true)
   private Float alpha;
 
+  @Column(nullable = false)
+  @Schema(description = "The total number of the adjustments", required = true)
+  private Integer adjustCount;
+
   // =======================================================================
   // Constructors
   // =======================================================================
 
-  public Performance() {
+  public AccumulatedPerformance() {
   }
 
-  public Performance(
-      AdjustmentRecord adjustmentRecord,
+  public AccumulatedPerformance(
+      Pact pact,
       Float portfolioEarningsYield,
-      Float benchmarkEarningsYield) {
+      Float benchmarkEarningsYield,
+      Float alpha,
+      Integer adjustCount) {
     super();
-    this.adjustmentRecord = adjustmentRecord;
+    this.pact = pact;
     this.portfolioEarningsYield = portfolioEarningsYield;
     this.benchmarkEarningsYield = benchmarkEarningsYield;
-    this.alpha = PortfolioCalculationHelper.calculateAlpha(portfolioEarningsYield, benchmarkEarningsYield);
-  }
-
-  // deep copy constructor
-  public Performance(Performance source) {
-    this.id = source.id;
-    this.adjustmentRecord = source.adjustmentRecord;
-    this.portfolioEarningsYield = source.portfolioEarningsYield;
-    this.benchmarkEarningsYield = source.benchmarkEarningsYield;
-    this.alpha = source.alpha;
+    this.alpha = alpha;
+    this.adjustCount = adjustCount;
   }
 
   // =======================================================================
@@ -77,16 +74,12 @@ public class Performance {
     return id;
   }
 
-  public void setId(Long id) {
-    this.id = id;
+  public Pact getPact() {
+    return pact;
   }
 
-  public AdjustmentRecord getAdjustmentRecord() {
-    return adjustmentRecord;
-  }
-
-  public void setAdjustmentRecord(AdjustmentRecord adjustmentRecord) {
-    this.adjustmentRecord = adjustmentRecord;
+  public void setPact(Pact pact) {
+    this.pact = pact;
   }
 
   public Float getPortfolioEarningsYield() {
@@ -112,4 +105,13 @@ public class Performance {
   public void setAlpha(Float alpha) {
     this.alpha = alpha;
   }
+
+  public Integer getAdjustCount() {
+    return adjustCount;
+  }
+
+  public void setAdjustCount(Integer adjustCount) {
+    this.adjustCount = adjustCount;
+  }
+
 }

@@ -6,6 +6,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos;
 
 import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AccumulatedPerformance;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
@@ -20,6 +21,7 @@ public record PortfolioDetail(
 		List<Constituent> constituents,
 		List<Benchmark> benchmarks,
 		Performance performance,
-		List<AdjustmentInfo> adjustmentInfos) {
+		List<AdjustmentInfo> adjustmentInfos,
+		AccumulatedPerformance accumulatedPerformance) {
 
 }

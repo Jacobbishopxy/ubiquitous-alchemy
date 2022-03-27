@@ -15,6 +15,15 @@ import org.springframework.data.repository.query.Param;
 public interface AdjustmentRecordRepository
 		extends JpaRepository<AdjustmentRecord, Long>, JpaSpecificationExecutor<AdjustmentRecord> {
 
+	final String queryIdsByPactId = """
+			SELECT ar.id
+			FROM AdjustmentRecord ar
+			WHERE ar.pact.id = :pactId
+			""";
+
+	@Query(value = queryIdsByPactId)
+	List<Long> findIdsByPactId(@Param("pactId") Long pactId);
+
 	// sort by adjust_date desc and adjust_version desc
 	final String queryDescSort = """
 			SELECT p

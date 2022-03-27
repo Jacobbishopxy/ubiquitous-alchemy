@@ -11,17 +11,20 @@ import java.util.stream.Collectors;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioOverview;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos.PortfolioDetail;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AccumulatedPerformance;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentInfo;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Benchmark;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AccumulatedPerformanceRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentInfoRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentRecordRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.BenchmarkRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.ConstituentRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioAdjustmentHelper;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioCalculationHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,6 +78,9 @@ public class PortfolioService {
 
 	@Autowired
 	private PerformanceService performanceService;
+
+	@Autowired
+	private AccumulatedPerformanceRepository accumulatedPerformanceRepository;
 
 	// =======================================================================
 	// Query methods
@@ -151,13 +157,21 @@ public class PortfolioService {
 						"No unsettled adjustment record found for pact id: " + pactId));
 		Long arId = ar.getId();
 
-		List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
-		List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
+		List<Benchmark> benchmarks = benchmarkService
+				.getBenchmarksByAdjustmentRecordId(arId);
+		List<Constituent> constituents = constituentService
+				.getConstituentsByAdjustmentRecordId(arId);
 		// if performance is null, return empty performance
-		Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
-		List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
+		Performance performance = performanceService
+				.getPerformanceByAdjustmentRecordId(arId)
+				.orElse(new Performance());
+		List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService
+				.getAdjustmentInfosByAdjustmentRecordId(arId);
+		AccumulatedPerformance accumulatedPerformance = accumulatedPerformanceRepository
+				.findByPactId(pactId)
+				.orElse(new AccumulatedPerformance());
 
-		return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos);
+		return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos, accumulatedPerformance);
 	}
 
 	/**
@@ -173,13 +187,20 @@ public class PortfolioService {
 						"No latest adjustment record found for pactId: " + pactId));
 		Long arId = ar.getId();
 
-		List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
-		List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
+		List<Benchmark> benchmarks = benchmarkService
+				.getBenchmarksByAdjustmentRecordId(arId);
+		List<Constituent> constituents = constituentService
+				.getConstituentsByAdjustmentRecordId(arId);
 		// if performance is null, return empty performance
-		Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
-		List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
+		Performance performance = performanceService
+				.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
+		List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService
+				.getAdjustmentInfosByAdjustmentRecordId(arId);
+		AccumulatedPerformance accumulatedPerformance = accumulatedPerformanceRepository
+				.findByPactId(pactId)
+				.orElse(new AccumulatedPerformance());
 
-		return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos);
+		return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos, accumulatedPerformance);
 	}
 
 	/**
@@ -195,18 +216,70 @@ public class PortfolioService {
 						"No adjustment record found for id: " + adjustmentRecordId));
 		Long arId = ar.getId();
 
-		List<Benchmark> benchmarks = benchmarkService.getBenchmarksByAdjustmentRecordId(arId);
-		List<Constituent> constituents = constituentService.getConstituentsByAdjustmentRecordId(arId);
+		List<Benchmark> benchmarks = benchmarkService
+				.getBenchmarksByAdjustmentRecordId(arId);
+		List<Constituent> constituents = constituentService
+				.getConstituentsByAdjustmentRecordId(arId);
 		// if performance is null, return empty performance
-		Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId).orElse(new Performance());
-		List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService.getAdjustmentInfosByAdjustmentRecordId(arId);
+		Performance performance = performanceService.getPerformanceByAdjustmentRecordId(arId)
+				.orElse(new Performance());
+		List<AdjustmentInfo> adjustmentInfos = adjustmentInfoService
+				.getAdjustmentInfosByAdjustmentRecordId(arId);
+		AccumulatedPerformance accumulatedPerformance = accumulatedPerformanceRepository
+				.findByPactId(ar.getPact().getId())
+				.orElse(new AccumulatedPerformance());
 
-		return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos);
+		return new PortfolioDetail(ar, constituents, benchmarks, performance, adjustmentInfos, accumulatedPerformance);
 	}
 
 	// =======================================================================
 	// Mutation methods
 	// =======================================================================
+
+	/**
+	 * Recalculate accumulated performance for a portfolio.
+	 * 
+	 * Every time a settle/unsettle action is made, the accumulated performance
+	 * should be recalculated.
+	 * 
+	 * @param pact
+	 * @param isAdjusted
+	 * @return
+	 */
+	private AccumulatedPerformance recalculateAccumulatedPerformance(boolean isSettle, Pact pact, boolean isAdjusted) {
+		Long pactId = pact.getId();
+
+		// get all adjustment record ids under this pact
+		List<Long> arIds = adjustmentRecordRepository.findIdsByPactId(pactId);
+		// get all performance records
+		List<Performance> pfms = performanceService.getPerformancesByAdjustmentRecordIds(arIds);
+		// calculate accumulated performance
+		PortfolioCalculationHelper.AccumulatedPerformanceResult apr = PortfolioCalculationHelper
+				.calculateAccumulatedPerformance(pfms);
+		// query accumulated performance or create a new one
+		AccumulatedPerformance ap = accumulatedPerformanceRepository
+				.findByPactId(pactId)
+				.orElseGet(() -> {
+					AccumulatedPerformance nAp = new AccumulatedPerformance();
+					nAp.setPact(pact);
+					nAp.setAdjustCount(0);
+					return nAp;
+				});
+
+		if (isAdjusted) {
+			if (isSettle) {
+				ap.setAdjustCount(ap.getAdjustCount() + 1);
+			} else {
+				ap.setAdjustCount(ap.getAdjustCount() - 1);
+			}
+		}
+
+		ap.setBenchmarkEarningsYield(apr.benchmarkEarningsYield());
+		ap.setPortfolioEarningsYield(apr.portfolioEarningsYield());
+		ap.setAlpha(apr.alpha());
+
+		return ap;
+	}
 
 	/**
 	 * Settle a portfolio.
@@ -328,7 +401,11 @@ public class PortfolioService {
 		newPfm.setAdjustmentRecord(newAr);
 		newPfm = performanceService.createPerformance(newPfm);
 
-		return new PortfolioDetail(newAr, newCons, newBms, newPfm, ais);
+		// recalculate accumulated performance and save it
+		AccumulatedPerformance ap = recalculateAccumulatedPerformance(true, pact, isAdjusted);
+		ap = accumulatedPerformanceRepository.save(ap);
+
+		return new PortfolioDetail(newAr, newCons, newBms, newPfm, ais, ap);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -349,6 +426,12 @@ public class PortfolioService {
 
 		// delete performance
 		performanceService.deletePerformanceByAdjustmentRecordId(ar.getId());
+
+		// recalculate accumulated performance and save it
+		boolean isAdjusted = ar.getIsAdjusted() == true ? true : false;
+		Pact pact = new Pact(pactId);
+		AccumulatedPerformance ap = recalculateAccumulatedPerformance(false, pact, isAdjusted);
+		accumulatedPerformanceRepository.save(ap);
 	}
 
 }

@@ -7,9 +7,11 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AccumulatedPerformance;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AccumulatedPerformanceRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentInfoRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentRecordRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.BenchmarkRepository;
@@ -41,6 +43,9 @@ public class PactService {
 
   @Autowired
   private PerformanceRepository perfRepo;
+
+  @Autowired
+  private AccumulatedPerformanceRepository apRepo;
 
   // =======================================================================
   // Query methods
@@ -87,6 +92,11 @@ public class PactService {
     Performance performance = new Performance();
     performance.setAdjustmentRecord(adjustmentRecord);
     perfRepo.save(performance);
+    // auto create accumulated performance, all other fields are null
+    AccumulatedPerformance accumulatedPerformance = new AccumulatedPerformance();
+    accumulatedPerformance.setPact(pact);
+    accumulatedPerformance.setAdjustCount(0);
+    apRepo.save(accumulatedPerformance);
 
     return pact;
   }
