@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
@@ -23,10 +24,11 @@ public class AccumulatedPerformance {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "portfolio_pact_id")
   @NotEmpty
   @Schema(description = "This portfolio accumulated performance belongs to a specific portfolio pact.", required = true)
+  @JsonIgnore
   private Pact pact;
 
   @Column(nullable = true)

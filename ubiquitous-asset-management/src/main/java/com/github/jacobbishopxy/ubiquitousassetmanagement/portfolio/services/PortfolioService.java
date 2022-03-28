@@ -148,15 +148,15 @@ public class PortfolioService {
 				.getARById(adjustmentRecordId)
 				.map(ar -> {
 					Pact pact = ar.getPact();
-					Performance pfm = performanceService
+					Performance p = performanceService
 							.getPerformanceByAdjustmentRecordId(ar.getId())
 							.orElse(new Performance());
 
-					AccumulatedPerformance accPfm = accumulatedPerformanceRepository
+					AccumulatedPerformance ap = accumulatedPerformanceRepository
 							.findByPactId(pact.getId())
 							.orElse(new AccumulatedPerformance());
 
-					return PortfolioOverview.fromPactAndPerformance(pact, pfm, accPfm);
+					return PortfolioOverview.fromPactAndPerformance(pact, p, ap);
 				});
 	}
 
@@ -254,10 +254,10 @@ public class PortfolioService {
 
 	/**
 	 * Recalculate accumulated performance for a portfolio.
-	 * 
+	 *
 	 * Every time a settle/unsettle action is made, the accumulated performance
 	 * should be recalculated.
-	 * 
+	 *
 	 * @param pact
 	 * @param isAdjusted
 	 * @return

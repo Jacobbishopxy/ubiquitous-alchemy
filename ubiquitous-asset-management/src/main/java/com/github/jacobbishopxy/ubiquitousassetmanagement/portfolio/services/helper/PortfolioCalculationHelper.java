@@ -33,7 +33,8 @@ public class PortfolioCalculationHelper {
             ey = 0f;
           }
           return c.getStaticWeight() * ey;
-        }).reduce(0f, Float::sum);
+        })
+        .reduce(0f, Float::sum);
 
     constituents.stream().map(c -> {
       c.setDynamicWeight(c.getDynamicWeight() / totalExpansion);
@@ -64,7 +65,8 @@ public class PortfolioCalculationHelper {
             ey = 0f;
           }
           return b.getStaticWeight() * ey;
-        }).reduce(0f, Float::sum);
+        })
+        .reduce(0f, Float::sum);
 
     benchmarks.stream().map(b -> {
       b.setDynamicWeight(b.getDynamicWeight() / totalExpansion);
