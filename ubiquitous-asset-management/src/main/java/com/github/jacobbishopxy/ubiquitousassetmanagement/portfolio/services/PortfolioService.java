@@ -6,6 +6,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.ConstituentRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioAdjustmentHelper;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.helper.PortfolioCalculationHelper;
+import com.google.common.collect.HashBiMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -102,22 +104,21 @@ public class PortfolioService {
 		List<AdjustmentRecord> ars = adjustmentRecordService.getUnsettledARs(pactIds);
 		List<Long> arIds = ars.stream().map(AdjustmentRecord::getId).collect(Collectors.toList());
 
+		// snapshot performances, sorted by arIds
 		List<Performance> pfm = performanceService.getPerformancesByAdjustmentRecordIds(arIds);
-
-		// TODO:
-		// performance & accumulated alignment
-
-		// List<AccumulatedPerformance> apfm =
-		// accumulatedPerformanceRepository.findAllByPactIdIn(arIds);
+		// accumulated performances, sorted by pactIds
+		List<AccumulatedPerformance> aPfm = accumulatedPerformanceRepository.findByPactIdIn(pactIds);
+		Map<Long, AccumulatedPerformance> aPfmMap = HashBiMap.create(
+				aPfm
+						.stream()
+						.collect(Collectors.toMap(AccumulatedPerformance::getThePactId, ap -> ap)));
 
 		return pfm
 				.stream()
 				.map(p -> {
 					Pact pact = p.getAdjustmentRecord().getPact();
-					// AccumulatedPerformance ap =
-					// p.getAccumulatedPerformance(pact.getId()).orElse(new
-					// AccumulatedPerformance());
-					AccumulatedPerformance ap = new AccumulatedPerformance();
+					AccumulatedPerformance optAp = aPfmMap.get(pact.getId());
+					AccumulatedPerformance ap = optAp == null ? new AccumulatedPerformance() : optAp;
 
 					return PortfolioOverview.fromPactAndPerformance(pact, p, ap);
 				})
@@ -145,19 +146,17 @@ public class PortfolioService {
 	public Optional<PortfolioOverview> getPortfolioOverview(Long adjustmentRecordId) {
 		return adjustmentRecordService
 				.getARById(adjustmentRecordId)
-				.flatMap(ar -> {
+				.map(ar -> {
 					Pact pact = ar.getPact();
 					Performance pfm = performanceService
 							.getPerformanceByAdjustmentRecordId(ar.getId())
-							.orElseThrow(() -> new RuntimeException(
-									"No performance found for adjustment record id: " + ar.getId()));
+							.orElse(new Performance());
 
 					AccumulatedPerformance accPfm = accumulatedPerformanceRepository
 							.findByPactId(pact.getId())
-							.orElseThrow(() -> new RuntimeException(
-									"No accumulated performance found for pact id: " + pact.getId()));
+							.orElse(new AccumulatedPerformance());
 
-					return Optional.of(PortfolioOverview.fromPactAndPerformance(pact, pfm, accPfm));
+					return PortfolioOverview.fromPactAndPerformance(pact, pfm, accPfm);
 				});
 	}
 

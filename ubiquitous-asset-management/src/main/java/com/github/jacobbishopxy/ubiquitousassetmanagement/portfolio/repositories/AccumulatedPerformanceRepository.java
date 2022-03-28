@@ -15,6 +15,6 @@ public interface AccumulatedPerformanceRepository extends JpaRepository<Accumula
 
   Optional<AccumulatedPerformance> findByPactId(Long pactId);
 
-  List<AccumulatedPerformance> findAllByPactIdIn(List<Long> pactId);
+  List<AccumulatedPerformance> findByPactIdIn(List<Long> pactId);
 
 }

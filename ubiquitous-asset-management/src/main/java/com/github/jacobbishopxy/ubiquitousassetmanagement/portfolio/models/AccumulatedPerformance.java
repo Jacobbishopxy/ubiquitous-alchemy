@@ -78,6 +78,10 @@ public class AccumulatedPerformance {
     return pact;
   }
 
+  public Long getThePactId() {
+    return pact.getId();
+  }
+
   public void setPact(Pact pact) {
     this.pact = pact;
   }
