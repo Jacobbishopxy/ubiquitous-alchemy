@@ -77,6 +77,8 @@ public class PortfolioAdjustmentHelper {
             ao = AdjustmentOperation.Increase;
           }
           ai.setOperation(ao);
+          ai.setPreviousStaticWeight(preC.getStaticWeight());
+          ai.setCurrentStaticWeight(curC.getStaticWeight());
           ai.setStaticWeight(curC.getStaticWeight() - preC.getStaticWeight());
 
           return ai;
@@ -94,6 +96,8 @@ public class PortfolioAdjustmentHelper {
           ai.setSymbol(c.getSymbol());
           ai.setAbbreviation(c.getAbbreviation());
           ai.setOperation(AdjustmentOperation.Join);
+          ai.setPreviousStaticWeight(0f);
+          ai.setCurrentStaticWeight(c.getStaticWeight());
           ai.setStaticWeight(c.getStaticWeight());
           return ai;
         })
@@ -109,6 +113,8 @@ public class PortfolioAdjustmentHelper {
           ai.setSymbol(c.getSymbol());
           ai.setAbbreviation(c.getAbbreviation());
           ai.setOperation(AdjustmentOperation.Leave);
+          ai.setPreviousStaticWeight(c.getStaticWeight());
+          ai.setCurrentStaticWeight(0f);
           ai.setStaticWeight(c.getStaticWeight());
           return ai;
         })

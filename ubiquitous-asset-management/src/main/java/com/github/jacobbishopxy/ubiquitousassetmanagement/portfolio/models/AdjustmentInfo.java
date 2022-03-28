@@ -67,6 +67,16 @@ public class AdjustmentInfo {
 
   @Column(nullable = false)
   @NotEmpty
+  @Schema(description = "Previous static weight.", required = true)
+  private Float previousStaticWeight;
+
+  @Column(nullable = false)
+  @NotEmpty
+  @Schema(description = "Current static weight.", required = true)
+  private Float currentStaticWeight;
+
+  @Column(nullable = false)
+  @NotEmpty
   @Schema(description = "The static weight change of the adjustment.", example = "0.15", required = true)
   private Float staticWeightChange;
 
@@ -86,7 +96,9 @@ public class AdjustmentInfo {
       String symbol,
       String abbreviation,
       AdjustmentOperation operation,
-      Float weight,
+      Float previousWeight,
+      Float currentWeight,
+      Float weightChange,
       String description) {
     super();
     this.adjustmentRecord = adjustmentRecord;
@@ -94,7 +106,9 @@ public class AdjustmentInfo {
     this.symbol = symbol;
     this.abbreviation = abbreviation;
     this.operation = operation;
-    this.staticWeightChange = weight;
+    this.previousStaticWeight = previousWeight;
+    this.currentStaticWeight = currentWeight;
+    this.staticWeightChange = weightChange;
     this.description = description;
   }
 
@@ -148,6 +162,22 @@ public class AdjustmentInfo {
 
   public void setOperation(AdjustmentOperation operation) {
     this.operation = operation;
+  }
+
+  public Float getPreviousStaticWeight() {
+    return previousStaticWeight;
+  }
+
+  public void setPreviousStaticWeight(Float previousStaticWeight) {
+    this.previousStaticWeight = previousStaticWeight;
+  }
+
+  public Float getCurrentStaticWeight() {
+    return currentStaticWeight;
+  }
+
+  public void setCurrentStaticWeight(Float currentStaticWeight) {
+    this.currentStaticWeight = currentStaticWeight;
   }
 
   public Float getStaticWeight() {

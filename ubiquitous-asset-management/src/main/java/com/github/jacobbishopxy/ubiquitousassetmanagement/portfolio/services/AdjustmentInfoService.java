@@ -57,6 +57,8 @@ public class AdjustmentInfoService {
       a.setSymbol(adjustmentInfo.getSymbol());
       a.setAbbreviation(adjustmentInfo.getAbbreviation());
       a.setOperation(adjustmentInfo.getOperation());
+      a.setPreviousStaticWeight(adjustmentInfo.getPreviousStaticWeight());
+      a.setCurrentStaticWeight(adjustmentInfo.getCurrentStaticWeight());
       a.setStaticWeight(adjustmentInfo.getStaticWeight());
       a.setDescription(adjustmentInfo.getDescription());
       return aRepo.save(a);
