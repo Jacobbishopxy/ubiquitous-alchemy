@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
@@ -33,7 +34,7 @@ public interface AdjustmentRecordRepository
 			""";
 
 	@Query(value = queryDescSort)
-	List<AdjustmentRecord> findByPactIdDescSort(Long pactId);
+	List<AdjustmentRecord> findByPactIdDescSort(Long pactId, Pageable pageable);
 
 	final String queryUnsettledByPactId = """
 			SELECT p

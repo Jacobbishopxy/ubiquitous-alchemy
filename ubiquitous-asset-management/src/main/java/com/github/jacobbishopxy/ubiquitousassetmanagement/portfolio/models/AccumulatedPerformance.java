@@ -80,7 +80,12 @@ public class AccumulatedPerformance {
     return pact;
   }
 
+  // this method only used in `PortfolioService.getPortfolioOverviews`
+  // normally, we should not use this method
   public Long getThePactId() {
+    if (pact == null) {
+      return null;
+    }
     return pact.getId();
   }
 

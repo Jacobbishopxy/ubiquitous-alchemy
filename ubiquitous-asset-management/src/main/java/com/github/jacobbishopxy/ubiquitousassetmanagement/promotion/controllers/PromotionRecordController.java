@@ -49,8 +49,8 @@ public class PromotionRecordController {
         .countPromotionRecordsByPromotionPactName(promotionPactName);
   }
 
-  @Operation(summary = "Get promotion records by page and size.", description = "Searching parameters are optional.")
   @GetMapping("/record")
+  @Operation(summary = "Get promotion records by page and size.", description = "Searching parameters are optional.")
   List<PromotionRecordOutput> getPromotionRecords(
       @RequestParam("page") int page,
       @RequestParam("size") int size,

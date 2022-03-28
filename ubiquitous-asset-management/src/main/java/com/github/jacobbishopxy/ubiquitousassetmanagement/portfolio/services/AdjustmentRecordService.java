@@ -11,6 +11,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Adjus
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repositories.AdjustmentRecordRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -39,8 +40,8 @@ public class AdjustmentRecordService {
     return arRepo.findUnsettledByPactId(pactId);
   }
 
-  public List<AdjustmentRecord> getARSortDesc(Long pactId) {
-    return arRepo.findByPactIdDescSort(pactId);
+  public List<AdjustmentRecord> getARSortDesc(Long pactId, Pageable pageable) {
+    return arRepo.findByPactIdDescSort(pactId, pageable);
   }
 
   public List<AdjustmentRecord> getUnsettledARs(List<Long> pactIds) {

@@ -29,6 +29,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.hel
 import com.google.common.collect.HashBiMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -130,10 +131,11 @@ public class PortfolioService {
 	 * settled. And unsettled record is always on the top.
 	 *
 	 * @param pactId
+	 * @param pageable
 	 * @return
 	 */
-	public List<AdjustmentRecord> getAdjustmentRecordsByPactId(Long pactId) {
-		return adjustmentRecordService.getARSortDesc(pactId);
+	public List<AdjustmentRecord> getAdjustmentRecordsByPactId(Long pactId, Pageable pageable) {
+		return adjustmentRecordService.getARSortDesc(pactId, pageable);
 	}
 
 	/**

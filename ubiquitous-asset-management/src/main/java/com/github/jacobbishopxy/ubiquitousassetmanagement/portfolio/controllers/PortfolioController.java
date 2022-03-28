@@ -14,6 +14,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Adjus
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.services.PortfolioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -53,8 +54,16 @@ public class PortfolioController {
   @GetMapping("/portfolio_adjustment_records")
   @Operation(summary = "Get all adjustment records by pact id.")
   List<AdjustmentRecord> getAdjustmentRecordsByPactId(
-      @RequestParam(value = "pact_id", required = true) Long pactId) {
-    return portfolioService.getAdjustmentRecordsByPactId(pactId);
+      @RequestParam(value = "pact_id", required = true) Long pactId,
+      @RequestParam(value = "page", required = false) Integer page,
+      @RequestParam(value = "size", required = false) Integer size) {
+
+    PageRequest pr = null;
+    if (page != null && size != null) {
+      pr = PageRequest.of(page, size);
+    }
+
+    return portfolioService.getAdjustmentRecordsByPactId(pactId, pr);
   }
 
   @GetMapping("/portfolio_detail/unsettled")
