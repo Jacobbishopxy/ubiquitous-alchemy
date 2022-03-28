@@ -21,7 +21,7 @@ public class AccumulatedPerformance {
 
   @Id
   @Column(columnDefinition = "serial")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)

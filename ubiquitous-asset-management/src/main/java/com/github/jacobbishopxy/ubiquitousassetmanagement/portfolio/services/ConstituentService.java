@@ -27,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ConstituentService {
 
   @Autowired
+  private ValidationService validationService;
+
+  @Autowired
   private ConstituentRepository cRepo;
 
   @Autowired
@@ -59,9 +62,6 @@ public class ConstituentService {
   // raw mutation is called when create/update/delete a constituent
   @Transactional(rollbackFor = Exception.class)
   private void rawMutation(List<Constituent> constituents) {
-    // TODO:
-    // if all constituents are deleted, delete the adjustment record?
-
     // 0. constituents cannot be empty
     if (constituents.isEmpty()) {
       throw new IllegalArgumentException("Constituents cannot be empty");
@@ -70,9 +70,11 @@ public class ConstituentService {
     // 1. get adjustment record id
     Long adjustmentRecordId = constituents.get(0).getAdjRecordId();
 
-    // 2. recalculate all constituents and their related performance
+    // 2. recalculate all constituents and their related performance,
+    // validate modified constituents
     ConstituentsResult res = PortfolioCalculationHelper
         .modifyConstituentsAndCalculatePortfolioEarningsYield(constituents);
+    validationService.checkConstituentsTotalWeightIsWithinRange(res.constituents());
 
     // 3. update all constituents' dynamic weight
     cRepo.saveAll(res.constituents());
@@ -105,6 +107,7 @@ public class ConstituentService {
     // IMPORTANT: constituent's adjustmentRecord id cannot be null. In other words,
     // it must have an adjustmentRecord to create a constituent.
     Long adjustmentRecordId = constituent.getAdjRecordId();
+    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordId);
 
     // 1. save constituent.
     Constituent newC = cRepo.save(constituent);
@@ -126,11 +129,11 @@ public class ConstituentService {
     List<Long> adjustmentRecordIds = constituents.stream()
         .map(Constituent::getAdjRecordId)
         .collect(Collectors.toList());
-
     Set<Long> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("Constituents must have the same adjustmentRecord id");
     }
+    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordIds.get(0));
 
     // 1. save constituents.
     List<Constituent> newCs = cRepo.saveAll(constituents);
@@ -145,6 +148,7 @@ public class ConstituentService {
   public Optional<Constituent> updateConstituent(Long id, Constituent constituent) {
     // 0. validate constituent
     Long adjustmentRecordId = constituent.getAdjRecordId();
+    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordId);
 
     // 1. update constituent
     cRepo
@@ -180,11 +184,11 @@ public class ConstituentService {
         .stream()
         .map(Constituent::getAdjRecordId)
         .collect(Collectors.toList());
-
     Set<Long> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("All constituents must have the same adjustmentRecord id");
     }
+    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordIds.get(0));
 
     // 1. only modify constituents that are in the database
     List<Long> ids = constituents
@@ -222,6 +226,10 @@ public class ConstituentService {
     return cRepo
         .findById(id)
         .map(c -> {
+          // validate benchmark
+          Long adjustmentRecordId = c.getAdjRecordId();
+          validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordId);
+
           if (dto.currentFactor() != null) {
             c.setCurrentFactor(dto.currentFactor());
           }
@@ -248,6 +256,7 @@ public class ConstituentService {
         .orElseThrow(() -> new RuntimeException(
             String.format("Constituent %d not found", id)));
     Long adjustmentRecordId = c.getAdjRecordId();
+    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordId);
 
     // 1. delete constituent. Since we've called findById, here can be sure that the
     // constituent is deleted.
@@ -261,16 +270,15 @@ public class ConstituentService {
   public void deleteConstituents(List<Long> ids) {
     // 0. find constituents and get adjustmentRecordId
     List<Constituent> cs = cRepo.findAllById(ids);
-
     List<Long> adjustmentRecordIds = cs
         .stream()
         .map(Constituent::getAdjRecordId)
         .collect(Collectors.toList());
-
     Set<Long> uniqueARIds = Sets.newHashSet(adjustmentRecordIds);
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("All constituents must have the same adjustmentRecord id");
     }
+    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordIds.get(0));
 
     // 1. delete constituents. Since we've called findAllById, here can be sure that
     // the
@@ -280,6 +288,12 @@ public class ConstituentService {
     // 2. common mutation
     commonMutation(adjustmentRecordIds.get(0));
   }
+
+  // =======================================================================
+  // DANGEROUS! Mutation methods
+  //
+  // Should only used in development environment
+  // =======================================================================
 
   // delete all constituents in the portfolio.
   // IMPORTANT: adjustRecord is not deleted

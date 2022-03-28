@@ -34,7 +34,7 @@ public class AdjustmentInfo {
 
   @Id
   @Column(columnDefinition = "serial")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(fetch = FetchType.EAGER)

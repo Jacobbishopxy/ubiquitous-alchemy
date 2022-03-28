@@ -28,7 +28,7 @@ public class Pact {
 
   @Id
   @Column(columnDefinition = "serial")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Column(nullable = false)

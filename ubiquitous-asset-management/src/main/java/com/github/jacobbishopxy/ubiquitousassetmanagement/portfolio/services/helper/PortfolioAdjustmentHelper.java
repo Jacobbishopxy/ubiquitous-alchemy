@@ -38,27 +38,27 @@ public class PortfolioAdjustmentHelper {
       List<Constituent> preCons,
       List<Constituent> curCons) {
 
-    Map<Long, Constituent> preConsMap = HashBiMap
+    Map<String, Constituent> preConsMap = HashBiMap
         .create(preCons
             .stream()
-            .collect(Collectors.toMap(Constituent::getId, c -> c)));
-    Map<Long, Constituent> curConsMap = HashBiMap
+            .collect(Collectors.toMap(Constituent::getSymbol, c -> c)));
+    Map<String, Constituent> curConsMap = HashBiMap
         .create(curCons
             .stream()
-            .collect(Collectors.toMap(Constituent::getId, c -> c)));
+            .collect(Collectors.toMap(Constituent::getSymbol, c -> c)));
 
-    Set<Long> preConsIds = Sets.newHashSet(preConsMap.keySet());
-    Set<Long> curConsIds = Sets.newHashSet(curConsMap.keySet());
+    Set<String> preConsSymbols = Sets.newHashSet(preConsMap.keySet());
+    Set<String> curConsSymbols = Sets.newHashSet(curConsMap.keySet());
 
     // remaining: if the current static weight is less than the previous one, mark
     // the constituent as `Decrease`; otherwise, mark it as `Increase`.
-    Set<Long> remainingIds = intersection(preConsIds, curConsIds);
+    Set<String> remainingSymbols = intersection(preConsSymbols, curConsSymbols);
     // added: mark it as `Join`.
-    Set<Long> addedIds = difference(curConsIds, preConsIds);
+    Set<String> addedSymbols = difference(curConsSymbols, preConsSymbols);
     // popped: mark it as `Leave`.
-    Set<Long> poppedIds = difference(preConsIds, curConsIds);
+    Set<String> poppedSymbols = difference(preConsSymbols, curConsSymbols);
 
-    List<AdjustmentInfo> aisRemaining = remainingIds
+    List<AdjustmentInfo> aisRemaining = remainingSymbols
         .stream()
         .map(i -> {
           Constituent preC = preConsMap.get(i);
@@ -72,9 +72,9 @@ public class PortfolioAdjustmentHelper {
           // operation based on the static weight's change
           AdjustmentOperation ao = AdjustmentOperation.Unchanged;
           if (preC.getStaticWeight() < curC.getStaticWeight()) {
-            ao = AdjustmentOperation.Decrease;
-          } else if (preC.getStaticWeight() > curC.getStaticWeight()) {
             ao = AdjustmentOperation.Increase;
+          } else if (preC.getStaticWeight() > curC.getStaticWeight()) {
+            ao = AdjustmentOperation.Decrease;
           }
           ai.setOperation(ao);
           ai.setPreviousStaticWeight(preC.getStaticWeight());
@@ -86,7 +86,7 @@ public class PortfolioAdjustmentHelper {
         .filter(c -> c.getOperation() != AdjustmentOperation.Unchanged)
         .collect(Collectors.toList());
 
-    List<AdjustmentInfo> aisAdded = addedIds
+    List<AdjustmentInfo> aisAdded = addedSymbols
         .stream()
         .map(i -> {
           Constituent c = curConsMap.get(i);
@@ -103,7 +103,7 @@ public class PortfolioAdjustmentHelper {
         })
         .collect(Collectors.toList());
 
-    List<AdjustmentInfo> aisPopped = poppedIds
+    List<AdjustmentInfo> aisPopped = poppedSymbols
         .stream()
         .map(i -> {
           Constituent c = preConsMap.get(i);

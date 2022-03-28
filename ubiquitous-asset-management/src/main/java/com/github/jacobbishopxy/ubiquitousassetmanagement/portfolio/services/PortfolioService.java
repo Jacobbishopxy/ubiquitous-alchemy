@@ -352,7 +352,7 @@ public class PortfolioService {
 					return List.of();
 				});
 
-		// get all unsettled data
+		// get all unsettled constituents, which also represents the current portfolio
 		List<Constituent> unsettledCons = constituentService
 				.getConstituentsByAdjustmentRecordId(unsettledArId);
 

@@ -32,7 +32,7 @@ public class PromotionRecord {
 
   @Id
   @Column(columnDefinition = "serial")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
   @ManyToOne(fetch = FetchType.EAGER)
