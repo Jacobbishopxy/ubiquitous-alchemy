@@ -14,8 +14,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Schema(name = "PortfolioPactInput", description = "Pact input")
 public record PactInput(
 		String alias,
-		String promoter,
-		String industry,
+		String promoterName,
+		String industryName,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate startDate,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate endDate,
 		String description) {

@@ -82,20 +82,20 @@ public class PactController {
   @Operation(summary = "Create a new pact.")
   PactOutput createPortfolioPact(@RequestBody PactInput dto) {
     Promoter promoter = pService
-        .getPromoterByNickname(dto.promoter())
+        .getPromoterByNickname(dto.promoterName())
         .orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND, String.format("Promoter nickname: %s not found", dto.promoter())));
+            HttpStatus.NOT_FOUND, String.format("Promoter nickname: %s not found", dto.promoterName())));
 
     IndustryInfo indInfo = iiService
-        .getIndustryInfoByName(dto.industry())
+        .getIndustryInfoByName(dto.industryName())
         .orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND, String.format("Industry name: %s not found", dto.industry())));
+            HttpStatus.NOT_FOUND, String.format("Industry name: %s not found", dto.industryName())));
 
     Pact pp = Pact.fromPortfolioPactDto(dto, promoter, indInfo);
 
     pp = ppService.createPact(pp);
 
-    return PactOutput.fromPortfolioPact(pp, dto.promoter(), dto.industry());
+    return PactOutput.fromPortfolioPact(pp, dto.promoterName(), dto.industryName());
   }
 
   @PutMapping(value = "/pact/{id}")
@@ -104,14 +104,14 @@ public class PactController {
       @PathVariable("id") Long id,
       @RequestBody PactInput dto) {
     Promoter promoter = pService
-        .getPromoterByNickname(dto.promoter())
+        .getPromoterByNickname(dto.promoterName())
         .orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND, String.format("Promoter nickname: %s not found", dto.promoter())));
+            HttpStatus.NOT_FOUND, String.format("Promoter nickname: %s not found", dto.promoterName())));
 
     IndustryInfo indInfo = iiService
-        .getIndustryInfoByName(dto.industry())
+        .getIndustryInfoByName(dto.industryName())
         .orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND, String.format("Industry name: %s not found", dto.industry())));
+            HttpStatus.NOT_FOUND, String.format("Industry name: %s not found", dto.industryName())));
 
     Pact pp = Pact.fromPortfolioPactDto(dto, promoter, indInfo);
 
@@ -120,7 +120,7 @@ public class PactController {
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("PortfolioPact id: %s not found", id)));
 
-    return PactOutput.fromPortfolioPact(pp, dto.promoter(), dto.industry());
+    return PactOutput.fromPortfolioPact(pp, dto.promoterName(), dto.industryName());
   }
 
   @DeleteMapping(value = "/pact/{id}")
