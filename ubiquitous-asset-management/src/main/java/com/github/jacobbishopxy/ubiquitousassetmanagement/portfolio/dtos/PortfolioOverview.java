@@ -7,6 +7,7 @@ package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dtos;
 import java.time.LocalDate;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AccumulatedPerformance;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Performance;
@@ -27,13 +28,17 @@ public record PortfolioOverview(
 		Float portfolioEarningsYield,
 		Float benchmarkEarningsYield,
 		Float alpha,
+		Float accumulatedPortfolioEarningsYield,
+		Float accumulatedBenchmarkEarningsYield,
+		Float accumulatedAlpha,
 		@JsonFormat(pattern = Constants.DATE_FORMAT) LocalDate adjustDate,
 		Integer adjustVersion,
 		Boolean isAdjusted) {
 
 	public static PortfolioOverview fromPactAndPerformance(
 			Pact pact,
-			Performance performance) {
+			Performance performance,
+			AccumulatedPerformance accumulatedPerformance) {
 
 		AdjustmentRecord ar = performance.getAdjustmentRecord();
 
@@ -49,6 +54,9 @@ public record PortfolioOverview(
 				performance.getPortfolioEarningsYield(),
 				performance.getBenchmarkEarningsYield(),
 				performance.getAlpha(),
+				accumulatedPerformance.getPortfolioEarningsYield(),
+				accumulatedPerformance.getBenchmarkEarningsYield(),
+				accumulatedPerformance.getAlpha(),
 				ar.getAdjustDate(),
 				ar.getAdjustVersion(),
 				ar.getIsAdjusted());

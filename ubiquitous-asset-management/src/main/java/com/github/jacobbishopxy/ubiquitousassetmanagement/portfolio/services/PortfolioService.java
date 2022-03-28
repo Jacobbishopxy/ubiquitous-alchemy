@@ -104,11 +104,22 @@ public class PortfolioService {
 
 		List<Performance> pfm = performanceService.getPerformancesByAdjustmentRecordIds(arIds);
 
+		// TODO:
+		// performance & accumulated alignment
+
+		// List<AccumulatedPerformance> apfm =
+		// accumulatedPerformanceRepository.findAllByPactIdIn(arIds);
+
 		return pfm
 				.stream()
 				.map(p -> {
 					Pact pact = p.getAdjustmentRecord().getPact();
-					return PortfolioOverview.fromPactAndPerformance(pact, p);
+					// AccumulatedPerformance ap =
+					// p.getAccumulatedPerformance(pact.getId()).orElse(new
+					// AccumulatedPerformance());
+					AccumulatedPerformance ap = new AccumulatedPerformance();
+
+					return PortfolioOverview.fromPactAndPerformance(pact, p, ap);
 				})
 				.collect(Collectors.toList());
 	}
@@ -135,12 +146,18 @@ public class PortfolioService {
 		return adjustmentRecordService
 				.getARById(adjustmentRecordId)
 				.flatMap(ar -> {
-					return performanceService
+					Pact pact = ar.getPact();
+					Performance pfm = performanceService
 							.getPerformanceByAdjustmentRecordId(ar.getId())
-							.map(p -> {
-								Pact pact = ar.getPact();
-								return PortfolioOverview.fromPactAndPerformance(pact, p);
-							});
+							.orElseThrow(() -> new RuntimeException(
+									"No performance found for adjustment record id: " + ar.getId()));
+
+					AccumulatedPerformance accPfm = accumulatedPerformanceRepository
+							.findByPactId(pact.getId())
+							.orElseThrow(() -> new RuntimeException(
+									"No accumulated performance found for pact id: " + pact.getId()));
+
+					return Optional.of(PortfolioOverview.fromPactAndPerformance(pact, pfm, accPfm));
 				});
 	}
 

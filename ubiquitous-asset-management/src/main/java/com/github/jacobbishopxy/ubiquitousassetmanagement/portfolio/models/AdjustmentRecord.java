@@ -46,7 +46,7 @@ public class AdjustmentRecord {
   @Column(nullable = true)
   private Boolean isUnsettled;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private Boolean isAdjusted;
 
   // =======================================================================

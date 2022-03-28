@@ -12,6 +12,7 @@
 	"gopls": {
 		"experimentalWorkspaceModule": true
 	},
+	"java.trace.server": "verbose",
 	"cSpell.words": [
 		"Actix",
 		"Cyberbrick",
