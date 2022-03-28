@@ -21,7 +21,7 @@ public class Performance {
 
   @Id
   @Column(columnDefinition = "serial")
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   @ManyToOne(fetch = FetchType.EAGER)

@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty;
 public class IndustryInfo {
   @Id
   @Column(columnDefinition = "serial")
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Integer id;
 
   @Column(nullable = false, unique = true)
