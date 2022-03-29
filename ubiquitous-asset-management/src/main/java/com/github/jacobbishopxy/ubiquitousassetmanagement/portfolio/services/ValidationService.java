@@ -39,7 +39,7 @@ public class ValidationService {
         .mapToDouble(Benchmark::getStaticWeight)
         .sum();
 
-    if (totalWeight < 0 || totalWeight > 1) {
+    if (totalWeight < 0 || totalWeight > 1.1) {
       throw new RuntimeException(String.format(
           "Total weight of benchmarks is %f, which is out of range [0, 1]", totalWeight));
     }
@@ -51,7 +51,7 @@ public class ValidationService {
         .mapToDouble(Constituent::getStaticWeight)
         .sum();
 
-    if (totalWeight < 0 || totalWeight > 1) {
+    if (totalWeight < 0 || totalWeight > 1.1) {
       throw new RuntimeException(String.format(
           "Total weight of constituents is %f, which is out of range [0, 1]", totalWeight));
     }

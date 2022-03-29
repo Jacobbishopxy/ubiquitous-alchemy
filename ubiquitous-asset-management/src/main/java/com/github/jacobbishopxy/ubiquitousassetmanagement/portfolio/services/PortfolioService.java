@@ -85,6 +85,9 @@ public class PortfolioService {
 	@Autowired
 	private AccumulatedPerformanceRepository accumulatedPerformanceRepository;
 
+	@Autowired
+	private ValidationService validationService;
+
 	// =======================================================================
 	// Query methods
 	// =======================================================================
@@ -393,6 +396,8 @@ public class PortfolioService {
 					return newC;
 				})
 				.collect(Collectors.toList());
+		// validate unsettled constituents
+		validationService.checkConstituentsTotalWeightIsWithinRange(newCons);
 		newCons = constituentRepository.saveAll(newCons);
 
 		// copy benchmarks, bind to new adjustment record and save
@@ -409,6 +414,8 @@ public class PortfolioService {
 					return newB;
 				})
 				.collect(Collectors.toList());
+		// validate unsettled benchmarks
+		validationService.checkBenchmarksTotalWeightIsWithinRange(newBms);
 		newBms = benchmarkRepository.saveAll(newBms);
 
 		// copy performance, bind to new adjustment record and save

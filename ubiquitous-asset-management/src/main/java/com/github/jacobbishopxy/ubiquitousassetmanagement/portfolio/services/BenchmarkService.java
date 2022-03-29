@@ -27,9 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class BenchmarkService {
 
   @Autowired
-  private ValidationService validationService;
-
-  @Autowired
   private BenchmarkRepository bRepo;
 
   @Autowired
@@ -72,7 +69,6 @@ public class BenchmarkService {
     // 2. recalculate all benchmarks and their related performance
     BenchmarksResult res = PortfolioCalculationHelper
         .modifyBenchmarksAndCalculateBenchmarkEarningsYield(benchmarks);
-    validationService.checkBenchmarksTotalWeightIsWithinRange(res.benchmarks());
 
     // 3. update all benchmarks' dynamic weight
     bRepo.saveAll(res.benchmarks());
@@ -103,7 +99,6 @@ public class BenchmarkService {
     // IMPORTANT: benchmark's adjustmentRecord id cannot be null. In other words,
     // it must have an adjustmentRecord to create a benchmark.
     Long adjustmentRecordId = benchmark.getAdjRecordId();
-    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordId);
 
     // 1. save benchmark.
     Benchmark newB = bRepo.save(benchmark);
@@ -128,7 +123,6 @@ public class BenchmarkService {
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("All benchmarks must have the same adjustment record id");
     }
-    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordIds.get(0));
 
     // 1. save benchmarks
     List<Benchmark> newBs = bRepo.saveAll(benchmarks);
@@ -143,7 +137,6 @@ public class BenchmarkService {
   public Optional<Benchmark> updateBenchmark(Long id, Benchmark benchmark) {
     // 0. validate benchmark
     Long adjustmentRecordId = benchmark.getAdjRecordId();
-    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordId);
 
     // 1. update benchmark
     bRepo
@@ -176,7 +169,6 @@ public class BenchmarkService {
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("All benchmarks must have the same adjustment record id");
     }
-    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordIds.get(0));
 
     // 1. only modify benchmarks that are in the database
     List<Long> ids = benchmarks
@@ -206,10 +198,6 @@ public class BenchmarkService {
     return bRepo
         .findById(id)
         .map(b -> {
-          // validate benchmark
-          Long adjustmentRecordId = b.getAdjRecordId();
-          validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordId);
-
           if (dto.percentageChange() != null) {
             b.setPercentageChange(dto.percentageChange());
           }
@@ -224,7 +212,6 @@ public class BenchmarkService {
         .findById(id)
         .orElseThrow(() -> new RuntimeException(String.format("Benchmark %d not found", id)));
     Long adjustmentRecordId = b.getAdjRecordId();
-    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordId);
 
     // 1. delete benchmark
     bRepo.deleteById(id);
@@ -245,7 +232,6 @@ public class BenchmarkService {
     if (uniqueARIds.size() != 1) {
       throw new IllegalArgumentException("All benchmarks must have the same adjustment record id");
     }
-    validationService.checkAdjustmentRecordIsUnsettled(adjustmentRecordIds.get(0));
 
     // 1. delete benchmarks
     bRepo.deleteAll(bms);

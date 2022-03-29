@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentInfo;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.Constituent;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models.fields.AdjustmentOperation;
 import com.google.common.collect.HashBiMap;
@@ -37,6 +38,12 @@ public class PortfolioAdjustmentHelper {
   public static List<AdjustmentInfo> adjust(
       List<Constituent> preCons,
       List<Constituent> curCons) {
+
+    if (preCons.size() < 1 || curCons.size() < 1) {
+      throw new IllegalArgumentException("Constituents must be non-empty");
+    }
+
+    final AdjustmentRecord curAr = curCons.get(0).getAdjustmentRecord();
 
     Map<String, Constituent> preConsMap = HashBiMap
         .create(preCons
@@ -66,7 +73,7 @@ public class PortfolioAdjustmentHelper {
 
           AdjustmentInfo ai = new AdjustmentInfo();
           // NOTICE: adjustment should use the current adjustment record
-          ai.setAdjustmentRecord(curC.getAdjustmentRecord());
+          ai.setAdjustmentRecord(curAr);
           ai.setAdjustTime(LocalTime.now());
           ai.setSymbol(preC.getSymbol());
           ai.setAbbreviation(preC.getAbbreviation());
@@ -92,7 +99,8 @@ public class PortfolioAdjustmentHelper {
         .map(i -> {
           Constituent c = curConsMap.get(i);
           AdjustmentInfo ai = new AdjustmentInfo();
-          ai.setAdjustmentRecord(c.getAdjustmentRecord());
+          // NOTICE: adjustment should use the current adjustment record
+          ai.setAdjustmentRecord(curAr);
           ai.setAdjustTime(LocalTime.now());
           ai.setSymbol(c.getSymbol());
           ai.setAbbreviation(c.getAbbreviation());
@@ -108,10 +116,9 @@ public class PortfolioAdjustmentHelper {
         .stream()
         .map(i -> {
           Constituent c = preConsMap.get(i);
-          Constituent curC = curConsMap.get(i);
           AdjustmentInfo ai = new AdjustmentInfo();
           // NOTICE: adjustment should use the current adjustment record
-          ai.setAdjustmentRecord(curC.getAdjustmentRecord());
+          ai.setAdjustmentRecord(curAr);
           ai.setAdjustTime(LocalTime.now());
           ai.setSymbol(c.getSymbol());
           ai.setAbbreviation(c.getAbbreviation());
