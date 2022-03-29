@@ -65,7 +65,8 @@ public class PortfolioAdjustmentHelper {
           Constituent curC = curConsMap.get(i);
 
           AdjustmentInfo ai = new AdjustmentInfo();
-          ai.setAdjustmentRecord(preC.getAdjustmentRecord());
+          // NOTICE: adjustment should use the current adjustment record
+          ai.setAdjustmentRecord(curC.getAdjustmentRecord());
           ai.setAdjustTime(LocalTime.now());
           ai.setSymbol(preC.getSymbol());
           ai.setAbbreviation(preC.getAbbreviation());
@@ -107,8 +108,10 @@ public class PortfolioAdjustmentHelper {
         .stream()
         .map(i -> {
           Constituent c = preConsMap.get(i);
+          Constituent curC = curConsMap.get(i);
           AdjustmentInfo ai = new AdjustmentInfo();
-          ai.setAdjustmentRecord(c.getAdjustmentRecord());
+          // NOTICE: adjustment should use the current adjustment record
+          ai.setAdjustmentRecord(curC.getAdjustmentRecord());
           ai.setAdjustTime(LocalTime.now());
           ai.setSymbol(c.getSymbol());
           ai.setAbbreviation(c.getAbbreviation());
