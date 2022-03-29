@@ -5,6 +5,7 @@
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.Constants;
 
@@ -83,6 +84,12 @@ public class Constituent {
   @Column(nullable = false)
   @NotEmpty
   private Float earningsYield;
+
+  @JsonFormat(pattern = Constants.DATETIME_FORMAT)
+  private LocalDateTime createdAt;
+
+  @JsonFormat(pattern = Constants.DATETIME_FORMAT)
+  private LocalDateTime updatedAt;
 
   // =======================================================================
   // Constructors
@@ -261,6 +268,24 @@ public class Constituent {
 
   public void setEarningsYield(Float earningsYield) {
     this.earningsYield = earningsYield;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  @PrePersist
+  protected void onCreate() {
+    createdAt = LocalDateTime.now();
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = LocalDateTime.now();
   }
 
 }

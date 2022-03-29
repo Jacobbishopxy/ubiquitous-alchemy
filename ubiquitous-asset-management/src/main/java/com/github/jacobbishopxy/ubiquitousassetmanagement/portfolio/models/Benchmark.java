@@ -5,6 +5,7 @@
 package com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -60,6 +61,12 @@ public class Benchmark {
   @NotEmpty
   @Schema(description = "The dynamic weight of this portfolio record.", required = true)
   private Float dynamicWeight;
+
+  @JsonFormat(pattern = Constants.DATETIME_FORMAT)
+  private LocalDateTime createdAt;
+
+  @JsonFormat(pattern = Constants.DATETIME_FORMAT)
+  private LocalDateTime updatedAt;
 
   // =======================================================================
   // Constructors
@@ -172,6 +179,24 @@ public class Benchmark {
 
   public void setDynamicWeight(Float dynamicWeight) {
     this.dynamicWeight = dynamicWeight;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  @PrePersist
+  protected void onCreate() {
+    createdAt = LocalDateTime.now();
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = LocalDateTime.now();
   }
 
 }
