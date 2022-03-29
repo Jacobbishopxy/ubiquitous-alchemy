@@ -440,9 +440,6 @@ public class PortfolioService {
 				.orElseThrow(() -> new RuntimeException(
 						"No latest adjustment record found for pactId: " + pactId));
 
-		// delete the latest adjustment record
-		adjustmentRecordService.deleteAR(ar.getId());
-
 		// delete benchmarks
 		benchmarkService.deleteBenchmarksByAdjustmentRecordId(ar.getId());
 
@@ -457,6 +454,12 @@ public class PortfolioService {
 		Pact pact = new Pact(pactId);
 		AccumulatedPerformance ap = recalculateAccumulatedPerformance(false, pact, isAdjusted);
 		accumulatedPerformanceRepository.save(ap);
+
+		// delete adjustment info
+		adjustmentInfoService.deleteAdjustmentInfosByAdjustmentRecordId(ar.getId());
+
+		// delete the latest adjustment record
+		adjustmentRecordService.deleteAR(ar.getId());
 	}
 
 }

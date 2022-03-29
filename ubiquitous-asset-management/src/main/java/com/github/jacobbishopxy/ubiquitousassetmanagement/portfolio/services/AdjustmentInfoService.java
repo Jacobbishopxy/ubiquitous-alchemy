@@ -84,4 +84,8 @@ public class AdjustmentInfoService {
   public void deleteAdjustmentInfo(Long id) {
     aRepo.deleteById(id);
   }
+
+  public void deleteAdjustmentInfosByAdjustmentRecordId(Long adjustmentRecordId) {
+    aRepo.deleteByAdjustmentRecordId(adjustmentRecordId);
+  }
 }

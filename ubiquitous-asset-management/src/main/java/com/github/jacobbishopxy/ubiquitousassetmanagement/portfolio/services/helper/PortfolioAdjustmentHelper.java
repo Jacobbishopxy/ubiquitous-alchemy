@@ -39,7 +39,7 @@ public class PortfolioAdjustmentHelper {
       List<Constituent> preCons,
       List<Constituent> curCons) {
 
-    if (preCons.size() < 1 || curCons.size() < 1) {
+    if (curCons.isEmpty()) {
       throw new IllegalArgumentException("Constituents must be non-empty");
     }
 
