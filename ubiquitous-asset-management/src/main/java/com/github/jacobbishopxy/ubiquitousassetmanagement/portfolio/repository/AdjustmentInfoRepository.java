@@ -27,6 +27,7 @@ public interface AdjustmentInfoRepository
       FROM AdjustmentInfo ai
       """;
 
+  @Query(queryDescSort)
   List<AdjustmentInfo> findAllDescSort(Pageable pageable);
 
   void deleteByAdjustmentRecordId(Long adjustmentRecordId);
