@@ -40,7 +40,7 @@ public class PromotionStatisticController {
 
   @GetMapping("/statistic_count")
   @Operation(description = "Count promotion statistics by promotion pact name.")
-  Integer countPromotionStatistics(@RequestParam String promotionPactName) {
+  Integer countPromotionStatistics(@RequestParam(value = "promotion_pact_name") String promotionPactName) {
     return promotionStatisticService.countByPromotionPactName(promotionPactName);
   }
 
