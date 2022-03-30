@@ -32,10 +32,19 @@ public class AdjustmentInfoController {
   // =======================================================================
 
   @GetMapping("/adjustment_infos")
-  @Operation(summary = "Get all adjustment info.")
+  @Operation(summary = "Get all adjustment infos by adjustment record id.")
   List<AdjustmentInfo> getAdjustmentInfosByAdjustmentRecordId(
       @RequestParam(value = "adjustment_record_id", required = true) Long adjustmentRecordId) {
     return aService.getAdjustmentInfosByAdjustmentRecordId(adjustmentRecordId);
+  }
+
+  @GetMapping("/adjustment_infos/overview")
+  @Operation(summary = "Get all adjustment infos sorted by descend time.")
+  List<AdjustmentInfo> getAdjustmentInfosOverview(
+      @RequestParam(value = "page", required = false) Integer page,
+      @RequestParam(value = "size", required = false) Integer size) {
+
+    throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Not implemented yet");
   }
 
   @GetMapping("/adjustment_info/{id}")

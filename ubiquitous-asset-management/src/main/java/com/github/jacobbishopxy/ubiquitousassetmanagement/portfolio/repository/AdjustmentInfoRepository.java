@@ -8,12 +8,26 @@ import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.domain.AdjustmentInfo;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
-public interface AdjustmentInfoRepository extends JpaRepository<AdjustmentInfo, Long> {
+public interface AdjustmentInfoRepository
+    extends JpaRepository<AdjustmentInfo, Long>, JpaSpecificationExecutor<AdjustmentInfo> {
 
   List<AdjustmentInfo> findByAdjustmentRecordId(Long adjustmentRecordId);
+
+  // TODO:
+  // 1. sort by portfolio_adjustment_record's adjust_date desc, adjust_version
+  // desc, and is_adjusted = true
+  // 2. take sorted portfolio_adjustment_record's id and query
+  // portfolio_adjustment_info
+  final String queryDescSort = """
+      SELECT ai
+      FROM AdjustmentInfo ai
+      """;
+
+  List<AdjustmentInfo> findAllDescSort(Pageable pageable);
 
   void deleteByAdjustmentRecordId(Long adjustmentRecordId);
 

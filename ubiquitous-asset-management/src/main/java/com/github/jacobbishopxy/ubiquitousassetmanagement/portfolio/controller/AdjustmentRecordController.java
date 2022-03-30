@@ -34,7 +34,7 @@ public class AdjustmentRecordController {
   @GetMapping("/adjustment_records")
   @Operation(summary = "Get all adjustment records by pact id with pagination.")
   List<AdjustmentRecord> getAdjustmentRecords(
-      @RequestParam(value = "pactId", required = true) Long pactId,
+      @RequestParam(value = "pact_id", required = true) Long pactId,
       @RequestParam("page") Integer page,
       @RequestParam("size") Integer size) {
 
@@ -58,7 +58,7 @@ public class AdjustmentRecordController {
   @GetMapping("/adjustment_record/unsettled")
   @Operation(summary = "Get unsettled adjustment record by pact id.")
   AdjustmentRecord getUnsettledAdjustmentRecord(
-      @RequestParam(value = "pactId", required = true) Long pactId) {
+      @RequestParam(value = "pact_id", required = true) Long pactId) {
     return arService
         .getUnsettledAR(pactId)
         .orElseThrow(() -> new ResponseStatusException(
@@ -69,7 +69,7 @@ public class AdjustmentRecordController {
   @GetMapping("/adjustment_records/unsettled")
   @Operation(summary = "Get unsettled adjustment records by pact ids.")
   List<AdjustmentRecord> getUnsettledAdjustmentRecords(
-      @RequestParam(value = "pactIds", required = true) List<Long> pactIds) {
+      @RequestParam(value = "pact_ids", required = true) List<Long> pactIds) {
     return arService.getUnsettledARs(pactIds);
   }
 

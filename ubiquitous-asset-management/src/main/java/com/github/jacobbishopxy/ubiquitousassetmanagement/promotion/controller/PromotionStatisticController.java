@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * PromotionStatisticController
- * 
+ *
  * PromotionStatistic related operations. Notice that PromotionStatistic is
  * automatically modified by PromotionRecord, hence only GET methods are
  * supported.
@@ -47,8 +47,8 @@ public class PromotionStatisticController {
   @GetMapping("/statistic")
   @Operation(summary = "Get promotion statistics.", description = "`promotionPactName` and `promoterName` are optional, but they cannot exist at the same time.")
   List<PromotionStatisticOutput> getPromotionStatistics(
-      @RequestParam(required = false) String promotionPactName,
-      @RequestParam(required = false) String promoterName) {
+      @RequestParam(value = "promotion_pact_name", required = false) String promotionPactName,
+      @RequestParam(value = "promoter_name", required = false) String promoterName) {
     // initialize the search result
     List<PromotionStatistic> ps;
 

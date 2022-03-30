@@ -12,6 +12,7 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dto.Adjustme
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repository.AdjustmentInfoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,6 +36,10 @@ public class AdjustmentInfoService {
 
   public Optional<AdjustmentInfo> getAdjustmentInfoById(Long id) {
     return aRepo.findById(id);
+  }
+
+  public List<AdjustmentInfo> getAISortDesc(Long adjustmentRecordId, Pageable pageable) {
+    throw new UnsupportedOperationException();
   }
 
   // =======================================================================
