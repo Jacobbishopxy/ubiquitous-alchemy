@@ -44,7 +44,7 @@ public class PromotionRecordController {
 
   @GetMapping("/record_count")
   @Operation(summary = "Count promotion records by promotion pact name.")
-  long countPromotionRecords(@RequestParam String promotionPactName) {
+  long countPromotionRecords(@RequestParam(value = "promotion_pact_name") String promotionPactName) {
     return promotionRecordService
         .countPromotionRecordsByPromotionPactName(promotionPactName);
   }
