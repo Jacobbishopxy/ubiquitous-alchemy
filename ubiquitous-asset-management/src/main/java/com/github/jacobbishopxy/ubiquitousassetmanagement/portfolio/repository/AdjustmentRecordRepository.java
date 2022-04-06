@@ -36,6 +36,19 @@ public interface AdjustmentRecordRepository
 	@Query(value = queryDescSort)
 	List<AdjustmentRecord> findByPactIdDescSort(Long pactId, Pageable pageable);
 
+	// sort by adjust_date desc and adjust_version desc, and filter by is_adjusted
+	// (current snapshot will still be displayed)
+	final String queryDescSortAndIsAdjusted = """
+			SELECT ar
+			FROM AdjustmentRecord ar
+			WHERE ar.pact.id = ?1
+			AND (ar.isAdjusted = true OR ar.isUnsettled = true)
+			ORDER BY ar.adjustDate DESC, ar.adjustVersion DESC
+			""";
+
+	@Query(value = queryDescSortAndIsAdjusted)
+	List<AdjustmentRecord> findByPactIdDescSortAndIsAdjustedTrue(Long pactId, Pageable pageable);
+
 	final String queryUnsettledByPactId = """
 			SELECT p
 			FROM AdjustmentRecord p

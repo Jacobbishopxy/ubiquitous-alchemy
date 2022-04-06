@@ -55,6 +55,7 @@ public class PortfolioController {
   @Operation(summary = "Get all adjustment records by pact id.")
   List<AdjustmentRecord> getAdjustmentRecordsByPactId(
       @RequestParam(value = "pact_id", required = true) Long pactId,
+      @RequestParam(value = "is_adjusted", required = false) Boolean isAdjusted,
       @RequestParam(value = "page", required = false) Integer page,
       @RequestParam(value = "size", required = false) Integer size) {
 
@@ -63,7 +64,7 @@ public class PortfolioController {
       pr = PageRequest.of(page, size);
     }
 
-    return portfolioService.getAdjustmentRecordsByPactId(pactId, pr);
+    return portfolioService.getAdjustmentRecordsByPactId(pactId, pr, isAdjusted);
   }
 
   @GetMapping("/portfolio_detail/unsettled")

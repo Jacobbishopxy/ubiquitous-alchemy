@@ -35,12 +35,17 @@ public class AdjustmentRecordController {
   @Operation(summary = "Get all adjustment records by pact id with pagination.")
   List<AdjustmentRecord> getAdjustmentRecords(
       @RequestParam(value = "pact_id", required = true) Long pactId,
+      @RequestParam(value = "is_adjusted", required = false) Boolean isAdjusted,
       @RequestParam("page") Integer page,
       @RequestParam("size") Integer size) {
 
     PageRequest pr = null;
     if (page != null && size != null) {
       pr = PageRequest.of(page, size);
+    }
+
+    if (isAdjusted == true) {
+      return arService.getARSortDescAndIsAdjustedTrue(pactId, pr);
     }
 
     return arService.getARSortDesc(pactId, pr);

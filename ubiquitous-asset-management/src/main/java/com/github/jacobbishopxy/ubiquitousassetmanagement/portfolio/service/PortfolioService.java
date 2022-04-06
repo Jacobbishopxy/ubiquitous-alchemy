@@ -137,7 +137,13 @@ public class PortfolioService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<AdjustmentRecord> getAdjustmentRecordsByPactId(Long pactId, Pageable pageable) {
+	public List<AdjustmentRecord> getAdjustmentRecordsByPactId(Long pactId, Pageable pageable, Boolean isAdjusted) {
+		if (isAdjusted != null) {
+			if (isAdjusted == true) {
+				return adjustmentRecordService.getARSortDescAndIsAdjustedTrue(pactId, pageable);
+			}
+		}
+
 		return adjustmentRecordService.getARSortDesc(pactId, pageable);
 	}
 

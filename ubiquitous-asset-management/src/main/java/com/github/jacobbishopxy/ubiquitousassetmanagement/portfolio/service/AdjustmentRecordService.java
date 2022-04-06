@@ -44,6 +44,10 @@ public class AdjustmentRecordService {
     return arRepo.findByPactIdDescSort(pactId, pageable);
   }
 
+  public List<AdjustmentRecord> getARSortDescAndIsAdjustedTrue(Long pactId, Pageable pageable) {
+    return arRepo.findByPactIdDescSortAndIsAdjustedTrue(pactId, pageable);
+  }
+
   public List<AdjustmentRecord> getUnsettledARs(List<Long> pactIds) {
     return arRepo.findUnsettledByPactIds(pactIds);
   }
