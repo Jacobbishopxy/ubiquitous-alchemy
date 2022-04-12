@@ -15,6 +15,7 @@
 	"java.trace.server": "verbose",
 	"cSpell.words": [
 		"Actix",
+		"Configurer",
 		"Cyberbrick",
 		"datetime",
 		"FILEBROWSER",

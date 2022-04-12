@@ -1,8 +1,10 @@
 /**
- * Created by Jacob Xie on 2/14/2022.
+ * Created by Jacob Xie on 4/12/2022.
  */
 
-package com.github.jacobbishopxy.ubiquitousassetmanagement.config;
+package com.github.jacobbishopxy.ubiquitousauth.config;
+
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,12 +14,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableJpaRepositories
 @PropertySource("classpath:persistence.properties")
-public class DbConfig {
+public class DBConfig {
 
   @Autowired
   private Environment env;
@@ -31,4 +31,5 @@ public class DbConfig {
     dataSource.setPassword(env.getProperty("password"));
     return dataSource;
   }
+
 }
