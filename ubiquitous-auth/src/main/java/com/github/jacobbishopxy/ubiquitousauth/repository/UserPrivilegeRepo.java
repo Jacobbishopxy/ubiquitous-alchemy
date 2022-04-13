@@ -6,11 +6,13 @@ package com.github.jacobbishopxy.ubiquitousauth.repository;
 
 import java.util.Optional;
 
+import com.github.jacobbishopxy.ubiquitousauth.domain.UserPrivilege;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserPrivilegeRepo extends JpaRepository<UserPrivilegeRepo, Integer> {
+public interface UserPrivilegeRepo extends JpaRepository<UserPrivilege, Integer> {
 
-  Optional<UserPrivilegeRepo> findByName(String name);
+  Optional<UserPrivilege> findByName(String name);
 
   void deleteByName(String name);
 

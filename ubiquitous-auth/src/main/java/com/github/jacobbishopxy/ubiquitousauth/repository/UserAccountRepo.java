@@ -4,6 +4,7 @@
 
 package com.github.jacobbishopxy.ubiquitousauth.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.github.jacobbishopxy.ubiquitousauth.domain.UserAccount;
@@ -19,5 +20,7 @@ public interface UserAccountRepo extends JpaRepository<UserAccount, Integer> {
   void deleteByEmail(String email);
 
   void deleteByUsername(String username);
+
+  List<UserAccount> findAllByActiveEquals(boolean active);
 
 }
