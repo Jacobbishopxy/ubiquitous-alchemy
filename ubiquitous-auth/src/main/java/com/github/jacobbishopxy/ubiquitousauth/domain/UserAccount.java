@@ -5,6 +5,7 @@
 package com.github.jacobbishopxy.ubiquitousauth.domain;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
@@ -105,5 +106,13 @@ public class UserAccount {
         .append("]");
 
     return builder.toString();
+  }
+
+  // get all privileges of all roles
+  public Collection<UserPrivilege> getPrivileges() {
+    return roles
+        .stream()
+        .flatMap(role -> role.getPrivileges().stream())
+        .collect(Collectors.toList());
   }
 }
