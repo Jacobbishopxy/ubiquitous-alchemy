@@ -4,6 +4,8 @@
 
 package com.github.jacobbishopxy.ubiquitousauth.config;
 
+import com.github.jacobbishopxy.ubiquitousauth.security.CustomCasService;
+
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.jasig.cas.client.validation.TicketValidator;
@@ -30,6 +32,9 @@ public class CasConfig {
 
   @Value("${baseUrl}")
   private String baseUrl;
+
+  @Value("${casKey}")
+  private String casKey;
 
   @Bean
   public AuthenticationEntryPoint authenticationEntryPoint() {
@@ -67,18 +72,18 @@ public class CasConfig {
     return new Cas20ServiceTicketValidator(casServerUrl);
   }
 
-  // @Bean
-  // public CustomCasService customCasService() {
-  // return new CustomCasService();
-  // }
+  @Bean
+  public CustomCasService customCasService() {
+    return new CustomCasService();
+  }
 
   @Bean
   public CasAuthenticationProvider casAuthenticationProvider() {
     CasAuthenticationProvider provider = new CasAuthenticationProvider();
     provider.setServiceProperties(this.serviceProperties());
     provider.setTicketValidator(this.ticketValidator());
-    // provider.setAuthenticationUserDetailsService(customCasService());
-    provider.setKey("CAS_PROVIDER_LOCALHOST");
+    provider.setAuthenticationUserDetailsService(customCasService());
+    provider.setKey(casKey);
     return provider;
   }
 

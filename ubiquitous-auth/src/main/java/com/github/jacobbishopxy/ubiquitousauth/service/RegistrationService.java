@@ -59,6 +59,10 @@ public class RegistrationService {
     return userAccountRepo.findById(id);
   }
 
+  public Optional<UserAccount> getUserByUsername(String username) {
+    return userAccountRepo.findByUsername(username);
+  }
+
   public Optional<FlattenedUserAccount> getUserByIdInFlattenedForm(Integer id) {
     return userAccountRepo
         .findById(id)
