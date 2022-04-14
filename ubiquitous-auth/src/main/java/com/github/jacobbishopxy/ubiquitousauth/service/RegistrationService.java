@@ -166,4 +166,10 @@ public class RegistrationService {
         .ifPresent(user -> user.setActive(true));
   }
 
+  public void toggleUserActiveStatus(Integer id) {
+    userAccountRepo
+        .findById(id)
+        .ifPresent(user -> user.setActive(!user.getActive()));
+  }
+
 }
