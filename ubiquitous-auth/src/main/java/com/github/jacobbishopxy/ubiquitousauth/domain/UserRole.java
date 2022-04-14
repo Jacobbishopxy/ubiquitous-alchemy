@@ -48,6 +48,11 @@ public class UserRole {
     this.description = description;
   }
 
+  public UserRole(String name, Collection<UserPrivilege> privileges) {
+    this.name = name;
+    this.privileges = privileges;
+  }
+
   public UserRole(String name, String description, Collection<UserPrivilege> privileges) {
     this.name = name;
     this.description = description;

@@ -1,0 +1,23 @@
+initialization:
+  shouldInitialize: true
+
+  supervisorName: jacob
+  supervisorEmail: jacob@example.com
+
+  initPrivileges:
+    - read
+    - write
+    - delete
+
+  initRoles:
+    - name: visitor
+      privileges:
+        - read
+    - name: user
+      privileges:
+        - read
+        - write
+    - name: admin
+      privileges:
+        - read
+        - delete

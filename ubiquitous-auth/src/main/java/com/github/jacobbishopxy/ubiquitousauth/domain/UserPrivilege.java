@@ -41,6 +41,10 @@ public class UserPrivilege {
     this.id = id;
   }
 
+  public UserPrivilege(String name) {
+    this.name = name;
+  }
+
   public UserPrivilege(String name, String description) {
     this.name = name;
     this.description = description;
@@ -86,6 +90,27 @@ public class UserPrivilege {
 
   public void setRoles(Collection<UserRole> roles) {
     this.roles = roles;
+  }
+
+  // =======================================================================
+  // Extra
+  // =======================================================================
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (!(o instanceof UserPrivilege))
+      return false;
+
+    UserPrivilege that = (UserPrivilege) o;
+
+    return id != null && id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 
 }

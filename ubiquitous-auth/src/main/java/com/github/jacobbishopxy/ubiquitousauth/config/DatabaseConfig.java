@@ -17,7 +17,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration
 @EnableJpaRepositories
 @PropertySource("classpath:persistence.properties")
-public class DBConfig {
+public class DatabaseConfig {
 
   @Autowired
   private Environment env;

@@ -4,22 +4,35 @@
 
 package com.github.jacobbishopxy.ubiquitousauth.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import com.github.jacobbishopxy.ubiquitousauth.service.RegistrationService;
 
-@Configuration
-@PropertySource("classpath:constants.properties")
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.transaction.annotation.Transactional;
 
-public class InitDataLoader {
+public class InitDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-  @Value("${supervisorName}")
-  private String supervisorName;
+  @Autowired
+  private InitDataConfig initDataConfig;
 
-  @Value("${supervisorEmail}")
-  private String supervisorEmail;
+  @Autowired
+  private RegistrationService registrationService;
 
-  // TODO:
-  // user service
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void onApplicationEvent(final ContextRefreshedEvent event) {
+
+    if (initDataConfig.getShouldInitialize() == null) {
+      return;
+    }
+    if (!initDataConfig.getShouldInitialize()) {
+      return;
+    }
+
+    // TODO:
+    // initializing
+
+  }
 
 }

@@ -113,6 +113,6 @@ public class UserAccount {
     return roles
         .stream()
         .flatMap(role -> role.getPrivileges().stream())
-        .collect(Collectors.toList());
+        .collect(Collectors.toSet());
   }
 }

@@ -93,6 +93,12 @@ public class RegistrationService {
     return userPrivilegeRepo.save(dto.intoUserPrivilege());
   }
 
+  public UserPrivilege registerPrivilegeIfNotFound(String name) {
+    return userPrivilegeRepo
+        .findByName(name)
+        .orElseGet(() -> userPrivilegeRepo.save(new UserPrivilege(name)));
+  }
+
   public Optional<UserPrivilege> modifyPrivilege(Integer id, UserPrivilegeDto dto) {
     return userPrivilegeRepo
         .findById(id)
@@ -111,6 +117,12 @@ public class RegistrationService {
     // only valid privilege ids are allowed
     List<UserPrivilege> privileges = userPrivilegeRepo.findAllById(dto.userPrivilegeIds());
     return userRoleRepo.save(new UserRole(dto.name(), dto.description(), privileges));
+  }
+
+  public UserRole registerRoleIfNotFound(String name, List<UserPrivilege> privileges) {
+    return userRoleRepo
+        .findByName(name)
+        .orElseGet(() -> userRoleRepo.save(new UserRole(name, privileges)));
   }
 
   public Optional<UserRole> modifyRole(Integer id, UserRoleDto dto) {
@@ -134,6 +146,16 @@ public class RegistrationService {
     // only valid role ids are allowed
     List<UserRole> roles = userRoleRepo.findAllById(dto.userRoleIds());
     return userAccountRepo.save(new UserAccount(dto.username(), dto.email(), dto.active(), roles));
+  }
+
+  public UserAccount registerUserIfNotFound(
+      String username,
+      String email,
+      Boolean active,
+      List<UserRole> roles) {
+    return userAccountRepo
+        .findByUsername(username)
+        .orElseGet(() -> userAccountRepo.save(new UserAccount(username, email, active, roles)));
   }
 
   public Optional<UserAccount> modifyUser(Integer id, UserAccountDto dto) {
