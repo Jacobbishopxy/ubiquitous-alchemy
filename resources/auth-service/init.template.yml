@@ -1,0 +1,27 @@
+initialization:
+  shouldInitialize: false
+
+  initPrivileges:
+    - read
+    - write
+    - delete
+
+  initRoles:
+    - name: visitor
+      privileges:
+        - read
+    - name: user
+      privileges:
+        - read
+        - write
+    - name: admin
+      privileges:
+        - read
+        - delete
+
+  initUsers:
+    - name: jacob
+      email: jacob@example.com
+      roles:
+        - user
+        - admin

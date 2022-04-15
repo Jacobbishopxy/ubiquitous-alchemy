@@ -1,0 +1,19 @@
+version: "3.6"
+
+services:
+  auth-service:
+    restart: always
+    image: ${AS_BASE_NAME}:${AS_BASE_VERSION}
+    container_name: ${AS_API_CONTAINER_NAME}
+    ports:
+      - ${AS_API_CONTAINER_PORT}:${AS_API_CONTAINER_PORT}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${VOLUME_LOG_EXT}:${VOLUME_LOG_INN}
+    command: java -jar /app/app.jar
+    # tty: true
+
+networks:
+  default:
+    external:
+      name: prod

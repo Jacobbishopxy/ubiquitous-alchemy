@@ -27,19 +27,59 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 @PropertySource("classpath:cas.properties")
 public class CasConfig {
 
-  @Value("${casServerUrl}")
-  private String casServerUrl;
+  @Value("${casKey}")
+  private String casKey;
+
+  @Value("${casUrl}")
+  private String casUrl;
+
+  @Value("${casLoginUrl}")
+  private String casLoginUrl;
+
+  @Value("${casLogoutUrl}")
+  private String casLogoutUrl;
 
   @Value("${baseUrl}")
   private String baseUrl;
 
-  @Value("${casKey}")
-  private String casKey;
+  @Value("${baseLoginPath}")
+  private String baseLoginPath;
+
+  @Value("${baseLogoutPath}")
+  private String baseLogoutPath;
+
+  public String getCasKey() {
+    return casKey;
+  }
+
+  public String getCasUrl() {
+    return casUrl;
+  }
+
+  public String getCasLoginUrl() {
+    return casLoginUrl;
+  }
+
+  public String getCasLogoutUrl() {
+    return casLogoutUrl;
+  }
+
+  public String getBaseUrl() {
+    return baseUrl;
+  }
+
+  public String getBaseLoginPath() {
+    return baseLoginPath;
+  }
+
+  public String getBaseLogoutPath() {
+    return baseLogoutPath;
+  }
 
   @Bean
   public AuthenticationEntryPoint authenticationEntryPoint() {
     CasAuthenticationEntryPoint entryPoint = new CasAuthenticationEntryPoint();
-    entryPoint.setLoginUrl(casServerUrl + "/login");
+    entryPoint.setLoginUrl(casLoginUrl);
     entryPoint.setServiceProperties(this.serviceProperties());
     return entryPoint;
   }
@@ -62,14 +102,14 @@ public class CasConfig {
   @Bean
   public ServiceProperties serviceProperties() {
     ServiceProperties serviceProperties = new ServiceProperties();
-    serviceProperties.setService(baseUrl + "/login/cas");
+    serviceProperties.setService(baseUrl + baseLoginPath);
     serviceProperties.setSendRenew(false);
     return serviceProperties;
   }
 
   @Bean
   public TicketValidator ticketValidator() {
-    return new Cas20ServiceTicketValidator(casServerUrl);
+    return new Cas20ServiceTicketValidator(casUrl);
   }
 
   @Bean
@@ -94,8 +134,8 @@ public class CasConfig {
 
   @Bean
   LogoutFilter logoutFilter() {
-    LogoutFilter filter = new LogoutFilter(casServerUrl + "/logout", securityContextLogoutHandler());
-    filter.setFilterProcessesUrl("/logout/cas");
+    LogoutFilter filter = new LogoutFilter(casLogoutUrl, securityContextLogoutHandler());
+    filter.setFilterProcessesUrl(baseLogoutPath);
     return filter;
   }
 

@@ -4,6 +4,8 @@
 
 package com.github.jacobbishopxy.ubiquitousauth.config;
 
+import com.github.jacobbishopxy.ubiquitousauth.Constants;
+
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
@@ -15,6 +17,9 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+  @Autowired
+  private CasConfig casConfig;
 
   @Autowired
   private SingleSignOutFilter singleSignOutFilter;
@@ -35,9 +40,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .csrf().disable()
         .authorizeRequests()
-        .antMatchers("/login/cas").permitAll()
-        // TODO:
-        // any other authorized urls should be placed in here
+        .antMatchers(casConfig.getBaseLoginPath()).permitAll()
+        .antMatchers(Constants.API_VERSION + Constants.API_INFORMATION).permitAll()
+        .antMatchers(Constants.API_VERSION + Constants.API_REGISTRATION).hasRole("admin")
         .anyRequest().authenticated()
         .and()
         .httpBasic().authenticationEntryPoint(authenticationEntryPoint)
