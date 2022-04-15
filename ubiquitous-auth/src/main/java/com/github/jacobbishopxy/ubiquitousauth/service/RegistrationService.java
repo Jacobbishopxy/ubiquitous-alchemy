@@ -81,6 +81,14 @@ public class RegistrationService {
         .collect(Collectors.toList());
   }
 
+  public Optional<UserRole> getRoleById(Integer id) {
+    return userRoleRepo.findById(id);
+  }
+
+  public Optional<UserRole> getRoleByName(String name) {
+    return userRoleRepo.findByName(name);
+  }
+
   public List<UserPrivilege> getAllPrivileges() {
     return userPrivilegeRepo.findAll();
   }

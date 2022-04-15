@@ -16,10 +16,9 @@ import org.springframework.context.annotation.PropertySource;
 public class InitDataConfig {
 
   private Boolean shouldInitialize;
-  private String supervisorName;
-  private String supervisorEmail;
   private List<String> initPrivileges;
   private List<InitRole> initRoles;
+  private List<InitUser> initUsers;
 
   public static class InitRole {
     private String name;
@@ -42,6 +41,36 @@ public class InitDataConfig {
     }
   }
 
+  public static class InitUser {
+    private String name;
+    private String email;
+    private List<String> roles;
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public String getEmail() {
+      return email;
+    }
+
+    public void setEmail(String email) {
+      this.email = email;
+    }
+
+    public List<String> getRoles() {
+      return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+      this.roles = roles;
+    }
+  }
+
   // ======================== getter and setter ========================
 
   public Boolean getShouldInitialize() {
@@ -50,22 +79,6 @@ public class InitDataConfig {
 
   public void setShouldInitialize(Boolean shouldInitialize) {
     this.shouldInitialize = shouldInitialize;
-  }
-
-  public String getSupervisorName() {
-    return supervisorName;
-  }
-
-  public void setSupervisorName(String supervisorName) {
-    this.supervisorName = supervisorName;
-  }
-
-  public String getSupervisorEmail() {
-    return supervisorEmail;
-  }
-
-  public void setSupervisorEmail(String supervisorEmail) {
-    this.supervisorEmail = supervisorEmail;
   }
 
   public List<String> getInitPrivileges() {
@@ -82,6 +95,14 @@ public class InitDataConfig {
 
   public void setInitRoles(List<InitRole> initRoles) {
     this.initRoles = initRoles;
+  }
+
+  public void setInitUsers(List<InitUser> initUsers) {
+    this.initUsers = initUsers;
+  }
+
+  public List<InitUser> getInitUsers() {
+    return initUsers;
   }
 
 }

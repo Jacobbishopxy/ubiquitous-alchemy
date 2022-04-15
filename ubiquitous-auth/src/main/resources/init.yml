@@ -1,9 +1,6 @@
 initialization:
   shouldInitialize: true
 
-  supervisorName: jacob
-  supervisorEmail: jacob@example.com
-
   initPrivileges:
     - read
     - write
@@ -21,3 +18,10 @@ initialization:
       privileges:
         - read
         - delete
+
+  initUsers:
+    - name: jacob
+      email: jacob@example.com
+      roles:
+        - user
+        - admin

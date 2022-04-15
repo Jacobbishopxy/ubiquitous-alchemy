@@ -35,3 +35,4 @@ build/
 logs/*
 !logs/.gitkeep
 
+src/main/resources/cas.properties

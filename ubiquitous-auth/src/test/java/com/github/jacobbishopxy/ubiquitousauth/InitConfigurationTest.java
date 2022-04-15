@@ -27,13 +27,6 @@ public class InitConfigurationTest {
   @Test
   public void testInitDataConfig() {
     assertThat(initDataConfig.getShouldInitialize()).isTrue();
-    assertThat(initDataConfig.getSupervisorName()).isEqualTo("jacob");
-    assertThat(initDataConfig.getSupervisorEmail()).isEqualTo("jacob@example.com");
-
-    // System.out.println(initDataConfig.getShouldInitialize());
-    // System.out.println(initDataConfig.getSupervisorName());
-    // System.out.println(initDataConfig.getSupervisorEmail());
-
     assertThat(initDataConfig.getInitPrivileges().size()).isEqualTo(3);
     assertThat(initDataConfig.getInitRoles().size()).isEqualTo(3);
   }
