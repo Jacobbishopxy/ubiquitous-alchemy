@@ -10,6 +10,7 @@ import com.github.jacobbishopxy.ubiquitousauth.Constants;
 import com.github.jacobbishopxy.ubiquitousauth.domain.UserAccount;
 import com.github.jacobbishopxy.ubiquitousauth.domain.UserPrivilege;
 import com.github.jacobbishopxy.ubiquitousauth.domain.UserRole;
+import com.github.jacobbishopxy.ubiquitousauth.dto.FlattenedUserAccount;
 import com.github.jacobbishopxy.ubiquitousauth.dto.SimpleUserRole;
 import com.github.jacobbishopxy.ubiquitousauth.dto.UserAccountDto;
 import com.github.jacobbishopxy.ubiquitousauth.dto.UserPrivilegeDto;
@@ -33,14 +34,14 @@ public class RegistrationController {
   // =======================================================================
 
   @GetMapping("/users")
-  public List<UserAccount> showAllUsers(@RequestParam(required = false) Boolean isActive) {
-    return registrationService.getAllUsers(isActive);
+  public List<FlattenedUserAccount> showAllUsers(@RequestParam(required = false) Boolean isActive) {
+    return registrationService.getAllUsersInFlattenedForm(isActive);
   }
 
   @GetMapping("/user/{id}")
-  public UserAccount showUserById(@PathVariable Integer id) {
+  public FlattenedUserAccount showUserById(@PathVariable Integer id) {
     return registrationService
-        .getUserById(id)
+        .getUserByIdInFlattenedForm(id)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, String.format("User with id %d not found!", id)));
   }

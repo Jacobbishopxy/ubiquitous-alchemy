@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.github.jacobbishopxy.ubiquitousauth.Constants;
 import com.github.jacobbishopxy.ubiquitousauth.domain.UserAccount;
+import com.github.jacobbishopxy.ubiquitousauth.dto.FlattenedUserAccount;
 import com.github.jacobbishopxy.ubiquitousauth.service.RegistrationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +31,20 @@ public class InformationController {
   // =======================================================================
 
   @GetMapping("/user")
-  public UserAccount getUserInfo() {
+  public FlattenedUserAccount getUserInfo() {
 
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String username = auth.getName();
 
-    return registrationService
+    UserAccount ua = registrationService
         .getUserByUsername(username)
         .orElse(new UserAccount(
             "visitor",
             "Please ask administrator to register an authorized account!",
             true,
             List.of()));
+
+    return FlattenedUserAccount.fromUserAccount(ua);
   }
 
   @GetMapping("/time")
