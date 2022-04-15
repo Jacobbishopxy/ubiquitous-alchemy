@@ -75,13 +75,15 @@ public class InitDataLoader implements ApplicationListener<ContextRefreshedEvent
           List<UserRole> r = ua
               .getRoles()
               .stream()
-              .map(roleName -> registrationService.getRoleByName(ua.getName()))
+              .map(roleName -> registrationService.getRoleByName(roleName))
               .filter(roleOpt -> roleOpt.isPresent())
               .map(role -> role.get())
               .collect(Collectors.toList());
 
           registrationService.registerUserIfNotFound(ua.getName(), ua.getEmail(), true, r);
         });
+
+    initDataConfig.setShouldInitialize(false);
 
     logger.info("Initialization finished");
 

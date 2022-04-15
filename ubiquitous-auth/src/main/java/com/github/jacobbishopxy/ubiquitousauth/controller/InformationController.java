@@ -29,7 +29,7 @@ public class InformationController {
   // Query methods
   // =======================================================================
 
-  @GetMapping("/info")
+  @GetMapping("/user")
   public UserAccount getUserInfo() {
 
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();

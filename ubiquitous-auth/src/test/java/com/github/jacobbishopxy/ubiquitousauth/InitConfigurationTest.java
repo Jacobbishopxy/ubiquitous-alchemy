@@ -26,9 +26,11 @@ public class InitConfigurationTest {
 
   @Test
   public void testInitDataConfig() {
-    assertThat(initDataConfig.getShouldInitialize()).isTrue();
+    assertThat(initDataConfig.getShouldInitialize()).isFalse();
     assertThat(initDataConfig.getInitPrivileges().size()).isEqualTo(3);
     assertThat(initDataConfig.getInitRoles().size()).isEqualTo(3);
+    assertThat(initDataConfig.getInitUsers().size()).isEqualTo(1);
+    assertThat(initDataConfig.getInitUsers().get(0).getRoles().size()).isEqualTo(2);
   }
 
 }

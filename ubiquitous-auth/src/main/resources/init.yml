@@ -1,5 +1,5 @@
 initialization:
-  shouldInitialize: true
+  shouldInitialize: false
 
   initPrivileges:
     - read
