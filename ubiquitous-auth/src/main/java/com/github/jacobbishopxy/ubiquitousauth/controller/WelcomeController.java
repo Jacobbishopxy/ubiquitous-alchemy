@@ -1,13 +1,11 @@
 package com.github.jacobbishopxy.ubiquitousauth.controller;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.jasig.cas.client.authentication.AttributePrincipal;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +20,12 @@ public class WelcomeController {
     return "Hello, " + auth.getName() + "!";
   }
 
-  @RequestMapping("/hello")
-  public void hello(HttpServletRequest request, HttpServletResponse response, @RequestParam("url") String url)
-      throws IOException {
-    AttributePrincipal principal = (AttributePrincipal) request.getUserPrincipal();
-
-    System.out.println(">>>>>>>>>>>>>>>>>> " + principal.getName());
-
-    response.sendRedirect(url);
+  @GetMapping("/redirect")
+  ResponseEntity<Void> redirect(@RequestParam("url") String url) {
+    return ResponseEntity
+        .status(HttpStatus.FOUND)
+        .location(URI.create(url))
+        .build();
   }
 
 }
