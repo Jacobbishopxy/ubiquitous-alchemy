@@ -20,6 +20,13 @@ public class WelcomeController {
     return "Hello, " + auth.getName() + "!";
   }
 
+  @GetMapping("/is_logged_in")
+  public Boolean isLoggedIn() throws JsonProcessingException {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    return auth.getName() != "anonymousUser";
+  }
+
   @GetMapping("/redirect")
   ResponseEntity<Void> redirect(@RequestParam("url") String url) {
     return ResponseEntity
