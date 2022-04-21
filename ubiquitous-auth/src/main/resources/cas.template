@@ -7,3 +7,4 @@ casUrl=https://cas.example.com
 casLoginUrl=https://https://cas.example.com/login
 casLogoutUrl=https://https://cas.example.com/logout
 casKey=CAS_PROVIDER_LOCALHOST
+casTimeout=43200

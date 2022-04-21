@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Constants {
 
-  public static final String API_VERSION = "v1";
+  public static final String API_VERSION = "/v1";
   public static final String API_INFORMATION = "/information";
   public static final String API_REGISTRATION = "/registration";
 

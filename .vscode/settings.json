@@ -24,6 +24,7 @@
 		"pfms",
 		"postgres",
 		"rustup",
+		"Servlet",
 		"typeorm",
 		"upsert",
 		"VARCHAR"

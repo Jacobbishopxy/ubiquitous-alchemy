@@ -30,6 +30,9 @@ public class CasConfig {
   @Value("${casKey}")
   private String casKey;
 
+  @Value("${casTimeout}")
+  private Integer casTimeout;
+
   @Value("${casUrl}")
   private String casUrl;
 
@@ -50,6 +53,10 @@ public class CasConfig {
 
   public String getCasKey() {
     return casKey;
+  }
+
+  public Integer getCasTimeout() {
+    return casTimeout;
   }
 
   public String getCasUrl() {
