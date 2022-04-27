@@ -1,11 +1,8 @@
 package com.github.jacobbishopxy.ubiquitousauth.controller;
 
 import java.net.URI;
-import java.time.Instant;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.github.jacobbishopxy.ubiquitousauth.config.CasConfig;
 
@@ -31,48 +28,62 @@ public class WelcomeController {
     return "Hello, " + auth.getName() + "!";
   }
 
-  @GetMapping("/check_logged_in")
-  public String checkLoggedIn(HttpServletRequest request) {
+  // @GetMapping("/check_logged_in")
+  // public String checkLoggedIn(HttpServletRequest request) {
 
-    return request.getUserPrincipal().getName();
-  }
+  // return request.getUserPrincipal().getName();
+  // }
+
+  // @GetMapping("/is_logged_in")
+  // public Boolean isLoggedIn(@CookieValue(value = AUTH_TOKEN, required = false)
+  // Integer authTime) {
+
+  // if (authTime == null) {
+  // return false;
+  // }
+
+  // if (authTime < Instant.now().getEpochSecond() - casConfig.getCasTimeout()) {
+  // return false;
+  // }
+
+  // return true;
+  // }
 
   @GetMapping("/is_logged_in")
-  public Boolean isLoggedIn(@CookieValue(value = AUTH_TOKEN, required = false) Integer authTime) {
-
-    if (authTime == null) {
-      return false;
-    }
-
-    if (authTime < Instant.now().getEpochSecond() - casConfig.getCasTimeout()) {
-      return false;
-    }
-
-    return true;
+  public Boolean isLoggedIn(HttpServletRequest request) {
+    return request.getUserPrincipal().getName() == "anonymousUser";
   }
 
   @GetMapping("/redirect")
-  ResponseEntity<Void> redirect(
-      @RequestParam("url") String url,
-      HttpServletRequest request,
-      HttpServletResponse response) {
-
-    // AttributePrincipal principal = (AttributePrincipal)
-    // request.getUserPrincipal();
-
-    // TODO:
-    // get IDM cookies and return to frontend
-
-    String currentTime = Instant.now().getEpochSecond() + "";
-
-    Cookie cookie = new Cookie(AUTH_TOKEN, currentTime);
-    response.addCookie(cookie);
-
+  ResponseEntity<Void> redirect(@RequestParam("url") String url) {
     return ResponseEntity
         .status(HttpStatus.FOUND)
         .location(URI.create(url))
         .build();
   }
+
+  // @GetMapping("/redirect")
+  // ResponseEntity<Void> redirect(
+  // @RequestParam("url") String url,
+  // HttpServletRequest request,
+  // HttpServletResponse response) {
+
+  // // AttributePrincipal principal = (AttributePrincipal)
+  // // request.getUserPrincipal();
+
+  // // TODO:
+  // // get IDM cookies and return to frontend
+
+  // String currentTime = Instant.now().getEpochSecond() + "";
+
+  // Cookie cookie = new Cookie(AUTH_TOKEN, currentTime);
+  // response.addCookie(cookie);
+
+  // return ResponseEntity
+  // .status(HttpStatus.FOUND)
+  // .location(URI.create(url))
+  // .build();
+  // }
 
   // @GetMapping("/logout")
   // String logout(
