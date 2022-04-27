@@ -2,8 +2,6 @@ package com.github.jacobbishopxy.ubiquitousauth.controller;
 
 import java.net.URI;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.github.jacobbishopxy.ubiquitousauth.config.CasConfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +48,10 @@ public class WelcomeController {
   // }
 
   @GetMapping("/is_logged_in")
-  public Boolean isLoggedIn(HttpServletRequest request) {
-    return request.getUserPrincipal().getName() == "anonymousUser";
+  public Boolean isLoggedIn() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    return auth.getName() != "anonymousUser";
   }
 
   @GetMapping("/redirect")
