@@ -2,7 +2,7 @@ package com.github.jacobbishopxy.ubiquitousauth.controller;
 
 import java.net.URI;
 
-import com.github.jacobbishopxy.ubiquitousauth.config.CasConfig;
+// import com.github.jacobbishopxy.ubiquitousauth.config.CasConfig;
 import com.github.jacobbishopxy.ubiquitousauth.service.ValidationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class WelcomeController {
 
-  @Autowired
-  CasConfig casConfig;
+  // @Autowired
+  // CasConfig casConfig;
 
   @Autowired
   ValidationService validationService;
 
-  static final String AUTH_TOKEN = "AUTH_TOKEN";
+  // static final String AUTH_TOKEN = "AUTH_TOKEN";
 
   @GetMapping("/")
   public String index() {

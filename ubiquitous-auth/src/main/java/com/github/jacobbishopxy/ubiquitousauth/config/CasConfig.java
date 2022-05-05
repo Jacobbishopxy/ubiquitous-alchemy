@@ -51,7 +51,7 @@ public class CasConfig {
   @Value("${baseLogoutPath}")
   private String baseLogoutPath;
 
-  @Value("${appUser")
+  @Value("${appUser}")
   private String appUser;
 
   @Value("${appKey}")
