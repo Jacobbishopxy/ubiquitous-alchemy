@@ -1,6 +1,13 @@
 package com.github.jacobbishopxy.ubiquitousauth.controller;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.Principal;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.github.jacobbishopxy.ubiquitousauth.config.CasConfig;
 
@@ -26,11 +33,20 @@ public class WelcomeController {
     return "Hello, " + auth.getName() + "!";
   }
 
-  // @GetMapping("/check_logged_in")
-  // public String checkLoggedIn(HttpServletRequest request) {
+  @GetMapping("/check_logged_in")
+  public boolean checkLoggedIn(HttpServletRequest request) {
+    Principal principal = request.getUserPrincipal();
 
-  // return request.getUserPrincipal().getName();
-  // }
+    if (principal == null) {
+      return false;
+    }
+
+    if (principal.getName().equals("anonymousUser")) {
+      return false;
+    }
+
+    return true;
+  }
 
   // @GetMapping("/is_logged_in")
   // public Boolean isLoggedIn(@CookieValue(value = AUTH_TOKEN, required = false)
@@ -60,6 +76,17 @@ public class WelcomeController {
         .status(HttpStatus.FOUND)
         .location(URI.create(url))
         .build();
+  }
+
+  @GetMapping("/redirect_test")
+  public void redirectTest(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      @RequestParam("url") String url) throws URISyntaxException, IOException {
+
+    Cookie jSessionId = new Cookie("JSESSIONID", null);
+    response.addCookie(jSessionId);
+    response.sendRedirect(url);
   }
 
   // @GetMapping("/redirect")
