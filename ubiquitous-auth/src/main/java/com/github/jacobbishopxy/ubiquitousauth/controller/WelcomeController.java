@@ -84,7 +84,9 @@ public class WelcomeController {
       HttpServletResponse response,
       @RequestParam("url") String url) throws URISyntaxException, IOException {
 
-    Cookie jSessionId = new Cookie("JSESSIONID", null);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    Cookie jSessionId = new Cookie("USER_NAME", auth.getName());
     response.addCookie(jSessionId);
     response.sendRedirect(url);
   }
