@@ -1,15 +1,9 @@
 package com.github.jacobbishopxy.ubiquitousauth.controller;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.Principal;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.github.jacobbishopxy.ubiquitousauth.config.CasConfig;
+import com.github.jacobbishopxy.ubiquitousauth.service.ValidationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +18,9 @@ public class WelcomeController {
   @Autowired
   CasConfig casConfig;
 
+  @Autowired
+  ValidationService validationService;
+
   static final String AUTH_TOKEN = "AUTH_TOKEN";
 
   @GetMapping("/")
@@ -34,18 +31,15 @@ public class WelcomeController {
   }
 
   @GetMapping("/check_logged_in")
-  public boolean checkLoggedIn(HttpServletRequest request) {
-    Principal principal = request.getUserPrincipal();
-
-    if (principal == null) {
-      return false;
+  public String checkLoggedIn(@CookieValue(value = "SIAMTGT", required = false) String cookie) {
+    if (cookie == null) {
+      return null;
     }
-
-    if (principal.getName().equals("anonymousUser")) {
-      return false;
+    try {
+      return validationService.validate(cookie);
+    } catch (Exception e) {
+      return null;
     }
-
-    return true;
   }
 
   // @GetMapping("/is_logged_in")
@@ -78,18 +72,14 @@ public class WelcomeController {
         .build();
   }
 
-  @GetMapping("/redirect_test")
-  public void redirectTest(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      @RequestParam("url") String url) throws URISyntaxException, IOException {
+  // @GetMapping("/redirect_test")
+  // public void redirectTest(
+  // HttpServletRequest request,
+  // HttpServletResponse response,
+  // @RequestParam("url") String url) throws URISyntaxException, IOException {
 
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-    Cookie jSessionId = new Cookie("USER_NAME", auth.getName());
-    response.addCookie(jSessionId);
-    response.sendRedirect(url);
-  }
+  // response.sendRedirect(url);
+  // }
 
   // @GetMapping("/redirect")
   // ResponseEntity<Void> redirect(

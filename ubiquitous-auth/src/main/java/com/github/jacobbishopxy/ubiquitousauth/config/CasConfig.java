@@ -51,6 +51,18 @@ public class CasConfig {
   @Value("${baseLogoutPath}")
   private String baseLogoutPath;
 
+  @Value("${appUser")
+  private String appUser;
+
+  @Value("${appKey}")
+  private String appKey;
+
+  @Value("${appInfo}")
+  private String appInfo;
+
+  @Value("${validateUrl}")
+  private String validateUrl;
+
   public String getCasKey() {
     return casKey;
   }
@@ -81,6 +93,22 @@ public class CasConfig {
 
   public String getBaseLogoutPath() {
     return baseLogoutPath;
+  }
+
+  public String getAppUser() {
+    return appUser;
+  }
+
+  public String getAppKey() {
+    return appKey;
+  }
+
+  public String getAppInfo() {
+    return appInfo;
+  }
+
+  public String getValidateUrl() {
+    return validateUrl;
   }
 
   @Bean

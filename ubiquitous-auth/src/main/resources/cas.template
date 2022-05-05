@@ -8,3 +8,8 @@ casLoginUrl=https://https://cas.example.com/login
 casLogoutUrl=https://https://cas.example.com/logout
 casKey=CAS_PROVIDER_LOCALHOST
 casTimeout=43200
+
+appUser=appUser
+appKey=appKey
+appInfo=dev-test
+validateUrl=https://https://cas.example.com/validate
