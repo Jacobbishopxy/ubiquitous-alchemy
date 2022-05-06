@@ -31,14 +31,15 @@ public class WelcomeController {
   }
 
   @GetMapping("/check_logged_in")
-  public String checkLoggedIn(@CookieValue(value = "SIAMTGT", required = false) String cookie) {
+  public Boolean checkLoggedIn(@CookieValue(value = "SIAMTGT", required = false) String cookie) {
     if (cookie == null) {
-      return null;
+      return false;
     }
     try {
-      return validationService.validate(cookie);
+      String validation = validationService.validate(cookie);
+      return validation != null;
     } catch (Exception e) {
-      return null;
+      return false;
     }
   }
 
