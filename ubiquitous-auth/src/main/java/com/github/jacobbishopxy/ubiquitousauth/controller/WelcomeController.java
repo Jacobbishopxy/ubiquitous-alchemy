@@ -1,7 +1,11 @@
 package com.github.jacobbishopxy.ubiquitousauth.controller;
 
 import java.net.URI;
+import java.util.List;
 
+import com.github.jacobbishopxy.ubiquitousauth.domain.UserAccount;
+import com.github.jacobbishopxy.ubiquitousauth.dto.FlattenedUserAccount;
+import com.github.jacobbishopxy.ubiquitousauth.service.RegistrationService;
 // import com.github.jacobbishopxy.ubiquitousauth.config.CasConfig;
 import com.github.jacobbishopxy.ubiquitousauth.service.ValidationService;
 
@@ -11,17 +15,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class WelcomeController {
 
-  // @Autowired
-  // CasConfig casConfig;
+  @Autowired
+  private ValidationService validationService;
 
   @Autowired
-  ValidationService validationService;
-
-  // static final String AUTH_TOKEN = "AUTH_TOKEN";
+  private RegistrationService registrationService;
 
   @GetMapping("/")
   public String index() {
@@ -43,21 +46,6 @@ public class WelcomeController {
     }
   }
 
-  // @GetMapping("/is_logged_in")
-  // public Boolean isLoggedIn(@CookieValue(value = AUTH_TOKEN, required = false)
-  // Integer authTime) {
-
-  // if (authTime == null) {
-  // return false;
-  // }
-
-  // if (authTime < Instant.now().getEpochSecond() - casConfig.getCasTimeout()) {
-  // return false;
-  // }
-
-  // return true;
-  // }
-
   @GetMapping("/is_logged_in")
   public Boolean isLoggedIn() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -73,52 +61,24 @@ public class WelcomeController {
         .build();
   }
 
-  // @GetMapping("/redirect_test")
-  // public void redirectTest(
-  // HttpServletRequest request,
-  // HttpServletResponse response,
-  // @RequestParam("url") String url) throws URISyntaxException, IOException {
+  @GetMapping("/user")
+  public FlattenedUserAccount getUser(@CookieValue(value = "SIAMTGT", required = false) String cookie) {
+    if (cookie == null) {
+      return null;
+    }
+    try {
+      String username = validationService.getUsername(cookie);
 
-  // response.sendRedirect(url);
-  // }
+      UserAccount ua = registrationService.getUserByUsername(username).orElse(new UserAccount(
+          "visitor",
+          "Please ask administrator to register an authorized account!",
+          true,
+          List.of()));
 
-  // @GetMapping("/redirect")
-  // ResponseEntity<Void> redirect(
-  // @RequestParam("url") String url,
-  // HttpServletRequest request,
-  // HttpServletResponse response) {
-
-  // // AttributePrincipal principal = (AttributePrincipal)
-  // // request.getUserPrincipal();
-
-  // // TODO:
-  // // get IDM cookies and return to frontend
-
-  // String currentTime = Instant.now().getEpochSecond() + "";
-
-  // Cookie cookie = new Cookie(AUTH_TOKEN, currentTime);
-  // response.addCookie(cookie);
-
-  // return ResponseEntity
-  // .status(HttpStatus.FOUND)
-  // .location(URI.create(url))
-  // .build();
-  // }
-
-  // @GetMapping("/logout")
-  // String logout(
-  // @RequestParam("url") String url,
-  // HttpSession session,
-  // HttpServletRequest request,
-  // HttpServletResponse response) throws IOException {
-
-  // session.removeAttribute(AUTH_TIME);
-
-  // String logoutUrl = casConfig.getCasLogoutUrl() + "?service=" + url;
-
-  // response.sendRedirect(logoutUrl);
-
-  // return url;
-  // }
+      return FlattenedUserAccount.fromUserAccount(ua);
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+  }
 
 }

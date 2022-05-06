@@ -24,7 +24,8 @@ public class ValidationService {
     return validateResult;
   }
 
-  public String getUser(String validateResult) throws Exception {
+  public String getUsername(String ticketValue) throws Exception {
+    String validateResult = validate(ticketValue);
     JSONObject obj = new JSONObject(validateResult);
     JSONObject user = obj.getJSONObject("user");
 
@@ -33,6 +34,18 @@ public class ValidationService {
     }
 
     return user.getString("uid");
+  }
+
+  public String getEmail(String ticketValue) throws Exception {
+    String validateResult = validate(ticketValue);
+    JSONObject obj = new JSONObject(validateResult);
+    JSONObject user = obj.getJSONObject("user");
+
+    if (user == null) {
+      return null;
+    }
+
+    return user.getString("mail");
   }
 
 }
