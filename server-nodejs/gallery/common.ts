@@ -92,6 +92,8 @@ export enum ElementType {
   FieldHeader = "fieldHeader",
   ConsensusDistribution = "consensusDistribution",
   Excel = "excel",
+  NetDiskCap = "netDiskCap",
+  NetDiskGroup = "netDiskGroup",
 }
 
 export const getElementType = (v: string) => {
@@ -142,6 +144,10 @@ export const getElementType = (v: string) => {
       return ElementType.ConsensusDistribution
     case "excel":
       return ElementType.Excel
+    case "netDiskCap":
+      return ElementType.NetDiskCap
+    case "netDiskGroup":
+      return ElementType.NetDiskGroup
     default:
       return undefined
   }

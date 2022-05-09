@@ -1,12 +1,16 @@
 package com.github.jacobbishopxy.ubiquitousauth.controller;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import com.github.jacobbishopxy.ubiquitousauth.config.CasConfig;
 import com.github.jacobbishopxy.ubiquitousauth.domain.UserAccount;
 import com.github.jacobbishopxy.ubiquitousauth.dto.FlattenedUserAccount;
 import com.github.jacobbishopxy.ubiquitousauth.service.RegistrationService;
-// import com.github.jacobbishopxy.ubiquitousauth.config.CasConfig;
 import com.github.jacobbishopxy.ubiquitousauth.service.ValidationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class WelcomeController {
+
+  @Autowired
+  private CasConfig casConfig;
 
   @Autowired
   private ValidationService validationService;
@@ -79,6 +86,16 @@ public class WelcomeController {
     } catch (Exception e) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
+  }
+
+  @GetMapping("/quit")
+  public void logout(
+      HttpServletResponse response,
+      @RequestParam("url") String url) throws IOException, URISyntaxException {
+
+    String redirect = casConfig.getCasLogoutUrl() + "?service=" + url;
+
+    response.sendRedirect(redirect);
   }
 
 }
