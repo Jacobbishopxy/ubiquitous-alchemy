@@ -36,6 +36,8 @@ public class Promoter {
 
   private String color;
 
+  private Boolean active;
+
   @Column(columnDefinition = "TEXT")
   private String description;
 
@@ -51,11 +53,12 @@ public class Promoter {
     this.email = email;
   }
 
-  public Promoter(String email, String nickname, String color, String description) {
+  public Promoter(String email, String nickname, String color, Boolean active, String description) {
     super();
     this.email = email;
     this.nickname = nickname;
     this.color = color;
+    this.active = active;
     this.description = description;
   }
 
@@ -85,6 +88,14 @@ public class Promoter {
 
   public void setColor(String color) {
     this.color = color;
+  }
+
+  public Boolean getActive() {
+    return active;
+  }
+
+  public void setActive(Boolean active) {
+    this.active = active;
   }
 
   public String getDescription() {

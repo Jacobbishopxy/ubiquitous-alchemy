@@ -21,7 +21,7 @@ export class Author {
   @PrimaryColumn("varchar")
   email!: string
 
-  @Column("bool")
+  @Column("bool", {default: true})
   active?: boolean
 
   @ManyToMany(() => Dashboard, t => t.authors, {nullable: true})
