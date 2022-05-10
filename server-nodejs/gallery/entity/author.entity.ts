@@ -8,11 +8,11 @@ import {
   Column,
   ManyToMany,
   JoinTable,
-  OneToMany
+  OneToMany,
 } from "typeorm"
 import {Dashboard} from "."
-import {author, RoleType} from "../common"
-import {Record} from "./record.entity"
+import {author} from "../common"
+import {OperationRecord} from "./operationRecord.entity"
 
 
 @Entity({name: author})
@@ -25,17 +25,14 @@ export class Author {
   @JoinTable()
   dashboards!: Dashboard[]
 
-  @OneToMany(() => Record, r => r.author, {nullable: true, cascade: true})
-  records!: Record[]
+  @OneToMany(() => OperationRecord, r => r.author, {nullable: true, cascade: true})
+  records!: OperationRecord[]
 
   @Column("varchar")
   nickname!: string
 
   @Column("varchar", {nullable: true})
   color!: string
-
-  @Column("enum", {nullable: false, enum: RoleType})
-  role!: RoleType
 
   @Column("text", {nullable: true})
   description?: string

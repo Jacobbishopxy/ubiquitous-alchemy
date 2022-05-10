@@ -171,9 +171,10 @@ export class DashboardService {
       upsertDashboards = await this.saveDashboards(upsertDashboards)
 
       // only if author is `editor` we need to auto bind the new dashboard
-      let author = await this.authService.getUserInfo(request)
+      // let author = await this.authService.getUserInfo(request)
+      let author = await this.authService.getUserAccount(request)
 
-      if (author.role === 'editor') {
+      if (authorizedRoles(author.roles)) {
         // only new ids should be bind to the author who created the dashboards,
         // get unchanged ids in order to compare with the new ids
         let unchangedDashboardIds = dashboards.filter(d => d.id !== undefined).map(d => d.id)
@@ -204,3 +205,11 @@ export class DashboardService {
   }
 }
 
+const authorizedRoles = (roles: common.UserRole[]) => {
+  for (let r of roles) {
+    if (r.name === "editor") {
+      return true
+    }
+  }
+  return false
+}

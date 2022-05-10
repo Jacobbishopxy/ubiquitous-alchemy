@@ -16,30 +16,34 @@ import * as common from "../common"
 export class AuthService {
   constructor(private configService: ConfigService) {}
 
-  private getGatewayPath() {
+  private getAuthPath() {
     const serverConfig = this.configService.get("server")
 
-    return `http://${serverConfig.SERVER_GATEWAY_HOST}:${serverConfig.SERVER_GATEWAY_PORT}/gateway/api/user`
+    return `http://${serverConfig.SERVER_AUTH_HOST}:${serverConfig.SERVER_AUTH_PORT}`
   }
 
-  async getUserInfo(req: Request): Promise<common.Auth> {
-    const token = req.cookies[common.auth]
-
+  async getUserAccount(req: Request): Promise<common.UserAccount> {
+    const token = req.cookies[common.userAccountCookie]
 
     if (!token)
       throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED)
 
-    const response = await axios.get(`${this.getGatewayPath()}`, {
+    const response = await axios.get(`${this.getAuthPath()}/user`, {
       headers: {
-        Cookie: `${common.auth}=${token}`,
+        Cookie: `${common.userAccountCookie}=${token}`,
       },
     })
 
     if (response.status === HttpStatus.OK) {
       return response.data
-    } else {
-      throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED)
     }
+    throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED)
+  }
+
+  async getAllUserAccounts(): Promise<common.UserAccount[]> {
+    const response = await axios.get(`${this.getAuthPath()}/users`)
+
+    return response.data
   }
 }
 

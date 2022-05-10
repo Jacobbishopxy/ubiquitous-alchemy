@@ -7,6 +7,7 @@ import {Request} from "express"
 
 import {AuthorService, AuthService} from "../provider"
 import {AuthorDashboardDto} from "../dto"
+import * as common from "../common"
 
 @Controller()
 export class AuthorController {
@@ -16,8 +17,25 @@ export class AuthorController {
   ) {}
 
   @Get("authors")
-  getAllAuthors() {
-    return this.authorService.getAllAuthors()
+  async getAllAuthors() {
+
+    const authors = await this.authorService.getAllAuthors()
+    const users = await this.authService.getAllUserAccounts()
+
+    const usersMap = users.reduce((acc, user) => {
+      acc[user.email] = user
+      return acc
+    }, {})
+
+    const res: common.FullAuthor[] = authors.map(author => {
+      const user = usersMap[author.email]
+      if (!user) {
+        throw new HttpException(`User ${author.email} not found`, HttpStatus.NOT_FOUND)
+      }
+      return {...author, ...user}
+    })
+
+    return res
   }
 
   @Get("author")
@@ -30,10 +48,11 @@ export class AuthorController {
     @Req() request: Request,
     @Body() binding: AuthorDashboardDto,
   ) {
-    let auth = await this.authService.getUserInfo(request)
-    if (!authorizedRoles(auth.role)) {
-      throw new HttpException(`Unauthorized role: ${auth.role}`, HttpStatus.UNAUTHORIZED)
+    let userAcc = await this.authService.getUserAccount(request)
+    if (!authorizedPrivileges(userAcc.privileges)) {
+      throw new HttpException(`Unauthorized role: ${userAcc.privileges}`, HttpStatus.UNAUTHORIZED)
     }
+
     return this.authorService.bindDashboardsToAuthor(binding.email, binding.dashboardIds)
   }
 
@@ -42,10 +61,11 @@ export class AuthorController {
     @Req() request: Request,
     @Body() binding: AuthorDashboardDto,
   ) {
-    let auth = await this.authService.getUserInfo(request)
-    if (!authorizedRoles(auth.role)) {
-      throw new HttpException(`Unauthorized role: ${auth.role}`, HttpStatus.UNAUTHORIZED)
+    let userAcc = await this.authService.getUserAccount(request)
+    if (!authorizedPrivileges(userAcc.privileges)) {
+      throw new HttpException(`Unauthorized role: ${userAcc.privileges}`, HttpStatus.UNAUTHORIZED)
     }
+
     return this.authorService.unbindDashboardsFromAuthor(binding.email, binding.dashboardIds)
   }
 
@@ -54,14 +74,21 @@ export class AuthorController {
     @Req() request: Request,
     @Body() binding: AuthorDashboardDto,
   ) {
-    let auth = await this.authService.getUserInfo(request)
-    if (!authorizedRoles(auth.role)) {
-      throw new HttpException(`Unauthorized role: ${auth.role}`, HttpStatus.UNAUTHORIZED)
+    let userAcc = await this.authService.getUserAccount(request)
+    if (!authorizedPrivileges(userAcc.privileges)) {
+      throw new HttpException(`Unauthorized role: ${userAcc.privileges}`, HttpStatus.UNAUTHORIZED)
     }
+
     return this.authorService.updateAuthorDashboards(binding.email, binding.dashboardIds)
   }
 }
 
-const authorizedRoles = (role: string): boolean => {
-  return role === "admin" || role === "supervisor"
+const authorizedPrivileges = (privilege: common.UserPrivilege[]): boolean => {
+  for (let p of privilege) {
+    if (p.name === "write") {
+      return true
+    }
+  }
+
+  return false
 }

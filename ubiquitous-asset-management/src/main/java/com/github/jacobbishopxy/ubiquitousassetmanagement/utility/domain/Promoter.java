@@ -4,17 +4,11 @@
 
 package com.github.jacobbishopxy.ubiquitousassetmanagement.utility.domain;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-
-import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.domain.obj.Role;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.domain.obj.RolePostgresEnumType;
 
 /**
  * Promoter
@@ -24,7 +18,6 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.utility.domain.obj.Rol
  */
 @Entity
 @Table(name = "author")
-@TypeDef(name = "author_role_enum", typeClass = RolePostgresEnumType.class)
 public class Promoter {
   // =======================================================================
   // Fields
@@ -43,14 +36,6 @@ public class Promoter {
 
   private String color;
 
-  @Column(nullable = false)
-  @Enumerated(EnumType.STRING)
-  @Type(type = "author_role_enum")
-  @NotEmpty
-  @Schema(description = "The role of the promoter.", allowableValues = { "visitor", "editor", "admin",
-      "supervisor" }, required = true)
-  private Role role;
-
   @Column(columnDefinition = "TEXT")
   private String description;
 
@@ -66,12 +51,11 @@ public class Promoter {
     this.email = email;
   }
 
-  public Promoter(String email, String nickname, String color, Role role, String description) {
+  public Promoter(String email, String nickname, String color, String description) {
     super();
     this.email = email;
     this.nickname = nickname;
     this.color = color;
-    this.role = role;
     this.description = description;
   }
 
@@ -101,14 +85,6 @@ public class Promoter {
 
   public void setColor(String color) {
     this.color = color;
-  }
-
-  public Role getRole() {
-    return role;
-  }
-
-  public void setRole(Role role) {
-    this.role = role;
   }
 
   public String getDescription() {

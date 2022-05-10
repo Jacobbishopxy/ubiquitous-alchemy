@@ -18,7 +18,7 @@ import {Template} from "./template.entity"
 import {Element} from "./element.entity"
 
 @Entity({name: record})
-export class Record {
+export class OperationRecord {
 
   @PrimaryGeneratedColumn("uuid")
   id!: string

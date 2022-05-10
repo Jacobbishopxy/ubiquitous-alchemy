@@ -88,6 +88,11 @@ public class WelcomeController {
     }
   }
 
+  @GetMapping("/users")
+  public List<FlattenedUserAccount> getAllUser() {
+    return registrationService.getAllUsersInFlattenedForm(true);
+  }
+
   @GetMapping("/quit")
   public void logout(
       HttpServletResponse response,

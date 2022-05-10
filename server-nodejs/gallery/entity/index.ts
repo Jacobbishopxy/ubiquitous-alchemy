@@ -11,7 +11,7 @@ import {Mark} from "./mark.entity"
 import {Storage} from "./storage.entity"
 import {Tag} from "./tag.entity"
 import {Template} from "./template.entity"
-import {Record} from "./record.entity"
+import {OperationRecord} from "./operationRecord.entity"
 import {Anchor, FlexContent} from "./flexContent.entity"
 
 export {
@@ -24,7 +24,7 @@ export {
   Storage,
   Tag,
   Template,
-  Record,
+  OperationRecord,
   Anchor,
   FlexContent,
 }

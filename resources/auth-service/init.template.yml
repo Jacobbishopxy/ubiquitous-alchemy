@@ -5,12 +5,13 @@ initialization:
     - read
     - write
     - delete
+    - execute
 
   initRoles:
     - name: visitor
       privileges:
         - read
-    - name: user
+    - name: editor
       privileges:
         - read
         - write
@@ -18,10 +19,14 @@ initialization:
       privileges:
         - read
         - delete
+    - name: supervisor
+      privileges:
+        - execute
 
   initUsers:
     - name: jacob
       email: jacob@example.com
       roles:
-        - user
+        - editor
         - admin
+        - supervisor

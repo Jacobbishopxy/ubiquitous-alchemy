@@ -3,7 +3,7 @@
  */
 
 import {Equal} from "typeorm"
-import {Content} from "./entity/content.entity"
+import {Dashboard, Content} from "./entity"
 
 // db name
 export const db = "gallery"
@@ -153,28 +153,6 @@ export const getElementType = (v: string) => {
   }
 }
 
-export enum RoleType {
-  Admin = "admin",
-  Editor = "editor",
-  Visitor = "visitor",
-  Supervisor = "supervisor",
-}
-
-export const getRoleType = (v: string) => {
-  switch (v) {
-    case "admin":
-      return RoleType.Admin
-    case "editor":
-      return RoleType.Editor
-    case "visitor":
-      return RoleType.Visitor
-    case "supervisor":
-      return RoleType.Supervisor
-    default:
-      return RoleType.Visitor
-  }
-}
-
 export enum StorageType {
   PG = "postgres",
   MYSQL = "mysql",
@@ -240,9 +218,36 @@ export function MongoContentValidation(data?: Record<string, any>) {
   return false
 }
 
-export interface Auth {
+
+export const userAccountCookie = "SIAMTGT"
+
+export interface UserRole {
+  name: string
+  description: string
+}
+
+export interface UserPrivilege {
+  name: string
+  description: string
+}
+
+export interface UserAccount {
+  username: string
   email: string
+  active: boolean
+  roles: UserRole[]
+  privileges: UserPrivilege[]
+}
+
+export interface FullAuthor {
+  username: string
   nickname: string
-  role: RoleType
+  color: string
+  description: string
+  email: string
+  active: boolean
+  roles: UserRole[]
+  privileges: UserPrivilege[]
+  dashboards: Dashboard[]
 }
 

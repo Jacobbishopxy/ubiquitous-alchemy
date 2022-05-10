@@ -37,8 +37,10 @@ const rootDir = isProd ? path.join(__dirname, "../..") : path.join(__dirname, ".
 interface ENV {
   SERVER_PY_HOST: string
   SERVER_PY_PORT: number
-  SERVER_GATEWAY_HOST: string
-  SERVER_GATEWAY_PORT: number
+  // SERVER_GATEWAY_HOST: string
+  // SERVER_GATEWAY_PORT: number
+  SERVER_AUTH_HOST: string
+  SERVER_AUTH_PORT: number
 
   GALLERY_NAME: string
   GALLERY_TYPE: string
@@ -82,8 +84,10 @@ const readConfig = (): ENV => {
   return {
     SERVER_PY_HOST: process.env.SERVER_PY_HOST || "localhost",
     SERVER_PY_PORT: Number(process.env.SERVER_PY_PORT) || 8020,
-    SERVER_GATEWAY_HOST: process.env.SERVER_GATEWAY_HOST || "localhost",
-    SERVER_GATEWAY_PORT: Number(process.env.SERVER_GATEWAY_PORT) || 8010,
+    // SERVER_GATEWAY_HOST: process.env.SERVER_GATEWAY_HOST || "localhost",
+    // SERVER_GATEWAY_PORT: Number(process.env.SERVER_GATEWAY_PORT) || 8010,
+    SERVER_AUTH_HOST: process.env.SERVER_AUTH_HOST || "localhost",
+    SERVER_AUTH_PORT: Number(process.env.SERVER_AUTH_PORT) || 8010,
 
     GALLERY_NAME: process.env.GALLERY_NAME || "gallery",
     GALLERY_TYPE: process.env.GALLERY_TYPE || "postgres",
