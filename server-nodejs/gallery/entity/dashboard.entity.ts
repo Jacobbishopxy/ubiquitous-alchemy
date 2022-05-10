@@ -13,7 +13,7 @@ import {
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from "typeorm"
-import {Author, Category, Template, Record} from "."
+import {Author, Category, Template, OperationRecord} from "."
 
 import * as common from "../common"
 
@@ -33,8 +33,8 @@ export class Dashboard {
   @ManyToMany(() => Author, c => c.dashboards, {nullable: true, onDelete: "CASCADE"})
   authors!: Author[]
 
-  @OneToMany(() => Record, r => r.dashboard, {nullable: true, cascade: true})
-  records!: Record[]
+  @OneToMany(() => OperationRecord, r => r.dashboard, {nullable: true, cascade: true})
+  records!: OperationRecord[]
 
   @Column("varchar")
   name!: string

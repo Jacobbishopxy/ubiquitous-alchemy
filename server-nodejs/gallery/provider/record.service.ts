@@ -8,7 +8,7 @@ import {Repository} from "typeorm"
 
 import * as common from "../common"
 import * as utils from "../../utils"
-import {Record as GRecord} from "../entity"
+import {OperationRecord} from "../entity"
 
 const recordRelations = {
   relations: [
@@ -23,8 +23,8 @@ const recordRelations = {
 @Injectable()
 export class RecordService {
   constructor(
-    @InjectRepository(GRecord, common.db)
-    private repo: Repository<GRecord>,
+    @InjectRepository(OperationRecord, common.db)
+    private repo: Repository<OperationRecord>,
   ) {}
 
 
@@ -45,7 +45,7 @@ export class RecordService {
    * @param record `Record`
    * @returns `Record`
    */
-  async saveLatestRecord(record: GRecord) {
+  async saveLatestRecord(record: OperationRecord) {
     let newRecord = this.repo.create(record)
     newRecord = await this.repo.save(newRecord)
 

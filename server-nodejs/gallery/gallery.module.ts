@@ -16,7 +16,7 @@ import {
   Storage,
   Tag,
   Template,
-  Record,
+  OperationRecord,
   FlexContent,
 } from "./entity"
 import {
@@ -62,7 +62,7 @@ import {
       Storage,
       Tag,
       Template,
-      Record,
+      OperationRecord,
     ], db),
     TypeOrmModule.forFeature([
       FlexContent,

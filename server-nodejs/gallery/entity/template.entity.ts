@@ -14,7 +14,7 @@ import {
 } from "typeorm"
 
 import * as common from "../common"
-import {Dashboard, Element, Record} from "."
+import {Dashboard, Element, OperationRecord} from "."
 
 @Entity({name: common.template})
 @Unique([common.dashboard, common.name])
@@ -29,8 +29,8 @@ export class Template {
   @OneToMany(() => Element, e => e.template, {cascade: true, nullable: true})
   elements!: Element[]
 
-  @OneToMany(() => Record, r => r.template, {nullable: true, cascade: true})
-  records!: Record[]
+  @OneToMany(() => OperationRecord, r => r.template, {nullable: true, cascade: true})
+  records!: OperationRecord[]
 
   @Column("int", {nullable: true})
   index!: number

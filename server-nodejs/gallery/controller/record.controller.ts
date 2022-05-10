@@ -5,7 +5,7 @@
 import {Body, Controller, Get, ParseArrayPipe, Post, Query} from '@nestjs/common'
 
 import {RecordService} from "../provider"
-import {Record} from "../entity"
+import {OperationRecord} from "../entity"
 
 @Controller()
 export class RecordController {
@@ -23,7 +23,7 @@ export class RecordController {
   }
 
   @Post("saveLatestRecord")
-  saveLatestRecord(@Body() record: Record) {
+  saveLatestRecord(@Body() record: OperationRecord) {
     return this.service.saveLatestRecord(record)
   }
 }
