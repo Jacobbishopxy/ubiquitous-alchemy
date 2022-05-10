@@ -21,6 +21,9 @@ export class Author {
   @PrimaryColumn("varchar")
   email!: string
 
+  @Column("bool")
+  active?: boolean
+
   @ManyToMany(() => Dashboard, t => t.authors, {nullable: true})
   @JoinTable()
   dashboards!: Dashboard[]

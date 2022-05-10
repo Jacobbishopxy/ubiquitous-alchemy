@@ -24,7 +24,13 @@ export class AuthorService {
     private repo: Repository<Author>,
   ) {}
 
-  getAllAuthors() {
+  getAllAuthors(active: boolean) {
+    if (active) {
+      return this.repo.find({
+        ...AuthorFullRelations,
+        where: {active: true}
+      })
+    }
     return this.repo.find(AuthorFullRelations)
   }
 

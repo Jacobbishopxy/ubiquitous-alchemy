@@ -19,7 +19,7 @@ export class AuthorController {
   @Get("authors")
   async getAllAuthors() {
 
-    const authors = await this.authorService.getAllAuthors()
+    const authors = await this.authorService.getAllAuthors(true)
     const users = await this.authService.getAllUserAccounts()
 
     const usersMap = users.reduce((acc, user) => {
