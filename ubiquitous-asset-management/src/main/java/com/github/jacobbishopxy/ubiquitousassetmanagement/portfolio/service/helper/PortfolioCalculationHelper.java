@@ -93,7 +93,7 @@ public class PortfolioCalculationHelper {
     Float accumulatedPortfolioEarningsYield = performances
         .stream()
         .map(Performance::getPortfolioEarningsYield)
-        .reduce(0f, (subtotal, ele) -> {
+        .reduce(1f, (subtotal, ele) -> {
           if (ele == null) {
             ele = 0f;
           }
@@ -104,7 +104,7 @@ public class PortfolioCalculationHelper {
     Float accumulatedBenchmarkEarningsYield = performances
         .stream()
         .map(Performance::getBenchmarkEarningsYield)
-        .reduce(0f, (subtotal, ele) -> {
+        .reduce(1f, (subtotal, ele) -> {
           if (ele == null) {
             ele = 0f;
           }
