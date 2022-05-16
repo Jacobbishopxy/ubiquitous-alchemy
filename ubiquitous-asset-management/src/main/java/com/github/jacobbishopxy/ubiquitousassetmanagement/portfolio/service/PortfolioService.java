@@ -25,7 +25,6 @@ import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repository.A
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repository.BenchmarkRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repository.ConstituentRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.service.helper.PortfolioAdjustmentHelper;
-import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.service.helper.PortfolioCalculationHelper;
 import com.google.common.collect.HashBiMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +86,9 @@ public class PortfolioService {
 
 	@Autowired
 	private ValidationService validationService;
+
+	@Autowired
+	private RecalculateService recalculateService;
 
 	// =======================================================================
 	// Query methods
@@ -264,51 +266,6 @@ public class PortfolioService {
 	// =======================================================================
 
 	/**
-	 * Recalculate accumulated performance for a portfolio.
-	 *
-	 * Every time a settle/unsettle action is made, the accumulated performance
-	 * should be recalculated.
-	 *
-	 * @param pact
-	 * @param isAdjusted
-	 * @return
-	 */
-	private AccumulatedPerformance recalculateAccumulatedPerformance(boolean isSettle, Pact pact, boolean isAdjusted) {
-		Long pactId = pact.getId();
-
-		// get all adjustment record ids under this pact
-		List<Long> arIds = adjustmentRecordRepository.findIdsByPactId(pactId);
-		// get all performance records
-		List<Performance> pfms = performanceService.getPerformancesByAdjustmentRecordIds(arIds);
-		// calculate accumulated performance
-		PortfolioCalculationHelper.AccumulatedPerformanceResult apr = PortfolioCalculationHelper
-				.calculateAccumulatedPerformance(pfms);
-		// query accumulated performance or create a new one
-		AccumulatedPerformance ap = accumulatedPerformanceRepository
-				.findByPactId(pactId)
-				.orElseGet(() -> {
-					AccumulatedPerformance nAp = new AccumulatedPerformance();
-					nAp.setPact(pact);
-					nAp.setAdjustCount(0);
-					return nAp;
-				});
-
-		if (isAdjusted) {
-			if (isSettle) {
-				ap.setAdjustCount(ap.getAdjustCount() + 1);
-			} else {
-				ap.setAdjustCount(ap.getAdjustCount() - 1);
-			}
-		}
-
-		ap.setBenchmarkEarningsYield(apr.benchmarkEarningsYield());
-		ap.setPortfolioEarningsYield(apr.portfolioEarningsYield());
-		ap.setAlpha(apr.alpha());
-
-		return ap;
-	}
-
-	/**
 	 * Settle a portfolio.
 	 *
 	 * A powerful method which automatically distinguishes between normal (members
@@ -433,7 +390,7 @@ public class PortfolioService {
 		newPfm = performanceService.createPerformance(newPfm);
 
 		// recalculate accumulated performance and save it
-		AccumulatedPerformance ap = recalculateAccumulatedPerformance(true, pact, isAdjusted);
+		AccumulatedPerformance ap = recalculateService.recalculateAccumulatedPerformance(pact, true, isAdjusted);
 		ap = accumulatedPerformanceRepository.save(ap);
 
 		return new PortfolioDetail(newAr, newCons, newBms, newPfm, ais, ap);
@@ -458,7 +415,7 @@ public class PortfolioService {
 		// recalculate accumulated performance and save it
 		boolean isAdjusted = ar.getIsAdjusted() == true ? true : false;
 		Pact pact = new Pact(pactId);
-		AccumulatedPerformance ap = recalculateAccumulatedPerformance(false, pact, isAdjusted);
+		AccumulatedPerformance ap = recalculateService.recalculateAccumulatedPerformance(pact, false, isAdjusted);
 		accumulatedPerformanceRepository.save(ap);
 
 		// delete adjustment info

@@ -9,10 +9,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.domain.AccumulatedPerformance;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.domain.AdjustmentRecord;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.domain.Constituent;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.domain.Pact;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.domain.Performance;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.dto.ConstituentUpdate;
+import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repository.AccumulatedPerformanceRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repository.ConstituentRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.repository.PerformanceRepository;
 import com.github.jacobbishopxy.ubiquitousassetmanagement.portfolio.service.helper.PortfolioCalculationHelper;
@@ -31,6 +34,12 @@ public class ConstituentService {
 
   @Autowired
   private PerformanceRepository pRepo;
+
+  @Autowired
+  private AccumulatedPerformanceRepository apRepo;
+
+  @Autowired
+  private RecalculateService recalculateService;
 
   // =======================================================================
   // Query methods
@@ -65,7 +74,9 @@ public class ConstituentService {
     }
 
     // 1. get adjustment record id
-    Long adjustmentRecordId = constituents.get(0).getAdjRecordId();
+    AdjustmentRecord adjustmentRecord = constituents.get(0).getAdjustmentRecord();
+    Long adjustmentRecordId = adjustmentRecord.getId();
+    Pact pact = adjustmentRecord.getPact();
 
     // 2. recalculate all constituents and their related performance,
     // validate modified constituents
@@ -85,6 +96,10 @@ public class ConstituentService {
       performance.setAlpha(res.earningsYield() - performance.getBenchmarkEarningsYield());
     }
     pRepo.save(performance);
+
+    // 5. update or create accumulated performance
+    AccumulatedPerformance ap = recalculateService.recalculateAccumulatedPerformance(pact, false, false);
+    apRepo.save(ap);
   }
 
   // common mutations is a wrapper of raw mutation, which only needs adjustment
