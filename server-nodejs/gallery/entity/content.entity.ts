@@ -32,7 +32,7 @@ export class Content {
   @ManyToOne(() => Element, e => e.contents, {nullable: true, onDelete: "SET NULL"})
   element!: Element
 
-  @ManyToOne(() => Category, c => c.contents, {nullable: false})
+  @ManyToOne(() => Category, c => c.contents, {nullable: true, onDelete: "SET NULL"})
   category!: Category
 
   @ManyToOne(() => Mark, m => m.contents, {cascade: true, nullable: true})
