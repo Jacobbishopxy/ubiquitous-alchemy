@@ -3,3 +3,4 @@ DIR.md
 
 secret.env
 asset-management/persistence.properties
+auth-service/cas.properties

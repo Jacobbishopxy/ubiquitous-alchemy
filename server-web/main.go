@@ -17,7 +17,7 @@ import (
 )
 
 var apiAddress *string
-var gatewayAddress *string
+var authAddress *string
 var assetManagementAddress *string
 
 //将request转发给 nodejs
@@ -32,8 +32,8 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	proxy.ServeHTTP(w, r)
 }
 
-func gatewayHandler(w http.ResponseWriter, r *http.Request) {
-	url, err := url.Parse(*gatewayAddress)
+func authHandler(w http.ResponseWriter, r *http.Request) {
+	url, err := url.Parse(*authAddress)
 	if err != nil {
 		log.Println(err)
 		return
@@ -100,7 +100,7 @@ func (h spaHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// Arguments given by command line
 	apiAddress = flag.String("a", "http://localhost:8030", "Address of the server-nodejs")
-	gatewayAddress = flag.String("g", "http://localhost:8010", "Address of the api-gate")
+	authAddress = flag.String("u", "http://localhost:8061", "Address of the auth-service")
 	assetManagementAddress = flag.String("m", "http://localhost:8060", "Address of the asset-management")
 
 	staticPath := flag.String("p", "../frontend", "The path to the static directory")
@@ -110,7 +110,7 @@ func main() {
 
 	// wildcard to match url path
 	router.HandleFunc("/api/{rest:.*}", apiHandler)
-	router.HandleFunc("/gateway/{rest:.*}", gatewayHandler)
+	router.HandleFunc("/auth/{rest:.*}", authHandler)
 	router.HandleFunc("/v1/{rest:.*}", asssetManagementHandler)
 	// serve static HTML file
 	spa := spaHandler{staticPath: *staticPath, indexPath: *staticPath + `/index.html`}
