@@ -27,25 +27,25 @@ public class ValidationService {
   public String getUsername(String ticketValue) throws Exception {
     String validateResult = validate(ticketValue);
     JSONObject obj = new JSONObject(validateResult);
-    JSONObject user = obj.getJSONObject("user");
 
-    if (user == null) {
-      return null;
+    try {
+      JSONObject user = obj.getJSONObject("user");
+      return user.getString("uid");
+    } catch (Exception e) {
+      return e.getMessage();
     }
-
-    return user.getString("uid");
   }
 
   public String getEmail(String ticketValue) throws Exception {
     String validateResult = validate(ticketValue);
     JSONObject obj = new JSONObject(validateResult);
-    JSONObject user = obj.getJSONObject("user");
 
-    if (user == null) {
-      return null;
+    try {
+      JSONObject user = obj.getJSONObject("user");
+      return user.getString("uid");
+    } catch (Exception e) {
+      return e.getMessage();
     }
-
-    return user.getString("mail");
   }
 
 }

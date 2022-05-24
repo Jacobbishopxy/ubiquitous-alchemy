@@ -60,8 +60,17 @@ public class CasConfig {
   @Value("${appInfo}")
   private String appInfo;
 
+  @Value("${authenticateUrl}")
+  private String authenticateUrl;
+
   @Value("${validateUrl}")
   private String validateUrl;
+
+  @Value("${testUser}")
+  private String testUser;
+
+  @Value("${testPass}")
+  private String testPass;
 
   public String getCasKey() {
     return casKey;
@@ -107,8 +116,20 @@ public class CasConfig {
     return appInfo;
   }
 
+  public String getAuthenticateUrl() {
+    return authenticateUrl;
+  }
+
   public String getValidateUrl() {
     return validateUrl;
+  }
+
+  public String getTestUser() {
+    return testUser;
+  }
+
+  public String getTestPass() {
+    return testPass;
   }
 
   @Bean

@@ -4,12 +4,13 @@ baseLoginPath=/login/cas
 baseLogoutPath=/logout/cas
 
 casUrl=https://cas.example.com
-casLoginUrl=https://https://cas.example.com/login
-casLogoutUrl=https://https://cas.example.com/logout
+casLoginUrl=https://cas.example.com/login
+casLogoutUrl=https://cas.example.com/logout
 casKey=CAS_PROVIDER_LOCALHOST
 casTimeout=43200
 
 appUser=appUser
 appKey=appKey
 appInfo=dev-test
-validateUrl=https://https://cas.example.com/validate
+authenticateUrl=https://cas.example.com/authenticate
+validateUrl=https://cas.example.com/validate
