@@ -20,7 +20,7 @@ This project serves as a collection of [Cyberbrick](https://github.com/Jacobbish
 
 1. [ubiquitous-asset-management](./ubiquitous-asset-management/README.md): asset management
 
-1. [ubiquitous-auth-server](./ubiquitous-auth-server/README.md): authentication
+1. [ubiquitous-auth](./ubiquitous-auth/README.md): authentication
 
 1. [ubiquitous-data-server](./ubiquitous-data-server/README.md) data layer, data engine and data cache based on deps below:
 
