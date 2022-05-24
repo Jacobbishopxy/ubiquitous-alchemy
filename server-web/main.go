@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -33,8 +34,13 @@ func httpProxy(address *string) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
+func rewrite(path string, remove string) string {
+	return strings.Replace(path, remove, "", 1)
+}
+
 func httpProxyStripPrefix(address *string, prefix string) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = rewrite(r.URL.Path, prefix)
 		url, err := url.Parse(*address)
 		if err != nil {
 			log.Println(err)
@@ -42,7 +48,7 @@ func httpProxyStripPrefix(address *string, prefix string) func(http.ResponseWrit
 		}
 
 		proxy := httputil.NewSingleHostReverseProxy(url)
-		http.Handle(prefix, http.StripPrefix(prefix, proxy))
+		proxy.ServeHTTP(w, r)
 	}
 }
 
