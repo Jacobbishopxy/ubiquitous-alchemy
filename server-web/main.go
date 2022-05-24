@@ -20,38 +20,30 @@ var apiAddress *string
 var authAddress *string
 var assetManagementAddress *string
 
-//将request转发给 nodejs
-func apiHandler(w http.ResponseWriter, r *http.Request) {
-	// log.Println(*apiHost)
-	url, err := url.Parse(*apiAddress)
-	if err != nil {
-		log.Println(err)
-		return
+func httpProxy(address *string) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		url, err := url.Parse(*address)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		proxy := httputil.NewSingleHostReverseProxy(url)
+		proxy.ServeHTTP(w, r)
 	}
-	proxy := httputil.NewSingleHostReverseProxy(url)
-	proxy.ServeHTTP(w, r)
 }
 
-func authHandler(w http.ResponseWriter, r *http.Request) {
-	url, err := url.Parse(*authAddress)
-	if err != nil {
-		log.Println(err)
-		return
+func httpProxyStripPrefix(address *string, prefix string) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		url, err := url.Parse(*address)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		proxy := httputil.NewSingleHostReverseProxy(url)
+		http.Handle(prefix, http.StripPrefix(prefix, proxy))
 	}
-
-	proxy := httputil.NewSingleHostReverseProxy(url)
-	proxy.ServeHTTP(w, r)
-}
-
-func asssetManagementHandler(w http.ResponseWriter, r *http.Request) {
-	url, err := url.Parse(*assetManagementAddress)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	proxy := httputil.NewSingleHostReverseProxy(url)
-	proxy.ServeHTTP(w, r)
 }
 
 // spaHandler implements the http.Handler interface, so we can use it
@@ -102,16 +94,16 @@ func main() {
 	apiAddress = flag.String("a", "http://localhost:8030", "Address of the server-nodejs")
 	authAddress = flag.String("u", "http://localhost:8061", "Address of the auth-service")
 	assetManagementAddress = flag.String("m", "http://localhost:8060", "Address of the asset-management")
-
 	staticPath := flag.String("p", "../frontend", "The path to the static directory")
 	flag.Parse()
+
 	// mux router
 	router := mux.NewRouter()
 
 	// wildcard to match url path
-	router.HandleFunc("/api/{rest:.*}", apiHandler)
-	router.HandleFunc("/auth/{rest:.*}", authHandler)
-	router.HandleFunc("/v1/{rest:.*}", asssetManagementHandler)
+	router.HandleFunc("/api/{rest:.*}", httpProxy(apiAddress))
+	router.HandleFunc("/auth/{rest:.*}", httpProxyStripPrefix(authAddress, "/auth"))
+	router.HandleFunc("/v1/{rest:.*}", httpProxy(assetManagementAddress))
 	// serve static HTML file
 	spa := spaHandler{staticPath: *staticPath, indexPath: *staticPath + `/index.html`}
 	router.PathPrefix("/").Handler(spa)
