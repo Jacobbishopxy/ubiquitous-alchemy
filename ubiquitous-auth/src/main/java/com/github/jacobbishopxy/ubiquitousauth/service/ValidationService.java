@@ -24,9 +24,22 @@ public class ValidationService {
     return validateResult;
   }
 
+  private Boolean checkExpiration(JSONObject obj) throws Exception {
+    try {
+      String status = obj.getString("success");
+      return status.equals("true");
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
   public String getUsername(String ticketValue) throws Exception {
     String validateResult = validate(ticketValue);
     JSONObject obj = new JSONObject(validateResult);
+
+    if (!checkExpiration(obj)) {
+      throw new Exception("Ticket is expired");
+    }
 
     try {
       JSONObject user = obj.getJSONObject("user");
@@ -39,6 +52,10 @@ public class ValidationService {
   public String getEmail(String ticketValue) throws Exception {
     String validateResult = validate(ticketValue);
     JSONObject obj = new JSONObject(validateResult);
+
+    if (!checkExpiration(obj)) {
+      throw new Exception("Ticket is expired");
+    }
 
     try {
       JSONObject user = obj.getJSONObject("user");
