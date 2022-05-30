@@ -4,10 +4,7 @@
 		"unresolved-import",
 		"unresolved-macro"
 	],
-	"rust-analyzer.linkedProjects": [
-		"ubiquitous-data-server/Cargo.toml",
-		"ubiquitous-viz-server/Cargo.toml"
-	],
+	"rust-analyzer.linkedProjects": [],
 	"gopls": {
 		"experimentalWorkspaceModule": true
 	},
