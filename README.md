@@ -22,15 +22,17 @@ This project serves as a collection of [Cyberbrick](https://github.com/Jacobbish
 
 1. [ubiquitous-auth](./ubiquitous-auth/README.md): authentication
 
+1. [ubiquitous-resource-centre](./ubiquitous-resource-centre/README.md): resource centre
+
 1. [ubiquitous-data-server](./ubiquitous-data-server/README.md) data layer, data engine and data cache based on deps below:
 
    - [fabrix](https://github.com/Jacobbishopxy/fabrix): custom data structure, providing custom ETL interface and multiple data sources' adapters
 
-1. [ubiquitous-fs-server](./ubiquitous-fs-server/README.md): file manage system
+<!-- 1. [ubiquitous-fs-server](./ubiquitous-fs-server/README.md): file manage system -->
 
-1. [ubiquitous-tg-server](./ubiquitous-tg-server/README.md): topological graph data server
+<!-- 1. [ubiquitous-tg-server](./ubiquitous-tg-server/README.md): topological graph data server -->
 
-1. [ubiquitous-viz-server](./ubiquitous-viz-server/README.md): visualization (components/demo) of ubiquitous-alchemy application
+<!-- 1. [ubiquitous-viz-server](./ubiquitous-viz-server/README.md): visualization (components/demo) of ubiquitous-alchemy application -->
 
 ## Tech stack
 
