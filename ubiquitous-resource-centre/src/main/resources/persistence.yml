@@ -1,0 +1,9 @@
+mongo:
+  cons:
+    - key: dev
+      host: localhost
+      port: 27017
+      username: root
+      password: secret
+      database: dev
+      auth: admin
