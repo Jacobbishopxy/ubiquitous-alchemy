@@ -6,13 +6,15 @@ package com.github.jacobbishopxy.ubiquitousresourcecentre.config;
 
 import java.util.List;
 
-import com.mongodb.MongoCredential;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
-import org.springframework.data.mongodb.core.MongoClientFactoryBean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.core.convert.DbRefResolver;
@@ -94,26 +96,24 @@ public class DbConfig {
     }
   }
 
-  MongoClientFactoryBean mongo(Conn conn) {
-    MongoClientFactoryBean mongo = new MongoClientFactoryBean();
+  MongoClient mongoClient(Conn conn) {
+    ConnectionString str = new ConnectionString(
+        String.format("mongodb://%s:%s@%s:%s/%s?authSource=%s", conn.getUsername(),
+            conn.getPassword(), conn.getHost(), conn.getPort(), conn.getDatabase(), conn.getAuth()));
+    MongoClientSettings settings = MongoClientSettings.builder()
+        .applyConnectionString(str)
+        .build();
 
-    MongoCredential credential = MongoCredential.createScramSha1Credential(
-        conn.getUsername(),
-        conn.getAuth(),
-        conn.getPassword().toCharArray());
-
-    mongo.setCredential(new MongoCredential[] { credential });
-    mongo.setHost(conn.getHost());
-    mongo.setPort(conn.getPort());
-    return mongo;
+    return MongoClients.create(settings);
   }
 
-  MongoTemplate mongoTemplate(Conn conn, String database) throws Exception {
-    return new MongoTemplate(mongo(conn).getObject(), database);
+  MongoTemplate mongoTemplate(Conn conn) throws Exception {
+    return new MongoTemplate(mongoClient(conn), conn.getDatabase());
   }
 
-  GridFsTemplate gridFsTemplate(Conn conn, String database) throws Exception {
-    MongoDatabaseFactory mongoDatabaseFactory = new SimpleMongoClientDatabaseFactory(mongo(conn).getObject(), database);
+  GridFsTemplate gridFsTemplate(Conn conn) throws Exception {
+    MongoDatabaseFactory mongoDatabaseFactory = new SimpleMongoClientDatabaseFactory(mongoClient(conn),
+        conn.getDatabase());
     DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDatabaseFactory);
     MappingMongoConverter converter = new MappingMongoConverter(
         dbRefResolver,

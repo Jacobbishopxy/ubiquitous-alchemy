@@ -4,8 +4,8 @@
 
 package com.github.jacobbishopxy.ubiquitousresourcecentre.service;
 
-import java.util.Map;
-
+import com.github.jacobbishopxy.ubiquitousresourcecentre.config.DbConfig;
+import com.github.jacobbishopxy.ubiquitousresourcecentre.config.DbConnections;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -18,11 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileService {
 
   @Autowired
-  Map<String, GridFsTemplate> map;
+  DbConfig config;
+
+  @Autowired
+  DbConnections conns;
 
   public String addFile(String key, MultipartFile file) throws Exception {
 
-    GridFsTemplate template = map.get(key);
+    GridFsTemplate template = conns.gridFsTemplateMap(config).get(key);
     if (template == null) {
       throw new Exception("No such key");
     }

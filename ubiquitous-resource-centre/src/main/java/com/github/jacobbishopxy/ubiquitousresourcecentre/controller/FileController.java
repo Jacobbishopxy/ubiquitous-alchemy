@@ -24,9 +24,9 @@ public class FileController {
   private FileService fileService;
 
   @PostMapping("/upload")
-  public ResponseEntity<?> upload(@RequestParam("database") String database, @RequestParam("file") MultipartFile file)
+  public ResponseEntity<?> upload(@RequestParam("key") String key, @RequestParam("file") MultipartFile file)
       throws Exception {
-    String fileID = fileService.addFile(database, file);
+    String fileID = fileService.addFile(key, file);
     return ResponseEntity.ok(fileID);
   }
 }

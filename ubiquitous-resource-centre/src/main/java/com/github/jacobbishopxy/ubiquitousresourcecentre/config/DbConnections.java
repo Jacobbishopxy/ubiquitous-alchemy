@@ -15,7 +15,7 @@ public class DbConnections {
   public Map<String, MongoTemplate> mongoTemplateMap(DbConfig config) throws Exception {
     Map<String, MongoTemplate> map = new HashMap<>();
     for (DbConfig.Conn conn : config.getCons()) {
-      map.put(conn.getKey(), config.mongoTemplate(conn, conn.getDatabase()));
+      map.put(conn.getKey(), config.mongoTemplate(conn));
     }
     return map;
   }
@@ -24,7 +24,7 @@ public class DbConnections {
   public Map<String, GridFsTemplate> gridFsTemplateMap(DbConfig config) throws Exception {
     Map<String, GridFsTemplate> map = new HashMap<>();
     for (DbConfig.Conn conn : config.getCons()) {
-      map.put(conn.getKey(), config.gridFsTemplate(conn, conn.getDatabase()));
+      map.put(conn.getKey(), config.gridFsTemplate(conn));
     }
     return map;
   }
