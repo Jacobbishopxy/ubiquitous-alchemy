@@ -17,14 +17,14 @@ FROM    ${MAVEN_IMAGE_NAME}:${MAVEN_IMAGE_VERSION} AS builder
 WORKDIR /app
 
 # copy pom.xml
-COPY    ./ubiquitous-resources-centre/pom.xml .
+COPY    ./ubiquitous-resource-centre/pom.xml .
 
 # cache dependencies
 RUN     mvn dependency:go-offline
 
 # copy source code & resources
-COPY    ./ubiquitous-resources-centre/src/main/java /app/src/main/java
-COPY    ./resources/resources-centre /app/src/main/resources
+COPY    ./ubiquitous-resource-centre/src/main/java /app/src/main/java
+COPY    ./resources/resource-centre /app/src/main/resources
 
 # build the jar
 RUN     mvn package && cp target/*.jar app.jar
