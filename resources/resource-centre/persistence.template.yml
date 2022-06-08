@@ -1,0 +1,17 @@
+mongo:
+  cons:
+    - key: image
+      host: localhost
+      port: 27017
+      username: root
+      password: secret
+      database: image
+      auth: admin
+
+    - key: misc
+      host: localhost
+      port: 27017
+      username: root
+      password: secret
+      database: misc
+      auth: admin

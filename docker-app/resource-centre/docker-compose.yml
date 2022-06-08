@@ -1,0 +1,19 @@
+version: "3.6"
+
+services:
+  asset-management:
+    restart: always
+    image: ${RC_BASE_NAME}:${RC_BASE_VERSION}
+    container_name: ${RC_API_CONTAINER_NAME}
+    ports:
+      - ${RC_API_CONTAINER_PORT}:${RC_API_CONTAINER_PORT}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${VOLUME_LOG_EXT}:${VOLUME_LOG_INN}
+    command: java -jar /app/app.jar
+    # tty: true
+
+networks:
+  default:
+    external:
+      name: prod
