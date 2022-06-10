@@ -20,6 +20,7 @@ import (
 var apiAddress *string
 var authAddress *string
 var assetManagementAddress *string
+var resourceCentreAddress *string
 
 func httpProxy(address *string) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -100,6 +101,7 @@ func main() {
 	apiAddress = flag.String("a", "http://localhost:8030", "Address of the server-nodejs")
 	authAddress = flag.String("u", "http://localhost:8061", "Address of the auth-service")
 	assetManagementAddress = flag.String("m", "http://localhost:8060", "Address of the asset-management")
+	resourceCentreAddress = flag.String("r", "http://localhost:8062", "Address of the resource-centre")
 	staticPath := flag.String("p", "../frontend", "The path to the static directory")
 	flag.Parse()
 
@@ -110,6 +112,7 @@ func main() {
 	router.HandleFunc("/api/{rest:.*}", httpProxy(apiAddress))
 	router.HandleFunc("/auth/{rest:.*}", httpProxyStripPrefix(authAddress, "/auth"))
 	router.HandleFunc("/v1/{rest:.*}", httpProxy(assetManagementAddress))
+	router.HandleFunc("/resource/{rest:.*}", httpProxyStripPrefix(resourceCentreAddress, "/resource"))
 	// serve static HTML file
 	spa := spaHandler{staticPath: *staticPath, indexPath: *staticPath + `/index.html`}
 	router.PathPrefix("/").Handler(spa)

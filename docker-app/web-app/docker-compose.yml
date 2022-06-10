@@ -19,6 +19,8 @@ services:
         $AUTH_ADDRESS,
         -m,
         $ASSET_MANAGEMENT_ADDRESS,
+        -r,
+        $RESOURCE_CENTRE_ADDRESS,
         -p,
         ../frontend
       ]
