@@ -32,7 +32,7 @@ export class FlexContentService {
     // validate id
     if (!ObjectId.isValid(objectId)) throw new BadRequestException(`Invalid id: ${objectId}`)
     // find one
-    const fc = await this.repo.findOneBy({id: objectId})
+    const fc = await this.repo.findOneBy({_id: new ObjectId(objectId)})
     if (!fc) throw new NotFoundException("FlexContent not found")
     return fc
   }
@@ -50,11 +50,11 @@ export class FlexContentService {
     // validate id
     if (!ObjectId.isValid(objectId)) throw new BadRequestException(`Invalid id: ${objectId}`)
     // check existence
-    const exists = await this.repo.findOneBy({id: objectId})
+    const exists = await this.repo.findOneBy({_id: new ObjectId(objectId)})
     if (!exists) throw new NotFoundException("FlexContent not found")
     // update by id
     await this.repo.update(objectId, content)
-    const update = await this.repo.findOneBy({id: objectId})
+    const update = await this.repo.findOneBy({_id: new ObjectId(objectId)})
     return update!
   }
 
