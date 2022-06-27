@@ -94,6 +94,7 @@ export enum ElementType {
   Excel = "excel",
   NetDiskCap = "netDiskCap",
   NetDiskGroup = "netDiskGroup",
+  BasicInfo = "basicInfo",
 }
 
 export const getElementType = (v: string) => {
@@ -148,6 +149,8 @@ export const getElementType = (v: string) => {
       return ElementType.NetDiskCap
     case "netDiskGroup":
       return ElementType.NetDiskGroup
+    case "basicInfo":
+      return ElementType.BasicInfo
     default:
       return undefined
   }
