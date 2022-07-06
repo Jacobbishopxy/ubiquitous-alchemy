@@ -95,6 +95,7 @@ export enum ElementType {
   NetDiskCap = "netDiskCap",
   NetDiskGroup = "netDiskGroup",
   BasicInfo = "basicInfo",
+  CoreInfo = "coreInfo",
 }
 
 export const getElementType = (v: string) => {
@@ -151,6 +152,8 @@ export const getElementType = (v: string) => {
       return ElementType.NetDiskGroup
     case "basicInfo":
       return ElementType.BasicInfo
+    case "coreInfo":
+      return ElementType.CoreInfo
     default:
       return undefined
   }
