@@ -41,6 +41,9 @@ public class ConstituentService {
   @Autowired
   private RecalculateService recalculateService;
 
+  @Autowired
+  private AdjustmentRecordService adjustmentRecordService;
+
   // =======================================================================
   // Query methods
   //
@@ -76,6 +79,8 @@ public class ConstituentService {
     // 1. get adjustment record id
     AdjustmentRecord adjustmentRecord = constituents.get(0).getAdjustmentRecord();
     Long adjustmentRecordId = adjustmentRecord.getId();
+    adjustmentRecord = adjustmentRecordService.getARById(adjustmentRecordId)
+        .orElseThrow(() -> new RuntimeException("cannot find adjustment record"));
     Pact pact = adjustmentRecord.getPact();
 
     // 2. recalculate all constituents and their related performance,
