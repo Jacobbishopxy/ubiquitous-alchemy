@@ -12,3 +12,6 @@ submodule-build:
 
 submodule-dev:
 	cd ${FILEBROWSER_SUBMODULE_PATH} ./filebrowser
+
+tree:
+	tree --dirsfirst --noreport -I "target|cache|Catalog.md|*.json|*.lock|*.toml" | sed 's/^/    /' > Catalog.md

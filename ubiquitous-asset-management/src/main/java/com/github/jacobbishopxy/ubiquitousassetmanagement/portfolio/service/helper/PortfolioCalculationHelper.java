@@ -23,7 +23,7 @@ public class PortfolioCalculationHelper {
     Float totalExpansion = constituents
         .stream()
         .map(Constituent::getDynamicWeight)
-        .reduce(0f, Float::sum);
+        .reduce(0f, (t, u) -> Float.sum(t, u));
 
     Float earningsYield = constituents
         .stream()
@@ -34,7 +34,7 @@ public class PortfolioCalculationHelper {
           }
           return c.getStaticWeight() * ey;
         })
-        .reduce(0f, Float::sum);
+        .reduce(0f, (t, u) -> Float.sum(t, u));
 
     constituents.stream().map(c -> {
       c.setDynamicWeight(c.getDynamicWeight() / totalExpansion);
@@ -55,7 +55,7 @@ public class PortfolioCalculationHelper {
     Float totalExpansion = benchmarks
         .stream()
         .map(Benchmark::getDynamicWeight)
-        .reduce(0f, Float::sum);
+        .reduce(0f, (t, u) -> Float.sum(t, u));
 
     Float earningsYield = benchmarks
         .stream()
@@ -66,7 +66,7 @@ public class PortfolioCalculationHelper {
           }
           return b.getStaticWeight() * ey;
         })
-        .reduce(0f, Float::sum);
+        .reduce(0f, (t, u) -> Float.sum(t, u));
 
     benchmarks.stream().map(b -> {
       b.setDynamicWeight(b.getDynamicWeight() / totalExpansion);
