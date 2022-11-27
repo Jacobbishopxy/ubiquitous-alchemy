@@ -28,9 +28,19 @@ export class AuthorController {
     }, {})
 
     const res: common.FullAuthor[] = authors.map(author => {
-      const user = usersMap[author.email]
+      var user = usersMap[author.email]
       if (!user) {
-        throw new HttpException(`User ${author.email} not found`, HttpStatus.NOT_FOUND)
+        // Temporary disable throw exception, since no uniformed API provided.
+        // A default `UserAccount` value has been given to avoid null `user` value
+
+        // throw new HttpException(`User ${author.email} not found`, HttpStatus.NOT_FOUND)
+        user = {
+          username: "Unknown",
+          email: "Unknown",
+          active: true,
+          roles: [],
+          privileges: []
+        } as common.UserAccount
       }
       return {...author, ...user}
     })
